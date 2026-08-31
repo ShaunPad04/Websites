@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+/* ============================================================
+   B BOUTIQUE — drawn from the shop itself
+   The room is black marble with white veining, polished gold
+   rails, a pale tiled floor, and rails of strong colour. The
+   palette is that room, not a generic "luxury" black-and-gold.
+   ============================================================ */
+
+:root {
+  /* The marble wall — warm near-black, never a cold neutral */
+  --onyx:       #141110;
+  --onyx-lift:  #221D1A;
+  --onyx-veil:  #2E2725;
+
+  /* The tiled floor — light surfaces */
+  --bone:       #F7F4EF;
+  --bone-deep:  #EBE4DA;
+  --bone-line:  #D9CFC2;
+
+  /* The rails. Two golds, split by the surface they sit on, because a
+     single mid gold cannot clear 4.5:1 against both bone and onyx.
+       --gold      4.58:1 on bone  (text on light)
+       --gold-lift 9.14:1 on onyx  (text on dark) */
+  --gold:       #8A6A2C;
+  --gold-lift:  #D4B06A;
+
+  /* One signal colour, taken off the rail. Used rarely, never as fill. */
+  --signal:     #A81E2D;
+
+  --line: color-mix(in oklab, var(--onyx) 16%, transparent);
+
+  /* Motion — one language across the whole site */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.44, 1);
+}
+
+@theme inline {
+  --color-onyx: var(--onyx);
+  --color-onyx-lift: var(--onyx-lift);
+  --color-onyx-veil: var(--onyx-veil);
+  --color-bone: var(--bone);
+  --color-bone-deep: var(--bone-deep);
+  --color-bone-line: var(--bone-line);
+  --color-gold: var(--gold);
+  --color-gold-lift: var(--gold-lift);
+  --color-signal: var(--signal);
+  --color-line: var(--line);
+
+  --font-display: var(--font-bodoni);
+  --font-sans: var(--font-jost);
+}
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  background: var(--bone);
+  color: var(--onyx);
+  font-family: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Headings carry the personality. Tight tracking, tight leading. */
+.display {
+  font-family: var(--font-bodoni), ui-serif, Georgia, serif;
+  font-optical-sizing: auto;
+  letter-spacing: -0.015em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+/* Small caps label — tells you which shelf to put the section on */
+.label {
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Paper grain. Keeps large flat areas from reading as flat digital fill. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Focus: visible, on-brand, never removed */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Reveal system — fires once, staggered */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+}
+.reveal.visible { opacity: 1; transform: none; }
+.d1 { transition-delay: 0.08s; }
+.d2 { transition-delay: 0.16s; }
+.d3 { transition-delay: 0.24s; }
+.d4 { transition-delay: 0.32s; }
+.d5 { transition-delay: 0.40s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Carousel rail — native scroll-snap so it works without JS and
+   stays keyboard + screen-reader friendly. */
+.rail {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.rail::-webkit-scrollbar { display: none; }
+.rail > * { scroll-snap-align: start; }
