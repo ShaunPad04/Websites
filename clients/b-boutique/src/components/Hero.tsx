@@ -9,7 +9,10 @@ export function Hero() {
         <Reveal className="max-w-2xl">
           <p className="label text-gold">Seaview Street · Cleethorpes</p>
 
-          <h1 className="display mt-6 max-w-[13ch] text-[clamp(2.5rem,5.6vw,4.25rem)]">
+          <h1
+            data-split
+            className="display mt-6 max-w-[13ch] text-[clamp(2.5rem,5.6vw,4.25rem)]"
+          >
             Clothes you won&rsquo;t meet coming the other way{" "}
             <span className="italic text-gold">down the high street.</span>
           </h1>
@@ -43,8 +46,16 @@ export function Hero() {
         {/* The image is cropped tall and bleeds off the right edge, so it
             reads as a shopfront window rather than a card sat on a page. */}
         <Reveal delay={2} className="relative">
-          <div className="relative aspect-[4/5] max-h-[34rem] overflow-hidden rounded-[2rem] lg:aspect-[4/5]">
-            <ImageSlot tone="marble" seed={3} className="absolute inset-0 h-full w-full" />
+          <div data-parallax-hero
+            className="relative aspect-[4/5] max-h-[34rem] overflow-hidden rounded-[2rem] lg:aspect-[4/5]">
+            <ImageSlot
+              tone="marble"
+              seed={3}
+              slot="hero"
+              priority
+              alt="Inside B Boutique — a brass rail of womenswear against the black marble wall"
+              className="absolute inset-0 h-full w-full"
+            />
             <div
               aria-hidden="true"
               className="absolute inset-0"

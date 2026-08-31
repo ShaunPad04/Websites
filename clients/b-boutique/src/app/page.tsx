@@ -6,11 +6,13 @@ import { Homeware } from "@/components/Homeware";
 import { Visit } from "@/components/Visit";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { PremiumMotion } from "@/components/PremiumMotion";
 
 export default function Home() {
   return (
     <>
       <SmoothScroll />
+      <PremiumMotion />
       <Nav />
       <main id="main" className="flex-1">
         {/* 01 Hook — what this is, and that it is open today */}

@@ -5,6 +5,8 @@
  * shot. Swapping in real images later means replacing this component with
  * next/image at the same call sites — the crops already match. */
 
+import { imageFor } from "@/lib/images";
+
 export type Tone = "bone" | "onyx" | "marble" | "gold";
 
 const RAMP: Record<Tone, [string, string]> = {
@@ -19,19 +21,28 @@ export function ImageSlot({
   label,
   seed = 0,
   className = "",
+  slot,
+  alt,
+  priority = false,
 }: {
   tone?: Tone;
   label?: string;
   seed?: number;
   className?: string;
+  /** Key into src/lib/images.ts. When a photograph exists for this slot it
+   *  is layered over the designed fallback below. */
+  slot?: string;
+  alt?: string;
+  priority?: boolean;
 }) {
   const [from, to] = RAMP[tone];
   const angle = 120 + ((seed * 37) % 90);
   const dark = tone === "onyx" || tone === "marble";
+  const src = imageFor(slot);
 
   return (
     <div
-      aria-hidden="true"
+      aria-hidden={src ? undefined : "true"}
       className={`relative overflow-hidden ${className}`}
       style={{ background: `linear-gradient(${angle}deg, ${from}, ${to})` }}
     >
@@ -80,6 +91,19 @@ export function ImageSlot({
         }}
       />
       <div className="grain absolute inset-0" />
+      {src ? (
+        /* Plain <img>: next/image would optimise this on the server, and the
+           origin is unreachable from the build environment. */
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={alt ?? ""}
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
+          fetchPriority={priority ? "high" : "auto"}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      ) : null}
       {label ? (
         <span className="label absolute bottom-3 left-3 text-white/55">{label}</span>
       ) : null}
