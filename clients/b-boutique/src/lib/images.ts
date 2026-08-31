@@ -10,7 +10,7 @@
  *  rather than broken. */
 
 export const images: Partial<Record<string, string>> = {
-  hero: "https://d8j0ntlcm91z4.cloudfront.net/user_3HwrG1wTADv3RkUcvzwwuwfoAUh/hf_20260831_210409_79905857-10e1-439f-ba3e-b5457c53e9fd.png",
+  hero: "https://d8j0ntlcm91z4.cloudfront.net/user_3HwrG1wTADv3RkUcvzwwuwfoAUh/hf_20260831_211507_7e45c146-8ff2-4d82-aa47-3eddc7c93ae8.png",
 };
 
 export const imageFor = (slot?: string) => (slot ? images[slot] : undefined);
