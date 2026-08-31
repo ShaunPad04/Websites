@@ -67,6 +67,31 @@ Also dropped as duplicates within the requested set:
 skills including `ui-ux-pro-max`, `impeccable`, `emil-design-eng`, `high-end-visual-design`,
 `design-taste-frontend` and `minimalist-ui` — all already present or deliberately excluded here.
 
+## Consolidation (second pass)
+
+The first pass installed 36 skills. Too many of them claimed the same requests, so 20 were
+removed. `CLAUDE.md` at the repo root now defines explicit precedence for the 16 that remain.
+
+**Removed — already inside `impeccable`.** All 17 exist as `impeccable/reference/<verb>.md`,
+and `impeccable`'s own description enumerates them, so both fired on the same request.
+`impeccable`'s copies are frequently the richer text (`polish` 12,010 vs 9,549 bytes;
+`shape` 9,473 vs 5,192; `colorize` 8,019 vs 6,897), so nothing was lost:
+
+`adapt` `animate` `audit` `bolder` `clarify` `colorize` `critique` `delight` `distill`
+`harden` `layout` `optimize` `overdrive` `polish` `quieter` `shape` `typeset`
+
+Invoke them as `impeccable <verb>`.
+
+**Removed — three more:**
+
+| Skill | Reason |
+|---|---|
+| `image-to-code` | Its own description says "skill for Codex" and instructs "In Codex, it must…". Written for GPT, not Claude. |
+| `ui-styling` | shadcn/Radix-specific, and that stack was declined. Competed with `tailwind-ui-rules` on Tailwind implementation. Also 5.7 MB of bundled TTF fonts. |
+| `design` | Logo/CIP/banner/icon/social-image generation requiring Gemini or Atlas Cloud API keys, which are not configured. Competed with `brand` and `design-system`. |
+
+Remaining: 16 skills, 6.2 MB (from 36 skills, 13 MB).
+
 ## Official upstream install commands
 
 Vendoring into this repository was chosen because Claude Code web sessions run in ephemeral

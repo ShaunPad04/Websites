@@ -15,3 +15,6 @@ yarn-error.log*
 .vercel
 coverage/
 .visual-preview/
+.lighthouse/
+test-results/
+playwright-report/
