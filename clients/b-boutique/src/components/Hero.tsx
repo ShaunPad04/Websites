@@ -1,18 +1,16 @@
 import { ImageSlot } from "./ImageSlot";
 
-/* Full-bleed cinematic hero.
- *
- * One image holds the whole viewport, the headline sits in the quiet left
- * third, and nothing else competes. The live open/closed badge deliberately
- * does NOT appear here — a trading notice undercuts the register. It lives
- * in the Visit section, where someone is actually deciding whether to come. */
+/* Full-bleed cinematic hero, built on the structure the client referenced:
+   the photograph holds the frame, the brand runs enormous across the bottom
+   and crops off the edge, and two small asymmetric text blocks do the
+   explaining. The scale of the wordmark is the whole idea — at this size it
+   stops being a label and becomes the composition. */
 export function Hero() {
   return (
     <section
       id="top"
-      className="relative isolate flex min-h-[88svh] items-end overflow-hidden lg:min-h-[92svh]"
+      className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden"
     >
-      {/* The photograph, drifting slightly slower than the page */}
       <div data-parallax-hero className="absolute inset-0 -z-10 scale-[1.06]">
         <ImageSlot
           tone="marble"
@@ -24,15 +22,14 @@ export function Hero() {
         />
       </div>
 
-      {/* Scrims. Two, not one: a vertical lift so the type has a floor, and a
-          horizontal one so the left third stays quiet whatever the photograph
-          does there. Without both, overlaid type is a coin toss. */}
+      {/* Two scrims: a floor for the wordmark, and a left-side wash so the
+          small copy stays readable whatever the photograph does there. */}
       <div
         aria-hidden="true"
         className="absolute inset-0 -z-10"
         style={{
           background:
-            "linear-gradient(to top, rgba(12,10,9,.92) 0%, rgba(12,10,9,.45) 38%, rgba(12,10,9,.10) 68%, rgba(12,10,9,.35) 100%)",
+            "linear-gradient(to top, rgba(12,10,9,.94) 0%, rgba(12,10,9,.55) 30%, rgba(12,10,9,.08) 62%, rgba(12,10,9,.42) 100%)",
         }}
       />
       <div
@@ -40,47 +37,53 @@ export function Hero() {
         className="absolute inset-0 -z-10 hidden lg:block"
         style={{
           background:
-            "linear-gradient(to right, rgba(12,10,9,.80) 0%, rgba(12,10,9,.35) 34%, transparent 62%)",
+            "linear-gradient(to right, rgba(12,10,9,.62) 0%, rgba(12,10,9,.18) 30%, transparent 55%)",
         }}
       />
 
-      <div className="mx-auto w-full max-w-7xl px-6 pb-16 sm:pb-20 lg:pb-24">
-        <p className="label text-gold-lift">Seaview Street · Cleethorpes</p>
+      {/* Mid-left stacked list — the reference's "Brand Design / Web Design" */}
+      <ul className="absolute left-6 top-1/2 hidden -translate-y-1/2 space-y-1 text-[0.9375rem] font-medium leading-tight text-bone lg:block">
+        <li>Womenswear</li>
+        <li>Accessories</li>
+        <li>Homeware</li>
+      </ul>
 
+      {/* Lower-right, right-aligned — the reference's bio block */}
+      <p className="pointer-events-none absolute bottom-[38%] right-6 hidden max-w-[22rem] text-right text-[0.9375rem] font-medium leading-snug text-bone lg:block">
+        Clothes you won&rsquo;t meet coming the other way down the high street.
+        One shop, on one street, every piece chosen by hand.
+      </p>
+
+      {/* The wordmark. Cropped by the viewport edge on purpose. */}
+      <div className="relative w-full overflow-hidden" data-mask>
         <h1
-          data-split
-          className="display mt-6 max-w-[15ch] text-[clamp(2.75rem,6.4vw,5.25rem)] text-bone"
+          className="chrome display select-none whitespace-nowrap px-4 text-center text-[clamp(3.5rem,15.5vw,15rem)] leading-[0.82] sm:px-6"
+          style={{ marginBottom: "-0.12em" }}
         >
-          Clothes you won&rsquo;t meet coming the other way{" "}
-          <span className="italic text-gold-lift">down the high street.</span>
+          B Boutique
         </h1>
+      </div>
 
-        <p className="mt-7 max-w-lg text-[1.0625rem] leading-relaxed text-bone/75">
-          An independent boutique on one street, run by people who pick every
-          piece themselves. Womenswear, accessories and homeware — small runs,
-          no repeats.
+      {/* Mobile keeps the copy, stacked under the wordmark rather than
+          floating — the absolute placements above need real width. */}
+      <div className="px-6 pb-10 pt-6 lg:hidden">
+        <p className="max-w-sm text-[0.9375rem] leading-snug text-bone/80">
+          Clothes you won&rsquo;t meet coming the other way down the high
+          street. Womenswear, accessories and homeware on Seaview Street.
         </p>
-
-        <div className="mt-9 flex flex-wrap items-center gap-4">
-          <a
-            href="#rails"
-            className="rounded-full bg-bone px-7 py-3.5 text-onyx transition-colors hover:bg-gold-lift"
-          >
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a href="#rails" className="rounded-full bg-bone px-6 py-3 text-sm text-onyx">
             See what&rsquo;s in
           </a>
-          <a
-            href="#visit"
-            className="rounded-full border border-bone/35 px-7 py-3.5 text-bone transition-colors hover:border-bone"
-          >
-            Visit the shop
+          <a href="#visit" className="rounded-full border border-bone/40 px-6 py-3 text-sm text-bone">
+            Visit
           </a>
         </div>
       </div>
 
-      {/* Scroll cue — the one small piece of ambient motion in the hero */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-6 right-6 hidden items-center gap-3 lg:flex"
+        className="pointer-events-none absolute bottom-6 left-6 hidden items-center gap-3 lg:flex"
       >
         <span className="label text-bone/45">Scroll</span>
         <span className="relative block h-10 w-px overflow-hidden bg-bone/20">

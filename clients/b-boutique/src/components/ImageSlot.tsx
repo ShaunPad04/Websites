@@ -101,6 +101,7 @@ export function ImageSlot({
           loading={priority ? "eager" : "lazy"}
           decoding="async"
           fetchPriority={priority ? "high" : "auto"}
+          style={{ color: "transparent" }}
           className="absolute inset-0 h-full w-full object-cover"
         />
       ) : null}

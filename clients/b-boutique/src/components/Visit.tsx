@@ -17,7 +17,7 @@ export function Visit() {
       <div className="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-2 lg:gap-20">
         <Reveal>
           <p className="label text-gold-lift">05 — Come in</p>
-          <h2 id="visit-heading" className="display mt-4 text-[clamp(2rem,4.5vw,3.5rem)]">
+          <h2 id="visit-heading" data-split className="display mt-4 text-[clamp(2rem,4.5vw,3.5rem)]">
             18 Seaview Street
           </h2>
 

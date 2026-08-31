@@ -43,6 +43,7 @@ export function NewInRail() {
             <p className="label text-gold">03 — Just arrived</p>
             <h2
               id="newin-heading"
+              data-split
               className="display mt-4 text-[clamp(2rem,4.5vw,3.25rem)]"
             >
               New in this week

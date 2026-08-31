@@ -5,94 +5,89 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 
-/* The signature motion. Three moves only — a page that animates everything
-   animates nothing.
-     1. The headline sets itself, character by character.
-     2. The hero image drifts against the scroll.
-     3. The marble section parallaxes behind the panels.
-   Everything else is handled by the one-shot Reveal observer.
-
-   Nothing here is required to read the page: GSAP `.from()` tweens start
-   from the rendered state, so with JS disabled or reduced-motion set, the
-   final layout is what ships. */
+/* Scroll-craft, kept to a handful of deliberate moves.
+ *
+ * Every tween is a .from()/.fromTo() off the rendered state, and the whole
+ * set is gated behind prefers-reduced-motion — so with JS off or motion
+ * reduced, the page ships exactly as laid out. */
 export function PremiumMotion() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger, SplitText);
 
     const mm = gsap.matchMedia();
-    let split: SplitText | null = null;
+    const splits: SplitText[] = [];
 
-    mm.add(
-      {
-        motionOK: "(prefers-reduced-motion: no-preference)",
-        reduced: "(prefers-reduced-motion: reduce)",
-      },
-      (ctx) => {
-        const { motionOK } = ctx.conditions as { motionOK: boolean };
-        if (!motionOK) return;
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      // 1. The wordmark rises out of its own mask. Not SplitText: splitting
+      //    would give each character its own background-clip box and shatter
+      //    the single chrome sweep across the word.
+      const mask = document.querySelector<HTMLElement>("[data-mask]");
+      const word = mask?.querySelector("h1");
+      if (word) {
+        gsap.from(word, {
+          yPercent: 108,
+          duration: 1.25,
+          ease: "expo.out",
+          delay: 0.15,
+        });
+      }
 
-        const headline = document.querySelector<HTMLElement>("[data-split]");
-        if (headline) {
-          // aria:"auto" keeps the heading readable as one string to screen
-          // readers instead of spelling out every character.
-          split = new SplitText(headline, { type: "chars,words", aria: "auto" });
-          gsap.from(split.chars, {
-            opacity: 0,
-            yPercent: 60,
-            rotateX: -55,
-            duration: 0.75,
-            stagger: 0.012,
-            ease: "expo.out",
-            delay: 0.12,
-          });
-        }
+      // 2. The photograph drifts slower than the page.
+      const heroImg = document.querySelector<HTMLElement>("[data-parallax-hero]");
+      if (heroImg) {
+        gsap.to(heroImg, {
+          yPercent: -9,
+          ease: "none",
+          scrollTrigger: { trigger: heroImg, start: "top top", end: "bottom top", scrub: 1 },
+        });
+      }
 
-        // The hero image drifts slower than the page — depth, not decoration.
-        const heroImg = document.querySelector<HTMLElement>("[data-parallax-hero]");
-        if (heroImg) {
-          gsap.to(heroImg, {
-            yPercent: -8,
-            ease: "none",
-            scrollTrigger: {
-              trigger: heroImg,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1,
-            },
-          });
-        }
+      // 3. The wordmark lifts and fades as the hero leaves, so the section
+      //    below arrives over it rather than shunting it off screen.
+      if (mask) {
+        gsap.to(mask, {
+          yPercent: -30,
+          opacity: 0.25,
+          ease: "none",
+          scrollTrigger: { trigger: mask, start: "bottom bottom", end: "bottom top", scrub: 1 },
+        });
+      }
 
-        // Marble drifts behind the rails so the panels feel like they sit
-        // in front of a wall rather than on a flat colour.
-        const marble = document.querySelector<HTMLElement>("[data-parallax-marble]");
-        if (marble) {
-          gsap.fromTo(
-            marble,
-            { backgroundPositionY: "0%" },
-            {
-              backgroundPositionY: "18%",
-              ease: "none",
-              scrollTrigger: {
-                trigger: marble,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 1.2,
-              },
-            },
-          );
-        }
-      },
-    );
+      // 4. Section headings set themselves, character by character. Safe to
+      //    split here — none of these carry a gradient fill.
+      document.querySelectorAll<HTMLElement>("[data-split]").forEach((el) => {
+        const split = new SplitText(el, { type: "chars,words", aria: "auto" });
+        splits.push(split);
+        gsap.from(split.chars, {
+          opacity: 0,
+          yPercent: 55,
+          duration: 0.6,
+          stagger: 0.011,
+          ease: "expo.out",
+          scrollTrigger: { trigger: el, start: "top 85%", once: true },
+        });
+      });
 
-    // Fonts and images change layout height; without this the triggers
-    // fire at the wrong scroll positions.
+      // 5. Cards and panels rise in on a short stagger as their row arrives.
+      document.querySelectorAll<HTMLElement>("[data-stagger]").forEach((group) => {
+        gsap.from(group.children, {
+          opacity: 0,
+          y: 26,
+          duration: 0.7,
+          stagger: 0.06,
+          ease: "power2.out",
+          scrollTrigger: { trigger: group, start: "top 88%", once: true },
+        });
+      });
+    });
+
     const refresh = () => ScrollTrigger.refresh();
     document.fonts?.ready.then(refresh).catch(() => {});
     window.addEventListener("load", refresh);
 
     return () => {
       window.removeEventListener("load", refresh);
-      split?.revert();
+      splits.forEach((s) => s.revert());
       mm.revert();
     };
   }, []);

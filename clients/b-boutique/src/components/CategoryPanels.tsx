@@ -26,6 +26,7 @@ export function CategoryPanels() {
         <p className="label text-gold-lift">02 — The rails</p>
         <h2
           id="rails-heading"
+          data-split
           className="display mt-4 max-w-2xl text-[clamp(2.25rem,5vw,4rem)]"
         >
           Six rails. Everything on them was chosen by hand.
@@ -38,7 +39,8 @@ export function CategoryPanels() {
 
       {/* Desktop and up: the accordion. Below that it becomes a stack,
           because a 6-panel accordion at 375px is unusable. */}
-      <ul className="mt-14 hidden gap-3 px-6 md:flex mx-auto max-w-7xl h-[30rem]">
+      <ul data-stagger
+        className="mt-14 hidden gap-3 px-6 md:flex mx-auto max-w-7xl h-[30rem]">
         {categories.map((cat, i) => {
           const isActive = i === active;
           return (

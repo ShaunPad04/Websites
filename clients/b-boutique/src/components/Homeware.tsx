@@ -19,6 +19,7 @@ export function Homeware() {
           </p>
           <h2
             id="homeware-heading"
+            data-split
             className="display mt-4 text-[clamp(2rem,4.5vw,3.5rem)]"
           >
             Things for the house,
