@@ -19,48 +19,51 @@ export type Brand = {
   /** The label's own name. Used as the accessible name, never as a claim. */
   name: string;
   /** Official wordmark vendored into public/img/brands/. Supplied by the
-   *  client; never redrawn, traced or approximated here. */
+   *  client; never redrawn, traced, cropped or approximated here. */
   src: string;
 
-  /* ── Geometry, measured from the files rather than declared ────────────
-     Every value below was read off the actual asset by rasterising it and
-     trimming to the ink, because the file box and the artwork inside it are
-     not the same thing. See `cap` and `inkFraction`. */
+  /* ── Ink geometry ──────────────────────────────────────────────────────
+     Every number below is measured off the real file by rasterising it and
+     trimming to the ink, then normalised against the ink's own height.
 
-  /** Intrinsic width ÷ height of the asset box. The mark's slot is built to
-   *  exactly this, so `mask-size: contain` fills it with no letterboxing and
-   *  the native aspect ratio survives untouched. */
-  ratio: number;
-  /** How much of the asset box height is actually ink. numph.png and
-   *  ichi.avif ship with ~25% vertical padding; the other six are edge to
-   *  edge. Without this correction those two render a quarter smaller than
-   *  everything else — a file artefact, not a design decision. The slot is
-   *  scaled up by 1/inkFraction so the *ink* lands on `cap`. */
-  inkFraction: number;
+     The slot is built to the INK, not to the file box, because the two are
+     rarely the same: mos-mosh is 73% transparent padding, ichi and numph
+     about 25%, and three assets are not even centred inside their own box.
+     Sizing by file box would render those marks small and sitting off to one
+     side, and mos-mosh would need a 100px-tall slot to show a 25px wordmark,
+     blowing the section height.
+
+     So the slot is exactly the ink, and the mask is scaled and offset so the
+     artwork's ink lands inside it. The file is never modified and nothing is
+     stretched or cropped — the padding simply falls outside the slot, and
+     being transparent it was never visible anyway. */
+
+  /** Ink width ÷ ink height. */
+  iw: number;
+  /** Full asset width and height, over ink height — the mask's scale. */
+  mw: number;
+  mh: number;
+  /** Ink's left/top inset within the asset, over ink height — the mask's
+   *  offset, so off-centre artwork still lands square in its slot. */
+  ox: number;
+  oy: number;
+
   /** Target ink height in px at desktop — the measurement that should look
-   *  even along the row. These are set by eye from the rendered row, not by
-   *  formula, because equal ink height is not equal optical weight: ICHI is a
-   *  heavy bold and needs markedly less height than the thin serifs beside
-   *  it, while Saint Tropez stacks two lines and needs more or its wordmark
-   *  reads small. Re-judge these against a screenshot if an asset changes. */
+   *  even along the row. Set by eye from the rendered row, not by formula,
+   *  because equal ink height is not equal optical weight: ICHI is a heavy
+   *  bold and needs markedly less height than the thin serifs beside it,
+   *  while Saint Tropez stacks two lines and needs more or it reads small.
+   *  Re-judge these against a screenshot whenever an asset changes. */
   cap: number;
 };
 
 export const brands: Brand[] = [
-  { name: "Mos Mosh",       src: "/img/brands/mos-mosh.svg",     ratio: 3.052,  inkFraction: 1,      cap: 28 },
-  { name: "Rino & Pelle",   src: "/img/brands/rino-pelle.svg",   ratio: 12.750, inkFraction: 0.995,  cap: 23 },
-  { name: "Part Two",       src: "/img/brands/part-two.png",     ratio: 9.178,  inkFraction: 1,      cap: 24 },
-  { name: "b.young",        src: "/img/brands/byoung.svg",       ratio: 4.637,  inkFraction: 1,      cap: 26 },
-  { name: "Ichi",           src: "/img/brands/ichi.avif",        ratio: 2.881,  inkFraction: 0.7525, cap: 22 },
-  { name: "Nümph",          src: "/img/brands/numph.png",        ratio: 3.472,  inkFraction: 0.7625, cap: 25 },
-  { name: "Saint Tropez",   src: "/img/brands/saint-tropez.svg", ratio: 2.280,  inkFraction: 1,      cap: 32 },
-  { name: "Selected Femme", src: "/img/brands/selected.svg",     ratio: 5.250,  inkFraction: 1,      cap: 23 },
+  { name: "Mos Mosh",       src: "/img/brands/mos-mosh.png",     iw: 5.9068,  mw: 10,      mh: 3.7267, ox: 2.0497, oy: 1.3665, cap: 22 },
+  { name: "Rino & Pelle",   src: "/img/brands/rino-pelle.svg",   iw: 12.8141, mw: 12.8141, mh: 1.0050, ox: 0,      oy: 0,      cap: 23 },
+  { name: "Part Two",       src: "/img/brands/part-two.png",     iw: 9.1783,  mw: 9.1783,  mh: 1,      ox: 0,      oy: 0,      cap: 24 },
+  { name: "b.young",        src: "/img/brands/byoung.svg",       iw: 4.6383,  mw: 4.6383,  mh: 1,      ox: 0,      oy: 0,      cap: 26 },
+  { name: "Ichi",           src: "/img/brands/ichi.avif",        iw: 3.2661,  mw: 3.8337,  mh: 1.3304, ox: 0.3503, oy: 0.1508, cap: 22 },
+  { name: "Nümph",          src: "/img/brands/numph.png",        iw: 3.6476,  mw: 4.5881,  mh: 1.3216, ox: 0.4714, oy: 0.1498, cap: 25 },
+  { name: "Saint Tropez",   src: "/img/brands/saint-tropez.svg", iw: 2.0918,  mw: 2.2838,  mh: 1.0017, ox: 0.0968, oy: 0.0017, cap: 32 },
+  { name: "Selected Femme", src: "/img/brands/selected.svg",     iw: 5.2117,  mw: 5.25,    mh: 1,      ox: 0,      oy: 0,      cap: 23 },
 ];
-
-/** Slot size for a mark: scale the box so the ink lands on `cap`, then take
- *  the width from the asset's own ratio. Nothing is stretched or cropped —
- *  the slot is simply built to fit the artwork. */
-export function slotFor(b: Brand) {
-  const height = b.cap / b.inkFraction;
-  return { height, width: height * b.ratio };
-}

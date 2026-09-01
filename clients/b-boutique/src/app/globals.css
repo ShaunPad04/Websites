@@ -199,7 +199,7 @@ body {
   --rail-duration: 34s;      /* mobile: inside the 28–40s band */
   --rail-scale: 0.8;         /* optical heights step down on small screens */
   background: var(--panel);
-  padding-block: 31px 34px;  /* holds the approved 134px section height */
+  padding-block: 31px 35px;  /* holds the approved 134px section height */
 }
 
 @media (min-width: 640px) {
@@ -241,23 +241,27 @@ body {
 
 .brand-rail-item { display: flex; align-items: center; }
 
-/* The official artwork is used as a mask, never restyled: the SVG supplies
-   the shape, the bone comes from the site's own token. */
+/* The official artwork is used as a mask, never restyled: the file supplies
+   the shape, the bone comes from the site's own token.
+
+   The box is the mark's ink, and the mask is scaled (--mw/--mh) and offset
+   (--ox/--oy) so the ink lands exactly in it. Transparent padding in the
+   supplied file therefore costs nothing: it falls outside the box, so the
+   gaps in the rail are true ink-to-ink rather than box-to-box. */
 .brand-rail-mark {
+  --c: calc(var(--cap) * var(--rail-scale));
   display: block;
-  height: calc(var(--h) * var(--rail-scale));
-  width: calc(var(--w) * var(--rail-scale));
+  height: var(--c);
+  width: calc(var(--c) * var(--iw));
   background-color: var(--bone);
   -webkit-mask-image: var(--mark);
   mask-image: var(--mark);
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  /* `contain` is what preserves the native aspect ratio — the box is a
-     generous slot and the mark sits inside it, never stretched or cropped. */
-  -webkit-mask-size: contain;
-  mask-size: contain;
+  -webkit-mask-size: calc(var(--c) * var(--mw)) calc(var(--c) * var(--mh));
+  mask-size: calc(var(--c) * var(--mw)) calc(var(--c) * var(--mh));
+  -webkit-mask-position: calc(-1 * var(--c) * var(--ox)) calc(-1 * var(--c) * var(--oy));
+  mask-position: calc(-1 * var(--c) * var(--ox)) calc(-1 * var(--c) * var(--oy));
   opacity: 0.68;
   transition: opacity 240ms var(--ease-out);
 }
