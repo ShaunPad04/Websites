@@ -41,7 +41,7 @@ export function MapPanel({
   const [shown, setShown] = useState(false);
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl border border-white/10 bg-onyx-lift ${className}`}>
+    <div className={`relative overflow-hidden rounded-2xl border border-white/10 bg-panel-lift ${className}`}>
       <div className="absolute inset-0 grid place-items-center px-6 text-center">
         <div>
           <p className="display text-2xl text-bone">{street}</p>

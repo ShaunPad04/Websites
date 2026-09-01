@@ -15,11 +15,11 @@ export function Visit() {
     <section
       id="visit"
       aria-labelledby="visit-heading"
-      className="relative grain scroll-mt-24 bg-onyx py-20 text-bone sm:py-28"
+      className="relative grain scroll-mt-24 bg-panel py-20 text-bone sm:py-28"
     >
       <div className="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-2 lg:gap-20">
         <Reveal>
-          <p className="label text-gold-lift">05 — Come in</p>
+          <p className="label text-bone/55">05 — Come in</p>
           <h2 id="visit-heading" data-split className="display mt-4 text-[clamp(2rem,4.5vw,3.5rem)]">
             {shop.street}
           </h2>

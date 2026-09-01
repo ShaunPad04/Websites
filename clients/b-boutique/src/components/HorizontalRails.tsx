@@ -94,7 +94,7 @@ export function HorizontalRails() {
       ref={section}
       id="rails"
       aria-labelledby="rails-heading"
-      className="relative scroll-mt-24 overflow-hidden bg-onyx py-20 text-bone sm:py-24"
+      className="relative scroll-mt-24 overflow-hidden bg-panel py-20 text-bone sm:py-24"
       style={{ borderRadius: "0 0 52px 52px" }}
     >
       <div className="mx-auto max-w-7xl px-6">
