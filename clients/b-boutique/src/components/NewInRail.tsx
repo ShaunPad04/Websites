@@ -40,7 +40,7 @@ export function NewInRail() {
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex items-end justify-between gap-6">
           <div>
-            <p className="label text-gold">03 — Just arrived</p>
+            <p className="label text-onyx/65">03 — Just arrived</p>
             <h2
               id="newin-heading"
               data-split

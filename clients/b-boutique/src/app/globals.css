@@ -375,6 +375,25 @@ body {
   100%        { opacity: 1; }
 }
 
+/* Descender safe area under the giant wordmark.
+   [data-mask] clips at its padding box so the entry reveal can slide the word
+   up out of nothing, which means anything the h1 paints below its own line box
+   is cut. leading-[0.82] pulls that line box well inside the em box, so the
+   "q" of "Boutique" overhangs it. Measured against the loaded face at both
+   clamp ends:
+
+     ink bottom (from the h1's top) = (leading - (asc + desc))/2 + asc + inkDesc
+     desktop, leading 0.82 -> 1.0235em, box 0.82em  -> needs 0.2035em
+     mobile,  leading 0.86 -> 1.0435em, box 0.86em  -> needs 0.1835em
+
+   0.30em clears the worse of the two by ~0.1em and doubles as the first slice
+   of breathing room before the black begins. The margin is on the h1 rather
+   than as padding on the mask because only the h1 carries the clamped
+   font-size that makes an em mean anything here.
+
+   If the leading or the face ever changes, re-derive — do not nudge. */
+.hero-word { margin-bottom: 0.30em; }
+
 /* The registered mark on the giant wordmark. Sized off the wordmark itself
    so it holds its proportion at every clamp step, and raised to sit against
    the cap line of the final "e" rather than floating. It inherits the chrome

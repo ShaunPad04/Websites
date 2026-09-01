@@ -98,7 +98,7 @@ export function HorizontalRails() {
       style={{ borderRadius: "0 0 52px 52px" }}
     >
       <div className="mx-auto max-w-7xl px-6">
-        <p className="label text-gold-lift">02 — The rails</p>
+        <p className="label text-bone/55">02 — The rails</p>
         <h2
           id="rails-heading"
           data-split

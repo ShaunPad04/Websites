@@ -24,8 +24,16 @@ export function PremiumMotion() {
       const mask = document.querySelector<HTMLElement>("[data-mask]");
       const word = mask?.querySelector("h1");
       if (word) {
+        /* Travel the mask's full height, not a percentage of the word's own
+           line box. The mask is taller than the h1 by the .hero-word descender
+           safe area, so a yPercent tuned to the h1 would leave the bottom of
+           the glyphs showing under the clip before the reveal starts. Reading
+           the mask means the safe area can change without re-tuning this. */
         gsap.from(word, {
-          yPercent: 108,
+          // +12 is headroom: the ink starts only ~3px inside the box top at the
+          // desktop clamp, so an exact travel leaves nothing for a different
+          // face metric or a zoomed rounding.
+          y: mask!.offsetHeight + 12,
           duration: 1.25,
           ease: "expo.out",
           delay: 0.15,

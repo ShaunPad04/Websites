@@ -14,7 +14,7 @@ export function Homeware() {
     >
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-2 lg:gap-20">
         <Reveal className="order-2 lg:order-1">
-          <p className="label" style={{ color: "var(--gold)" }}>
+          <p className="label text-onyx/65">
             04 — The back of the shop
           </p>
           <h2

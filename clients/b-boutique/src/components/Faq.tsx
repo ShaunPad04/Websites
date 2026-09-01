@@ -25,7 +25,7 @@ export function Faq() {
     >
       <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:gap-24">
         <Reveal>
-          <p className="label text-gold">05 — Questions</p>
+          <p className="label text-onyx/65">05 — Questions</p>
           <h2
             id="faq-heading"
             data-split

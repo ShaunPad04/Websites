@@ -34,7 +34,12 @@ export function Hero() {
       <div className="hero-pin">
         <section
           id="top"
-          className="relative isolate flex flex-col justify-end bg-red lg:min-h-[100svh] lg:overflow-hidden"
+          /* pb on lg is the red buffer the wordmark sits above: the section is
+             pinned at exactly 100svh, so the only way to get red between the
+             mark and the brand rail is to lift the mark off the section's
+             bottom edge. Below lg the mark already has the copy block and its
+             pb-14 beneath it. */
+          className="relative isolate flex flex-col justify-end bg-red lg:min-h-[100svh] lg:overflow-hidden lg:pb-[8vh]"
         >
           <div
             data-parallax-hero
@@ -103,13 +108,7 @@ export function Hero() {
           <div className="hero-fx hero-fx-mark relative w-full">
             <div className="relative w-full overflow-hidden" data-mask>
               <h1
-                className="chrome display select-none whitespace-nowrap px-6 text-center text-[clamp(2.75rem,15.5vw,15rem)] leading-[0.86] lg:leading-[0.82]"
-                /* Positive, not the -0.1em it used to be: leading-[0.82] already
-                   pulls the line box inside the em box, so a negative margin
-                   pushed the descender of the "q" below the hero's overflow clip
-                   and the brand rail sliced it. 0.13em is that safe area plus the
-                   extra breathing room asked for before the black begins. */
-                style={{ marginBottom: "0.13em" }}
+                className="hero-word chrome display select-none whitespace-nowrap px-6 text-center text-[clamp(2.75rem,15.5vw,15rem)] leading-[0.86] lg:leading-[0.82]"
               >
                 B Boutique
                 <span className="hero-reg" aria-hidden="true">
