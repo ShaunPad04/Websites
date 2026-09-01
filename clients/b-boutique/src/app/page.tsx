@@ -1,6 +1,6 @@
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
-import { BrandMarquee } from "@/components/BrandMarquee";
+import { BrandRail } from "@/components/BrandRail";
 import { PointOfView } from "@/components/PointOfView";
 import { HorizontalRails } from "@/components/HorizontalRails";
 import { NewInRail } from "@/components/NewInRail";
@@ -17,8 +17,8 @@ export default function Home() {
       <main id="main" className="flex-1">
         {/* 01 Hook — what this is */}
         <Hero />
-        {/* 02 A breath — what the shop is, in one moving line */}
-        <BrandMarquee />
+        {/* 02 A breath — the labels on the rails, moving slowly */}
+        <BrandRail />
         {/* 03 Editorial interlude — the statement, lit word by word */}
         <PointOfView />
         {/* 04 The rails — the heroic interaction */}
