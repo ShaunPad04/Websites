@@ -34,10 +34,15 @@ export const MENU: MenuItem[] = [
  */
 export const socials: { name: string; href: string }[] = [];
 
-/** Real directions link, built from the real address. Not a placeholder. */
-export const directionsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+/** The address as Google Maps wants it. One definition: the Visit section,
+ *  the footer map and the directions link all read this, so the pin can never
+ *  disagree with the address printed beside it. */
+export const mapsQuery = encodeURIComponent(
   `${shop.name}, ${shop.street}, ${shop.town} ${shop.postcode}`,
-)}`;
+);
+
+/** Real directions link, built from the real address. Not a placeholder. */
+export const directionsHref = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
 
 /** Footer navigation.
  *

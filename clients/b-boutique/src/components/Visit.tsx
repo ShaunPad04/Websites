@@ -1,11 +1,8 @@
 import { shop, hours, formatHour } from "@/lib/shop";
 import { OpenBadge } from "./OpenBadge";
+import { mapsQuery } from "@/lib/nav";
 import { MapPanel } from "./MapPanel";
 import { Reveal } from "./Reveal";
-
-const MAPS_QUERY = encodeURIComponent(
-  `${shop.name}, ${shop.street}, ${shop.town} ${shop.postcode}`,
-);
 
 /* This is the conversion point. Not a basket — a postcode. */
 export function Visit() {
@@ -36,7 +33,7 @@ export function Visit() {
 
           <div className="mt-9 flex flex-wrap gap-4">
             <a
-              href={`https://www.google.com/maps/search/?api=1&query=${MAPS_QUERY}`}
+              href={`https://www.google.com/maps/search/?api=1&query=${mapsQuery}`}
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-full bg-bone px-7 py-3.5 text-onyx transition-colors hover:bg-gold hover:text-bone"
@@ -83,7 +80,7 @@ export function Visit() {
             street={shop.street}
             town={shop.town}
             postcode={shop.postcode}
-            query={MAPS_QUERY}
+            query={mapsQuery}
             title={`Map showing ${shop.name}, ${shop.street}, ${shop.town}`}
           />
         </Reveal>

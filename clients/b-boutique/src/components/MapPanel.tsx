@@ -22,17 +22,22 @@ export function MapPanel({
   postcode,
   query,
   title,
+  /** Layout only — the panel keeps its own surface and border. Lets the
+   *  footer run a taller map than the Visit section without either one
+   *  having to fork the component. */
+  className = "mt-8 h-64",
 }: {
   street: string;
   town: string;
   postcode: string;
   query: string;
   title: string;
+  className?: string;
 }) {
   const [shown, setShown] = useState(false);
 
   return (
-    <div className="relative mt-8 h-64 overflow-hidden rounded-2xl border border-white/10 bg-onyx-lift">
+    <div className={`relative overflow-hidden rounded-2xl border border-white/10 bg-onyx-lift ${className}`}>
       <div className="absolute inset-0 grid place-items-center px-6 text-center">
         <div>
           <p className="display text-2xl text-bone">{street}</p>

@@ -495,10 +495,9 @@ body {
    page and the section under the hero are the same surface. */
 .footer-shell { overflow: hidden; }
 
-/* Registered marks. Both are em-relative against their own size, the same way
-   the hero's is, so they hold proportion at every clamp step. */
-.footer-reg    { font-size: 0.28em; vertical-align: 1.55em; margin-left: 0.12em; }
-.footer-reg-lg { font-size: 0.16em; vertical-align: 2.8em;  margin-left: 0.1em; }
+/* The closing mark's ®. Em-relative against its own size, the same way the
+   hero's is, so it holds proportion at every clamp step. */
+.footer-reg-lg { font-size: 0.16em; vertical-align: 2.8em; margin-left: 0.1em; }
 
 /* Links: a hairline drawing itself in from the left, and one pixel of travel.
    The reference grew a rounded accent panel behind each link and scaled it to

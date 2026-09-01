@@ -1,4 +1,5 @@
-import { footerNav, socials, directionsHref } from "@/lib/nav";
+import { footerNav, socials, directionsHref, mapsQuery } from "@/lib/nav";
+import { MapPanel } from "./MapPanel";
 import { shop, addressLines } from "@/lib/shop";
 
 /* The closing page of the editorial.
@@ -16,6 +17,9 @@ import { shop, addressLines } from "@/lib/shop";
  * deliberately kept off this page's critical path. Where scroll-driven
  * animation is unsupported the footer simply renders, fully visible.
  *
+ * The top-left block is the map; the brand statement is the closing
+ * wordmark alone.
+ *
  * Every href resolves. There is one route in this project, so navigation is
  * section anchors; /privacy, /terms and /cookies do not exist and are not
  * linked. See footerNav. */
@@ -27,17 +31,23 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-6 pt-20 sm:pt-28">
         {/* ── Brand + newsletter ─────────────────────────────────────── */}
         <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-24">
+          {/* The map, not a second wordmark. The closing mark at the foot of
+              the page carries the brand on its own now, and a shop's footer is
+              a more useful place for a pin than for a repeat signature.
+              Reuses the Visit section's MapPanel rather than a second map:
+              same click-to-load behaviour, so Google's cookies still are not
+              set until someone asks for them, and no extra weight — the
+              component is already on the page. */}
           <div className="footer-rise" style={{ "--d": "0%" } as React.CSSProperties}>
-            <p className="display text-[clamp(2rem,4vw,3rem)] leading-none">
-              {shop.name}
-              <span className="footer-reg" aria-hidden="true">®</span>
-            </p>
-            {/* Kept from the previous footer — the one line of real voice it
-                had, demoted to a pull quote rather than deleted. */}
-            <p className="display mt-7 max-w-md text-[clamp(1.05rem,1.9vw,1.4rem)] italic leading-snug text-bone/70">
-              A high street is only as good as the people still willing to
-              stand behind a counter on it.
-            </p>
+            <p className="label text-bone/55">Find us</p>
+            <MapPanel
+              street={shop.street}
+              town={shop.town}
+              postcode={shop.postcode}
+              query={mapsQuery}
+              title={`Map showing ${shop.name}, ${shop.street}, ${shop.town}`}
+              className="mt-5 h-[17rem] sm:h-[20rem]"
+            />
           </div>
 
           <div className="footer-rise" style={{ "--d": "6%" } as React.CSSProperties}>
