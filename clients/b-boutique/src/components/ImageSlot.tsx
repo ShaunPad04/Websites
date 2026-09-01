@@ -7,13 +7,14 @@
 
 import { imageFor } from "@/lib/images";
 
-export type Tone = "bone" | "onyx" | "marble" | "gold";
+export type Tone = "bone" | "onyx" | "marble" | "gold" | "red";
 
 const RAMP: Record<Tone, [string, string]> = {
   bone:   ["#F2EBE1", "#CFC2B1"],
   onyx:   ["#221D1A", "#0E0B0A"],
   marble: ["#241F1D", "#0C0A09"],
   gold:   ["#D4B06A", "#8A6A2C"],
+  red:    ["#D4202C", "#7A0610"],
 };
 
 export function ImageSlot({

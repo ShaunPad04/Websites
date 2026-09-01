@@ -25,8 +25,13 @@
   --gold:       #8A6A2C;
   --gold-lift:  #D4B06A;
 
-  /* One signal colour, taken off the rail. Used rarely, never as fill. */
-  --signal:     #A81E2D;
+  /* Crimson. The hero ground — and it was always in the shop, on the rail.
+     Bone text clears 5.67:1 on it. */
+  --red:        #C1121F;
+
+  /* Gold has to lift on red: --gold-lift manages only 3.03:1 against it,
+     which fails small text. This one clears 4.51:1. */
+  --gold-pale:  #EFD9AE;
 
   --line: color-mix(in oklab, var(--onyx) 16%, transparent);
 
@@ -44,7 +49,8 @@
   --color-bone-line: var(--bone-line);
   --color-gold: var(--gold);
   --color-gold-lift: var(--gold-lift);
-  --color-signal: var(--signal);
+  --color-red: var(--red);
+  --color-gold-pale: var(--gold-pale);
   --color-line: var(--line);
 
   --font-display: var(--font-bodoni);
@@ -143,11 +149,11 @@ body {
   background-image: linear-gradient(
     176deg,
     #FFFFFF 2%,
-    #F2ECE2 16%,
-    #A69E93 34%,
+    #F6F1E9 16%,
+    #DCD3C6 34%,
     #FFFFFF 50%,
-    #E2DACE 62%,
-    #9A9289 80%,
+    #E9E1D5 62%,
+    #CFC6B9 80%,
     #FFFFFF 98%
   );
   -webkit-background-clip: text;
