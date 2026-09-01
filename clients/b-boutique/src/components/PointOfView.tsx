@@ -114,7 +114,7 @@ export function PointOfView() {
       <div className="grain sticky top-0 flex h-[100svh] items-center overflow-hidden pt-20 lg:pt-28">
         <div className="mx-auto w-full max-w-[92rem] px-5 sm:px-8 lg:px-16">
           <p className="label mb-8 text-bone/35 sm:mb-12 lg:mb-16">
-            01 / Our point of view
+            01 — Our point of view
           </p>
 
           {/* Offset from centre: a perfectly centred block reads generic, and

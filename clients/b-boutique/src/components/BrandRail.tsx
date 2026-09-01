@@ -39,8 +39,11 @@ export function BrandRail() {
         <h2 id="brands-heading" className="label text-bone/60">
           Brands in store
         </h2>
+        {/* A count of the logos, deliberately NOT the "NN — Label" shape the
+            numbered sections use: this sat one screen above "01 — Our point
+            of view" and read as a second section 01. */}
         <p className="label text-bone/55" aria-hidden="true">
-          01 — {count}
+          01/{count}
         </p>
       </div>
 

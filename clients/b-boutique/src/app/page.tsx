@@ -16,21 +16,29 @@ export default function Home() {
       <MotionLayer />
       <Nav />
       <main id="main" className="flex-1">
-        {/* 01 Hook — what this is */}
+        {/* The numbers below are the eyebrow each section actually prints, so
+            this list and the page read the same. They run 01–06 over the six
+            numbered sections in document order; Hero and BrandRail carry no
+            section number (BrandRail's "01 — 08" is a count of the logos on
+            its own rail, not a place in this sequence). Renumber both ends
+            together, or the page starts lying about itself — a stale copy of
+            this list is how Visit and the FAQ both ended up at 05. */}
+
+        {/* Hook — what this is */}
         <Hero />
-        {/* 02 A breath — the labels on the rails, moving slowly */}
+        {/* A breath — the labels on the rails, moving slowly */}
         <BrandRail />
-        {/* 03 Editorial interlude — the statement, lit word by word */}
+        {/* 01 Editorial interlude — the statement, lit word by word */}
         <PointOfView />
-        {/* 04 The rails — the heroic interaction */}
+        {/* 02 The rails — the heroic interaction */}
         <HorizontalRails />
         {/* 03 Proof — actual stock, moving weekly */}
         <NewInRail />
-        {/* 05 A second world — homeware */}
+        {/* 04 A second world — homeware */}
         <Homeware />
-        {/* 06 The practical questions, once they are interested */}
+        {/* 05 The practical questions, once they are interested */}
         <Faq />
-        {/* 07 The ask — a postcode, not a basket */}
+        {/* 06 The ask — a postcode, not a basket */}
         <Visit />
       </main>
       <Footer />
