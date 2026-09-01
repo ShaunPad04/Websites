@@ -123,7 +123,7 @@ export function Hero() {
           <div className="hero-fx hero-fx-aside px-6 pb-14 pt-6 lg:hidden">
             <p className="max-w-sm text-[0.9375rem] leading-relaxed text-bone">
               Clothes you won&rsquo;t meet coming the other way down the high
-              street. Womenswear, accessories and homeware on Seaview Street.
+              street. Womenswear, accessories and homeware on Sea View Street.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <a href="#rails" className="rounded-full bg-bone px-6 py-3 text-sm text-onyx">

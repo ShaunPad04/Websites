@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, Bodoni_Moda, JetBrains_Mono, Jost } from "next/font/google";
+import { directionsHref } from "@/lib/nav";
 import { shop, hours } from "@/lib/shop";
 import "./globals.css";
 
@@ -38,24 +39,24 @@ const jetbrains = JetBrains_Mono({
 });
 
 const description =
-  "An independent boutique on Seaview Street, Cleethorpes. Womenswear, accessories and homeware, chosen one piece at a time. Open Tuesday to Sunday, 10 till 4.";
+  "An independent boutique on Sea View Street, Cleethorpes. Womenswear, accessories and homeware, chosen one piece at a time. Open Tuesday to Sunday, 10 till 4.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bboutique.co.uk"),
   title: {
-    default: "B Boutique — Womenswear & Homeware, Seaview Street, Cleethorpes",
+    default: "B Boutique — Womenswear & Homeware, Sea View Street, Cleethorpes",
     template: "%s — B Boutique, Cleethorpes",
   },
   description,
   keywords: [
     "boutique Cleethorpes",
     "womens clothing Cleethorpes",
-    "Seaview Street shops",
+    "Sea View Street shops",
     "independent boutique North East Lincolnshire",
     "homeware Cleethorpes",
   ],
   openGraph: {
-    title: "B Boutique — Seaview Street, Cleethorpes",
+    title: "B Boutique — Sea View Street, Cleethorpes",
     description,
     type: "website",
     locale: "en_GB",
@@ -80,6 +81,16 @@ function localBusinessSchema() {
       postalCode: shop.postcode,
       addressCountry: shop.country,
     },
+    /* A point, not just a string. Search engines geocode the address anyway,
+       but geocoding a UK street address is a guess and this is the shop's
+       actual position — worth having for a business whose whole call to
+       action is "come to this door". */
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: shop.lat,
+      longitude: shop.lng,
+    },
+    hasMap: directionsHref,
     openingHoursSpecification: hours
       .filter((d) => d.hours !== null)
       .map((d) => ({

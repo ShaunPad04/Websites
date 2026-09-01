@@ -56,7 +56,7 @@ export function Footer() {
               A few good things, occasionally.
             </p>
             <p className="mt-4 text-[0.9375rem] leading-relaxed text-bone/60">
-              New arrivals, in-store edits and the occasional note from Seaview
+              New arrivals, in-store edits and the occasional note from Sea View
               Street.
             </p>
 

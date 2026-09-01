@@ -47,7 +47,7 @@ function openingSummary(): string {
 export const faq: FaqItem[] = [
   {
     q: "Where is B Boutique?",
-    a: `${shop.street}, ${shop.town} ${shop.postcode}. Seaview Street runs up from the seafront — there is on-street parking at the top, and the Market Place car park is a two-minute walk.`,
+    a: `${shop.street}, ${shop.town} ${shop.postcode}. Sea View Street runs up from the seafront — there is on-street parking at the top, and the Market Place car park is a two-minute walk.`,
   },
   {
     q: "What are your opening hours?",

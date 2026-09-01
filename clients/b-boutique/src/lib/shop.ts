@@ -9,10 +9,21 @@ export const shop = {
      sends customers to a stranger. */
   phone: "" as string,
   email: "" as string,
-  street: "18 Seaview Street",
+  street: "18 Sea View Street",
   town: "Cleethorpes",
+
+  /* The shop's own point, taken from the client's Google Maps link on
+     2026-09-01 (the !3d/!4d pair — the @ pair in a Maps URL is the viewport
+     centre and sat 170m west of the building).
+     The address is Google's, on the client's instruction 2026-09-01: it was
+     briefed as "18 Seaview Street … DN35 8HY", and Google resolves the
+     building as "18 Sea View St … DN35 8EZ". Both the street spelling and the
+     postcode changed. "Street" is written out rather than Google's "St",
+     which is a display abbreviation, not part of the name. */
+  lat: 53.5574101,
+  lng: -0.0259913,
   county: "North East Lincolnshire",
-  postcode: "DN35 8HY",
+  postcode: "DN35 8EZ",
   country: "GB",
 } as const;
 

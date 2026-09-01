@@ -16,7 +16,7 @@ export function Visit() {
         <Reveal>
           <p className="label text-gold-lift">05 — Come in</p>
           <h2 id="visit-heading" data-split className="display mt-4 text-[clamp(2rem,4.5vw,3.5rem)]">
-            18 Seaview Street
+            {shop.street}
           </h2>
 
           <address className="mt-6 not-italic text-lg leading-relaxed text-bone/80">
@@ -43,7 +43,7 @@ export function Visit() {
           </div>
 
           <p className="mt-8 max-w-sm text-sm leading-relaxed text-bone/60">
-            Seaview Street runs up from the seafront. There is on-street parking
+            Sea View Street runs up from the seafront. There is on-street parking
             at the top and the Market Place car park is a two-minute walk.
           </p>
         </Reveal>
