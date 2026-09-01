@@ -92,6 +92,7 @@ export function PointOfView() {
   return (
     <section
       ref={section}
+      id="our-story"
       aria-labelledby="pov-heading"
       className="relative bg-ink-deep"
       style={{ height: "165vh" }}

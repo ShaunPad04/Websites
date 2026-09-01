@@ -36,7 +36,7 @@ export function NewInRail() {
   };
 
   return (
-    <section aria-labelledby="newin-heading" className="scroll-mt-24 py-20 sm:py-28">
+    <section id="new-in" aria-labelledby="newin-heading" className="scroll-mt-24 py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex items-end justify-between gap-6">
           <div>
