@@ -36,6 +36,10 @@
      two sections meet without a seam. */
   --ink-deep:   #0E0908;
 
+  /* The menu panel. Deliberately NEUTRAL, not the warm --ink-deep: at
+     #0E0908 the red in it reads as brown against the hero photograph. */
+  --panel:      #0A0A0A;
+
   --line: color-mix(in oklab, var(--onyx) 16%, transparent);
 
   /* Motion — one language across the whole site */
@@ -54,6 +58,7 @@
   --color-gold-lift: var(--gold-lift);
   --color-red: var(--red);
   --color-ink-deep: var(--ink-deep);
+  --color-panel: var(--panel);
   --color-line: var(--line);
 
   --font-display: var(--font-bodoni);

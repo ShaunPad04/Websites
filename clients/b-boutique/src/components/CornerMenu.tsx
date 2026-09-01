@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import { MENU, directionsHref, socials } from "@/lib/nav";
-import { addressLines } from "@/lib/shop";
+import { addressLines, shop } from "@/lib/shop";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -156,7 +156,7 @@ export function CornerMenu({ scrolled }: { scrolled: boolean }) {
               role="dialog"
               aria-modal="true"
               aria-label="Menu"
-              className="pointer-events-auto absolute right-4 top-0 w-[min(24rem,calc(100vw-2rem))] sm:right-6 origin-top-right overflow-hidden rounded-[22px] bg-ink-deep text-bone shadow-[0_30px_80px_rgba(0,0,0,.6)]"
+              className="pointer-events-auto absolute right-4 top-0 w-[min(24rem,calc(100vw-2rem))] sm:right-6 origin-top-right overflow-hidden rounded-[22px] bg-panel text-bone shadow-[0_30px_80px_rgba(0,0,0,.6)]"
               style={{ maxHeight: "calc(100svh - 1.5rem)" }}
               {...panelMotion}
             >
@@ -229,6 +229,23 @@ export function CornerMenu({ scrolled }: { scrolled: boolean }) {
                   <p className="mb-2.5 mt-8 font-mono text-[0.625rem] uppercase tracking-[0.18em] text-bone/50">
                     Contact
                   </p>
+                  {/* Rendered only once real details exist — see lib/shop.ts */}
+                  {shop.email ? (
+                    <a
+                      href={`mailto:${shop.email}`}
+                      className="mb-1 block font-mono text-[0.6875rem] leading-[1.75] text-bone/75 transition-colors hover:text-bone"
+                    >
+                      {shop.email}
+                    </a>
+                  ) : null}
+                  {shop.phone ? (
+                    <a
+                      href={`tel:${shop.phone.replace(/\s+/g, "")}`}
+                      className="mb-2 block font-mono text-[0.6875rem] leading-[1.75] text-bone/75 transition-colors hover:text-bone"
+                    >
+                      {shop.phone}
+                    </a>
+                  ) : null}
                   <address className="not-italic font-mono text-[0.6875rem] leading-[1.75] text-bone/75">
                     {addressLines.map((l) => (
                       <span key={l} className="block">

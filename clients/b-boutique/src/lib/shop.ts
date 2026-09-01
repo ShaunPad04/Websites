@@ -4,6 +4,11 @@
 
 export const shop = {
   name: "B Boutique",
+  /* Fill these in and they appear in the menu's contact block automatically.
+     Left empty rather than guessed — a wrong number on a real shop's site
+     sends customers to a stranger. */
+  phone: "" as string,
+  email: "" as string,
   street: "18 Seaview Street",
   town: "Cleethorpes",
   county: "North East Lincolnshire",
