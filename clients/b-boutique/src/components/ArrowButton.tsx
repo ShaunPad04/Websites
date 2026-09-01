@@ -29,11 +29,11 @@ export function ArrowButton({
     <a
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className={`group inline-flex items-center gap-3 rounded-full py-2 pl-2 pr-6 text-[0.9375rem] transition-colors ${shell}`}
+      className={`group inline-flex shrink-0 items-center gap-2 rounded-full py-2 pl-2 pr-4 text-sm transition-colors sm:gap-3 sm:pr-6 sm:text-[0.9375rem] ${shell}`}
     >
       <span
         aria-hidden="true"
-        className={`grid h-9 w-9 shrink-0 place-items-center rounded-full transition-transform duration-300 ease-out group-hover:rotate-45 ${badge}`}
+        className={`grid h-8 w-8 shrink-0 place-items-center rounded-full transition-transform duration-300 ease-out group-hover:rotate-45 sm:h-9 sm:w-9 ${badge}`}
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path
