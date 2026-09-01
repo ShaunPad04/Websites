@@ -66,7 +66,12 @@ export function Hero() {
       <div className="relative w-full overflow-hidden" data-mask>
         <h1
           className="chrome display select-none whitespace-nowrap px-6 text-center text-[clamp(2.75rem,15.5vw,15rem)] leading-[0.86] lg:leading-[0.82]"
-          style={{ marginBottom: "-0.1em" }}
+          /* Positive, not the -0.1em it used to be: leading-[0.82] already
+             pulls the line box inside the em box, so a negative margin pushed
+             the descender of the "q" below the hero's overflow clip and the
+             brand rail sliced it. This is the safe area that stops that —
+             scale and position are otherwise untouched. */
+          style={{ marginBottom: "0.06em" }}
         >
           B Boutique
         </h1>

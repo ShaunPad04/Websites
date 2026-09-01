@@ -187,59 +187,55 @@ body {
 }
 
 /* ── Brand rail ──────────────────────────────────────────────────────────
-   A slow flat marquee under the hero. All movement is one CSS animation on
-   the track; nothing here runs per frame in React.
-
-   The track holds the brand list twice and translates by exactly -50%, so at
-   the end of a cycle copy two sits where copy one started and the loop is
-   invisible. That only holds if both copies are identical in width, which is
-   why the duplicate is a straight repeat rather than a trimmed one. */
+   A centre-weighted carousel under the hero. Positioning and motion are
+   written by LogoCarousel3D straight to the nodes; everything here is static
+   geometry, so no rule below is recalculated during the animation. */
 .brand-rail-section {
-  --rail-gap: 62px;          /* mobile: inside the 50–75px band */
-  --rail-duration: 34s;      /* mobile: inside the 28–40s band */
-  --rail-scale: 0.8;         /* optical heights step down on small screens */
+  --rail-scale: 0.8;   /* mark sizes step down with the spacing on small screens */
   background: var(--panel);
-  padding-block: 31px 35px;  /* holds the approved 134px section height */
+  padding-block: 32px 34px;
 }
 
 @media (min-width: 640px) {
-  .brand-rail-section {
-    --rail-gap: 104px;       /* desktop: inside the 80–130px band */
-    --rail-duration: 44s;    /* desktop: inside the 35–50s band */
-    --rail-scale: 1;
-    padding-block: 44px 47px; /* holds the approved 166px section height */
-  }
+  .brand-rail-section { --rail-scale: 1; padding-block: 44px 46px; }
 }
 
-.brand-rail-viewport {
+.logo3d {
+  position: relative;
   margin-top: 26px;
+  height: 52px;
+  touch-action: pan-y;
+  user-select: none;
+  /* The tilt is read against a distant camera: any closer and the rotation
+     reads as a card turning rather than a line receding. */
+  perspective: 1600px;
   overflow: hidden;
-  /* Narrow edge fade so marks leave the frame rather than being cut off.
-     Kept tight — a wide fade reads as fog, not as an edge. */
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  /* Scale and opacity already carry most of the recession, so the mask only
+     has to clean up the last few pixels. Narrow on purpose — a wide fade
+     reads as fog. */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
 }
 
-.brand-rail-track {
-  display: flex;
-  width: max-content;
-  animation: brand-rail-scroll var(--rail-duration) linear infinite;
+@media (min-width: 640px) {
+  .logo3d { height: 68px; margin-top: 28px; }
 }
 
-/* Pause on hover. Pausing the animation holds the exact transform, so there
-   is no jump on either edge of the interaction. */
-.brand-rail-viewport:hover .brand-rail-track { animation-play-state: paused; }
+.logo3d-stage { position: absolute; inset: 0; }
 
-.brand-rail-set {
+.logo3d-item {
+  position: absolute;
+  left: 0;
+  top: 50%;
   display: flex;
   align-items: center;
-  gap: var(--rail-gap);
-  padding-inline-end: var(--rail-gap); /* the seam needs a gap too */
-  margin: 0;
-  list-style: none;
+  /* Every item is centred on the same axis by its own box centre — and the
+     box is the ink, so it is the artwork that lines up, not the padding. */
+  transform: translate3d(0, -50%, 0);
+  /* No will-change: an animated transform/opacity is promoted anyway, and
+     declaring it here pins a composited layer per mark for the life of the
+     page — memory the section does not need to spend. */
 }
-
-.brand-rail-item { display: flex; align-items: center; }
 
 /* The official artwork is used as a mask, never restyled: the file supplies
    the shape, the bone comes from the site's own token.
@@ -247,7 +243,7 @@ body {
    The box is the mark's ink, and the mask is scaled (--mw/--mh) and offset
    (--ox/--oy) so the ink lands exactly in it. Transparent padding in the
    supplied file therefore costs nothing: it falls outside the box, so the
-   gaps in the rail are true ink-to-ink rather than box-to-box. */
+   rail's spacing is true ink-to-ink rather than box-to-box. */
 .brand-rail-mark {
   --c: calc(var(--cap) * var(--rail-scale));
   display: block;
@@ -262,37 +258,27 @@ body {
   mask-size: calc(var(--c) * var(--mw)) calc(var(--c) * var(--mh));
   -webkit-mask-position: calc(-1 * var(--c) * var(--ox)) calc(-1 * var(--c) * var(--oy));
   mask-position: calc(-1 * var(--c) * var(--ox)) calc(-1 * var(--c) * var(--oy));
-  opacity: 0.68;
-  transition: opacity 240ms var(--ease-out);
 }
 
-.brand-rail-item:hover .brand-rail-mark { opacity: 1; }
-
-@keyframes brand-rail-scroll {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-50%, 0, 0); }
-}
-
-/* Reduced motion: stop entirely and present the brands as a static wrapped
-   set. The duplicate is removed so nothing reads twice, the mask comes off so
-   nothing is clipped, and every brand stays visible. */
+/* Reduced motion: no loop, no depth, no transforms — the component writes
+   none. One plain scrollable row instead, showing each brand once. */
 @media (prefers-reduced-motion: reduce) {
-  .brand-rail-viewport {
-    overflow: visible;
+  .logo3d {
+    height: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    perspective: none;
     -webkit-mask-image: none;
     mask-image: none;
   }
-  .brand-rail-track {
-    animation: none;
-    width: 100%;
+  .logo3d-stage {
+    position: static;
+    display: flex;
+    align-items: center;
+    gap: 72px;
     padding-inline: 1.5rem;
+    width: max-content;
   }
-  .brand-rail-track > [aria-hidden="true"] { display: none; }
-  .brand-rail-set {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 28px var(--rail-gap);
-    padding-inline-end: 0;
-    width: 100%;
-  }
+  .logo3d-item { position: static; transform: none; opacity: 1 !important; }
+  .logo3d-item[data-dup] { display: none; }
 }
