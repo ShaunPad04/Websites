@@ -38,3 +38,35 @@ export const socials: { name: string; href: string }[] = [];
 export const directionsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
   `${shop.name}, ${shop.street}, ${shop.town} ${shop.postcode}`,
 )}`;
+
+/** Footer navigation.
+ *
+ *  Every href here resolves today. This project is a single route —
+ *  src/app/page.tsx — so the site's navigation is section anchors, and a
+ *  footer column of /privacy, /terms and /cookies would be three links to
+ *  404s. They are omitted until those pages exist rather than linked and
+ *  broken.
+ *
+ *  "Contact" is omitted for the same reason: shop.phone and shop.email are
+ *  deliberately empty, so there is nothing to link to. The FAQ answers the
+ *  question and the Visit section carries the address. */
+export const footerNav: { heading: string; items: MenuItem[] }[] = [
+  {
+    heading: "Shop",
+    items: [
+      { n: "", label: "New In", href: "#new-in" },
+      { n: "", label: "Womenswear", href: "#rails", pending: true },
+      { n: "", label: "Accessories", href: "#rails", pending: true },
+      { n: "", label: "Homeware", href: "#homeware" },
+    ],
+  },
+  {
+    heading: "B Boutique",
+    items: [
+      { n: "", label: "The Boutique", href: "#our-story" },
+      { n: "", label: "The Rails", href: "#rails" },
+      { n: "", label: "Questions", href: "#faq" },
+      { n: "", label: "Visit Us", href: "#visit" },
+    ],
+  },
+];

@@ -489,3 +489,160 @@ body {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+
+/* ── Footer ──────────────────────────────────────────────────────────────
+   The closing page. Same near-black as the brand rail, so the bottom of the
+   page and the section under the hero are the same surface. */
+.footer-shell { overflow: hidden; }
+
+/* Registered marks. Both are em-relative against their own size, the same way
+   the hero's is, so they hold proportion at every clamp step. */
+.footer-reg    { font-size: 0.28em; vertical-align: 1.55em; margin-left: 0.12em; }
+.footer-reg-lg { font-size: 0.16em; vertical-align: 2.8em;  margin-left: 0.1em; }
+
+/* Links: a hairline drawing itself in from the left, and one pixel of travel.
+   The reference grew a rounded accent panel behind each link and scaled it to
+   1.05 — that is a software interaction, and it is the single thing that
+   would have made this footer read as a product page. */
+.footer-link {
+  position: relative;
+  display: inline-block;
+  font-size: 0.9375rem;
+  color: color-mix(in oklab, var(--bone) 72%, transparent);
+  transition: color 220ms var(--ease-out), transform 220ms var(--ease-out);
+}
+.footer-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 280ms var(--ease-out);
+}
+.footer-link:hover,
+.footer-link:focus-visible { color: var(--bone); transform: translateX(2px); }
+.footer-link:hover::after,
+.footer-link:focus-visible::after { transform: scaleX(1); }
+
+.footer-social {
+  display: inline-block;
+  color: color-mix(in oklab, var(--bone) 78%, transparent);
+  transition: color 220ms var(--ease-out);
+}
+.footer-social:hover { color: var(--bone); }
+.footer-arrow {
+  display: inline-block;
+  transition: transform 240ms var(--ease-out);
+}
+.footer-link:hover .footer-arrow,
+.footer-social:hover .footer-arrow { transform: translate(2px, -2px); }
+
+/* Newsletter: a rule and a caret, not a pill. */
+.footer-field {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.6rem;
+  border-bottom: 1px solid color-mix(in oklab, var(--bone) 22%, transparent);
+  transition: border-color 220ms var(--ease-out);
+}
+.footer-field:focus-within { border-bottom-color: var(--bone); }
+.footer-input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  padding: 0.7rem 0;
+  color: var(--bone);
+  font-size: 0.9375rem;
+}
+.footer-input::placeholder { color: color-mix(in oklab, var(--bone) 34%, transparent); }
+.footer-input:focus { outline: none; }
+.footer-send {
+  flex: none;
+  display: grid;
+  place-items: center;
+  /* 44px of target even though the caret is 15px. */
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-right: -0.5rem;
+  color: color-mix(in oklab, var(--bone) 65%, transparent);
+  transition: color 220ms var(--ease-out), transform 220ms var(--ease-out);
+}
+.footer-send:hover { color: var(--bone); transform: translateX(2px); }
+.footer-send:focus-visible,
+.footer-input:focus-visible { outline: 2px solid var(--gold-lift); outline-offset: 3px; }
+
+/* Unconfirmed content, same treatment as the FAQ so it reads as one system
+   of internal markers rather than as copy. */
+.footer-pending {
+  margin-top: 0.85rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  /* --gold-lift, not the --red the FAQ marker uses. Red sits on the FAQ's
+     ivory ground and reads loudly there; on this near-black it measures under
+     3:1 and stops being the unmissable warning it exists to be. */
+  color: var(--gold-lift);
+}
+
+/* The woven rule. A doubled-width inner band translated by exactly half its
+   width, so the diagonals meet themselves and the drift has no seam. */
+.footer-weave {
+  position: relative;
+  height: 36px;
+  overflow: hidden;
+  border-block: 1px solid color-mix(in oklab, var(--bone) 8%, transparent);
+}
+.footer-weave-inner {
+  position: absolute;
+  inset: 0;
+  width: 200%;
+  background-image: repeating-linear-gradient(
+    315deg,
+    color-mix(in oklab, var(--bone) 7%, transparent) 0 1px,
+    transparent 1px 9px
+  );
+  animation: footer-weave-drift 30s linear infinite;
+}
+@keyframes footer-weave-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+/* The closing wordmark. Sized to the container rather than bled off it, and
+   balanced so the mark never touches either edge. */
+.footer-mark {
+  margin-block: 3.5rem 3rem;
+  text-align: center;
+  line-height: 0.9;
+  font-size: clamp(3rem, 15vw, 15rem);
+  color: color-mix(in oklab, var(--bone) 92%, transparent);
+}
+
+/* Entrance. Scroll-driven, so it is intersection-triggered by definition and
+   costs no JavaScript. Each block starts a little later than the one above
+   through --d, which is the stagger. Unsupported browsers get no animation
+   and a fully visible footer. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .footer-rise {
+      animation: footer-rise linear both;
+      animation-timeline: view();
+      animation-range: entry calc(4% + var(--d, 0%)) entry calc(48% + var(--d, 0%));
+    }
+  }
+}
+@keyframes footer-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-weave-inner { animation: none; }
+}
