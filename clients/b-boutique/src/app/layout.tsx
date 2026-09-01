@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bodoni_Moda, Jost } from "next/font/google";
+import { Archivo, Bodoni_Moda, JetBrains_Mono, Jost } from "next/font/google";
 import { shop, hours } from "@/lib/shop";
 import "./globals.css";
 
@@ -17,6 +17,22 @@ const bodoni = Bodoni_Moda({
 
 const jost = Jost({
   variable: "--font-jost",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+/* Menu only. The corner menu is deliberately a different register from the
+   hero: a heavy grotesque in caps for the labels and a monospace for every
+   small element — index numbers, section labels, contact details. The hero
+   keeps Bodoni; that contrast is the point. */
+const archivo = Archivo({
+  variable: "--font-grotesk",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const jetbrains = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
   display: "swap",
 });
@@ -84,7 +100,7 @@ export default function RootLayout({
   return (
     <html
       lang="en-GB"
-      className={`${bodoni.variable} ${jost.variable} h-full antialiased`}
+      className={`${bodoni.variable} ${jost.variable} ${archivo.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bone text-onyx">
         <script

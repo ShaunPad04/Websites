@@ -58,6 +58,8 @@
 
   --font-display: var(--font-bodoni);
   --font-sans: var(--font-jost);
+  --font-grotesk: var(--font-grotesk);
+  --font-mono: var(--font-mono);
 }
 
 html { scroll-behavior: smooth; }

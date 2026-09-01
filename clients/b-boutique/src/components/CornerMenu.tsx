@@ -105,15 +105,23 @@ export function CornerMenu({ scrolled }: { scrolled: boolean }) {
         /* relative z-[60] keeps the trigger above the panel. The panel is a
            sibling inside <header>, so its z-50 competes here, not against the
            header's own z-index — raising the header alone changed nothing. */
-        className={`group relative z-[60] inline-flex shrink-0 items-center gap-2.5 rounded-full px-4 py-2.5 text-[0.75rem] font-medium tracking-[0.14em] transition-colors ${
+        className={`group relative z-[60] inline-flex shrink-0 items-center gap-2.5 rounded-full px-4 py-2.5 font-mono text-[0.6875rem] tracking-[0.14em] transition-colors ${
           open || scrolled
             ? "bg-onyx text-bone hover:bg-onyx-lift"
             : "bg-bone text-onyx hover:bg-white"
         }`}
       >
         <span className="uppercase">{open ? "Close" : "Menu"}</span>
-        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"
-          className="transition-transform duration-300 ease-out group-hover:rotate-45">
+        {/* The 45-degree hover turn belongs to the arrow only — applied to
+            the close glyph it rotates the cross into a plus. */}
+        <svg
+          width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"
+          className={
+            open
+              ? ""
+              : "transition-transform duration-300 ease-out group-hover:rotate-45"
+          }
+        >
           {open ? (
             <path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
           ) : (
@@ -148,11 +156,15 @@ export function CornerMenu({ scrolled }: { scrolled: boolean }) {
               role="dialog"
               aria-modal="true"
               aria-label="Menu"
-              className="pointer-events-auto absolute right-4 top-0 w-[min(22rem,calc(100vw-2rem))] sm:right-6 origin-top-right overflow-hidden rounded-[22px] bg-red text-bone shadow-[0_30px_80px_rgba(12,10,9,.5)]"
+              className="pointer-events-auto absolute right-4 top-0 w-[min(24rem,calc(100vw-2rem))] sm:right-6 origin-top-right overflow-hidden rounded-[22px] bg-ink-deep text-bone shadow-[0_30px_80px_rgba(0,0,0,.6)]"
               style={{ maxHeight: "calc(100svh - 1.5rem)" }}
               {...panelMotion}
             >
               <div className="grain relative flex max-h-[calc(100svh-1.5rem)] flex-col overflow-y-auto p-6 pt-20 sm:pt-[5.5rem]">
+                <p className="mb-3 font-mono text-[0.625rem] uppercase tracking-[0.18em] text-bone/50">
+                  Navigation
+                </p>
+
                 <ul className="flex flex-col">
                   {MENU.map((item, i) => (
                     <motion.li
@@ -164,24 +176,23 @@ export function CornerMenu({ scrolled }: { scrolled: boolean }) {
                           ? { duration: 0 }
                           : { duration: 0.42, ease: EASE, delay: 0.12 + i * 0.055 }
                       }
-                      className="border-b border-bone/15 last:border-b-0"
+                      className="border-b border-bone/12 last:border-b-0"
                     >
                       <a
                         href={item.href}
                         onClick={close}
-                        className="group flex min-h-[44px] items-center gap-4 py-3 transition-[padding] duration-200 ease-out hover:pl-1.5 focus-visible:pl-1.5"
+                        className="group flex min-h-[44px] items-center gap-3.5 py-2.5 transition-[padding] duration-200 ease-out hover:pl-1.5 focus-visible:pl-1.5"
                       >
-                        <span className="w-7 shrink-0 text-[0.625rem] font-medium uppercase leading-none tracking-[0.16em] text-bone/45 transition-colors duration-200 group-hover:text-gold-lift group-focus-visible:text-gold-lift">
+                        <span className="w-6 shrink-0 font-mono text-[0.625rem] leading-none text-bone/50 transition-colors duration-200 group-hover:text-gold-lift group-focus-visible:text-gold-lift">
                           {item.n}
                         </span>
-                        {/* Compact and engineered, deliberately NOT the hero's
-                            editorial serif — the contrast between the two is
-                            the point. 17px / 500 / 1.2 / -0.01em. */}
-                        <span className="text-[1.0625rem] font-medium leading-[1.2] tracking-[-0.01em]">
+                        {/* Heavy grotesque in caps — the reference's defining
+                            character. 29px / 800 / 0.98 / -0.02em. */}
+                        <span className="font-grotesk text-[1.6rem] font-extrabold uppercase leading-[0.98] tracking-[-0.02em] sm:text-[1.8rem]">
                           {item.label}
                         </span>
                         <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"
-                          className="ml-auto shrink-0 translate-x-[-4px] self-center opacity-0 transition-all duration-200 ease-out group-hover:translate-x-0 group-hover:opacity-70 group-focus-visible:translate-x-0 group-focus-visible:opacity-70">
+                          className="ml-auto shrink-0 self-center opacity-50 transition-all duration-200 ease-out group-hover:translate-x-0.5 group-hover:opacity-90 group-focus-visible:translate-x-0.5 group-focus-visible:opacity-90">
                           <path d="M3 11L11 3M11 3H4.5M11 3v6.5" stroke="currentColor" strokeWidth="1.6"
                             strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
@@ -196,34 +207,38 @@ export function CornerMenu({ scrolled }: { scrolled: boolean }) {
                   transition={
                     reduced ? { duration: 0 } : { duration: 0.42, ease: EASE, delay: 0.12 + MENU.length * 0.055 }
                   }
-                  className="mt-7"
+                  className="mt-6"
                 >
                   <a
                     href={directionsHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex w-full items-center justify-between gap-3 rounded-full bg-bone px-5 py-3.5 text-onyx transition-colors hover:bg-white"
+                    className="group flex w-full items-center justify-between gap-3 border border-bone/40 px-4 py-3.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-bone transition-colors hover:border-bone hover:bg-bone hover:text-onyx"
                   >
-                    <span className="text-[0.75rem] font-medium uppercase tracking-[0.14em]">Find us</span>
-                    <span aria-hidden="true"
-                      className="grid h-7 w-7 place-items-center rounded-full bg-onyx text-bone transition-transform duration-300 ease-out group-hover:rotate-45">
-                      <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                        <path d="M3 11L11 3M11 3H4.5M11 3v6.5" stroke="currentColor" strokeWidth="1.6"
-                          strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </span>
+                    <span>Find us</span>
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"
+                      className="shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-1">
+                      <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.4"
+                        strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                   </a>
 
-                  {/* Real address and hours only. No social accounts are held
-                      anywhere in this project, so none are listed. */}
-                  <address className="mt-6 not-italic text-[0.8125rem] leading-[1.6] tracking-[0.01em] text-bone/70">
+                  {/* Contact set in monospace, matching the reference's
+                      utility register. Real address and hours only — no
+                      social accounts are held anywhere in this project. */}
+                  <p className="mb-2.5 mt-8 font-mono text-[0.625rem] uppercase tracking-[0.18em] text-bone/50">
+                    Contact
+                  </p>
+                  <address className="not-italic font-mono text-[0.6875rem] leading-[1.75] text-bone/75">
                     {addressLines.map((l) => (
                       <span key={l} className="block">
                         {l}
                       </span>
                     ))}
                   </address>
-                  <p className="mt-1.5 text-[0.8125rem] leading-[1.6] tracking-[0.01em] text-bone/50">Tuesday to Sunday, 10 till 4</p>
+                  <p className="mt-2.5 font-mono text-[0.6875rem] leading-[1.75] text-bone/60">
+                    Tue &ndash; Sun / 10:00 &ndash; 16:00
+                  </p>
 
                   {/* Rendered only once real handles exist — see lib/nav.ts */}
                   {socials.length ? (
@@ -234,7 +249,7 @@ export function CornerMenu({ scrolled }: { scrolled: boolean }) {
                             href={sn.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="label text-bone/70 underline decoration-bone/25 underline-offset-4 transition-colors hover:text-bone"
+                            className="font-mono text-[0.6875rem] uppercase tracking-[0.12em] text-bone/70 underline decoration-bone/25 underline-offset-4 transition-colors hover:text-bone"
                           >
                             {sn.name}
                           </a>
