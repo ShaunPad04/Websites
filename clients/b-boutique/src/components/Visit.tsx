@@ -1,10 +1,15 @@
 import { shop, hours, formatHour } from "@/lib/shop";
 import { OpenBadge } from "./OpenBadge";
-import { mapEmbedSrc, mapsQuery } from "@/lib/nav";
-import { MapPanel } from "./MapPanel";
+import { directionsHref } from "@/lib/nav";
 import { Reveal } from "./Reveal";
 
-/* This is the conversion point. Not a basket — a postcode. */
+/* This is the conversion point. Not a basket — a postcode.
+ *
+ * No map here. There was one, which made two on the homepage — this and the
+ * footer's — and the second one is the better home for it: by then the reader
+ * has finished and is deciding whether to make the trip. This section keeps
+ * the address, the open badge, the hours and a directions link, which is what
+ * someone reading it actually needs. */
 export function Visit() {
   return (
     <section
@@ -33,7 +38,7 @@ export function Visit() {
 
           <div className="mt-9 flex flex-wrap gap-4">
             <a
-              href={`https://www.google.com/maps/search/?api=1&query=${mapsQuery}`}
+              href={directionsHref}
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-full bg-bone px-7 py-3.5 text-onyx transition-colors hover:bg-gold hover:text-bone"
@@ -76,14 +81,6 @@ export function Visit() {
             })}
           </dl>
 
-          <MapPanel
-            street={shop.street}
-            town={shop.town}
-            postcode={shop.postcode}
-            query={mapsQuery}
-              embedSrc={mapEmbedSrc}
-            title={`Map showing ${shop.name}, ${shop.street}, ${shop.town}`}
-          />
         </Reveal>
       </div>
     </section>
