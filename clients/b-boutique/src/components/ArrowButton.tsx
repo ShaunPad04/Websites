@@ -20,6 +20,11 @@ export function ArrowButton({
       ? "bg-bone text-onyx hover:bg-white"
       : "bg-onyx text-bone hover:bg-onyx-lift";
 
+  // The badge inverts against its own pill. A black badge on a black pill
+  // would vanish, so the dark variant flips to bone with a dark arrow.
+  const badge =
+    tone === "light" ? "bg-onyx text-bone" : "bg-bone text-onyx";
+
   return (
     <a
       href={href}
@@ -28,7 +33,7 @@ export function ArrowButton({
     >
       <span
         aria-hidden="true"
-        className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gold text-bone transition-transform duration-300 ease-out group-hover:rotate-45"
+        className={`grid h-9 w-9 shrink-0 place-items-center rounded-full transition-transform duration-300 ease-out group-hover:rotate-45 ${badge}`}
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path

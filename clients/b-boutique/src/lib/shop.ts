@@ -74,10 +74,12 @@ export function openState(now: Date): OpenState {
 
 /** The rails. These drive the expanding panels. */
 export const categories = [
-  { slug: "dresses",     name: "Dresses",     note: "Occasion, day, and the one you keep coming back to." },
+  { slug: "all",         name: "Shop All",    note: "Everything on the rails this week, in one place." },
   { slug: "jackets",     name: "Jackets",     note: "For a street that faces the sea." },
-  { slug: "knitwear",    name: "Knitwear",    note: "Lambswool, cotton, and proper weight." },
   { slug: "trousers",    name: "Trousers",    note: "Wide, tailored, and cut to actually fit." },
+  { slug: "dresses",     name: "Dresses",     note: "Occasion, day, and the one you keep coming back to." },
+  { slug: "tops",        name: "Tops",        note: "Silk, cotton and stripes that go with everything." },
+  { slug: "knitwear",    name: "Knitwear",    note: "Lambswool, cotton, and proper weight." },
   { slug: "accessories", name: "Accessories", note: "Bags, scarves, and small gold things." },
   { slug: "homeware",    name: "Homeware",    note: "Candles, ceramics, and things worth wrapping." },
 ] as const;

@@ -16,9 +16,13 @@ const CDN =
   "https://d8j0ntlcm91z4.cloudfront.net/user_3HwrG1wTADv3RkUcvzwwuwfoAUh/";
 
 export const images: Partial<Record<string, string>> = {
-  hero: CDN + "hf_20260831_211507_7e45c146-8ff2-4d82-aa47-3eddc7c93ae8.png",
+  hero: "/img/hero.png",
+  "hero-mobile": "/img/hero-mobile.png",
 
-  // Category panels
+  // Category panels — one per rail, keyed by slug so a reorder cannot
+  // silently mis-pair a photograph with the wrong category.
+  "panel-all":         CDN + "hf_20260901_005602_d257ff55-dc4f-40c5-bd57-f948cfbb8480.png",
+  "panel-tops":        CDN + "hf_20260901_005609_b5cc1ef9-3ce9-4b5a-a591-78da88a8f43f.png",
   "panel-dresses":     CDN + "hf_20260831_213118_14e2c6f8-dcde-4c09-986b-584661bb7fb6.png",
   "panel-jackets":     CDN + "hf_20260831_213120_c83fcbf8-6a0f-4e60-806b-a8ce0a32417f.png",
   "panel-knitwear":    CDN + "hf_20260831_213122_f1b362aa-51b9-415a-87ee-792954a78c57.png",

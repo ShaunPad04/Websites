@@ -5,6 +5,8 @@
  * shot. Swapping in real images later means replacing this component with
  * next/image at the same call sites — the crops already match. */
 
+import NextImage from "next/image";
+
 import { imageFor } from "@/lib/images";
 
 export type Tone = "bone" | "onyx" | "marble" | "gold" | "red";
@@ -14,7 +16,7 @@ const RAMP: Record<Tone, [string, string]> = {
   onyx:   ["#221D1A", "#0E0B0A"],
   marble: ["#241F1D", "#0C0A09"],
   gold:   ["#D4B06A", "#8A6A2C"],
-  red:    ["#D4202C", "#7A0610"],
+  red:    ["#A80A10", "#5C0407"],
 };
 
 export function ImageSlot({
@@ -25,6 +27,7 @@ export function ImageSlot({
   slot,
   alt,
   priority = false,
+  sizes,
 }: {
   tone?: Tone;
   label?: string;
@@ -35,6 +38,8 @@ export function ImageSlot({
   slot?: string;
   alt?: string;
   priority?: boolean;
+  /** Passed to next/image for vendored files; ignored for remote ones. */
+  sizes?: string;
 }) {
   const [from, to] = RAMP[tone];
   const angle = 120 + ((seed * 37) % 90);
@@ -93,18 +98,33 @@ export function ImageSlot({
       />
       <div className="grain absolute inset-0" />
       {src ? (
-        /* Plain <img>: next/image would optimise this on the server, and the
-           origin is unreachable from the build environment. */
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={src}
-          alt={alt ?? ""}
-          loading={priority ? "eager" : "lazy"}
-          decoding="async"
-          fetchPriority={priority ? "high" : "auto"}
-          style={{ color: "transparent" }}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
+        src.startsWith("/") ? (
+          /* Vendored in public/: next/image can encode AVIF/WebP and emit a
+             srcset, so it gets the real treatment. `fill` needs a positioned
+             parent, which the wrapper above provides. */
+          <NextImage
+            src={src}
+            alt={alt ?? ""}
+            fill
+            priority={priority}
+            sizes={sizes ?? "100vw"}
+            className="object-cover"
+            style={{ color: "transparent" }}
+          />
+        ) : (
+          /* Remote: the origin is unreachable from the build environment, so
+             the optimiser would fail. Serve it directly. */
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={src}
+            alt={alt ?? ""}
+            loading={priority ? "eager" : "lazy"}
+            decoding="async"
+            fetchPriority={priority ? "high" : "auto"}
+            style={{ color: "transparent" }}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        )
       ) : null}
       {label ? (
         <span className="label absolute bottom-3 left-3 text-white/55">{label}</span>
