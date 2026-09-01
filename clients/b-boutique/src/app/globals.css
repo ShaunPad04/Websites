@@ -37,8 +37,11 @@
   --ink-deep:   #0E0908;
 
   /* The menu panel. Deliberately NEUTRAL, not the warm --ink-deep: at
-     #0E0908 the red in it reads as brown against the hero photograph. */
+     #0E0908 the red in it reads as brown against the hero photograph.
+     --panel-lift is the hover step, kept on the same neutral axis: --onyx-lift
+     is warm and reads brown the moment it sits beside the panel. */
   --panel:      #0A0A0A;
+  --panel-lift: #1A1A1A;
 
   --line: color-mix(in oklab, var(--onyx) 16%, transparent);
 
@@ -59,6 +62,7 @@
   --color-red: var(--red);
   --color-ink-deep: var(--ink-deep);
   --color-panel: var(--panel);
+  --color-panel-lift: var(--panel-lift);
   --color-line: var(--line);
 
   --font-display: var(--font-bodoni);

@@ -105,10 +105,15 @@ export function CornerMenu({ scrolled }: { scrolled: boolean }) {
         /* relative z-[60] keeps the trigger above the panel. The panel is a
            sibling inside <header>, so its z-50 competes here, not against the
            header's own z-index — raising the header alone changed nothing. */
+        /* Open: the chip takes the panel's own neutral black. --onyx is warm,
+           and beside the panel it reads visibly brown. Scrolled-but-closed
+           keeps --onyx, which is correct against the bone header bar. */
         className={`group relative z-[60] inline-flex shrink-0 items-center gap-2.5 rounded-full px-4 py-2.5 font-mono text-[0.6875rem] tracking-[0.14em] transition-colors ${
-          open || scrolled
-            ? "bg-onyx text-bone hover:bg-onyx-lift"
-            : "bg-bone text-onyx hover:bg-white"
+          open
+            ? "bg-panel text-bone hover:bg-panel-lift"
+            : scrolled
+              ? "bg-onyx text-bone hover:bg-onyx-lift"
+              : "bg-bone text-onyx hover:bg-white"
         }`}
       >
         <span className="uppercase">{open ? "Close" : "Menu"}</span>
