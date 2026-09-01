@@ -1,7 +1,9 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+
+import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 
 export type NavSection = { id: string; label: string; n: string };
 
@@ -29,7 +31,7 @@ const T = { duration: 0.42, ease: EASE };
  * from a row to a column in CSS and there is exactly one current item. */
 export function NavStack({ scrolled }: { scrolled: boolean }) {
   const [active, setActive] = useState(0);
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   const activeRef = useRef(0);
 
   useEffect(() => {

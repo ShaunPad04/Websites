@@ -25,13 +25,16 @@
   --gold:       #8A6A2C;
   --gold-lift:  #D4B06A;
 
-  /* Crimson. The hero ground — and it was always in the shop, on the rail.
-     Bone text clears 5.67:1 on it. */
-  --red:        #C1121F;
+  /* Sampled from the hero photograph itself, not guessed — a deep blood
+     red, far darker than a bright crimson reads on screen. Bone clears
+     9.05:1 on it and --gold-lift clears 4.83:1, so no separate pale gold is
+     needed. The guessed #C1121F made the mobile band under the photograph
+     visibly brighter than the photograph. */
+  --red:        #8A070B;
 
-  /* Gold has to lift on red: --gold-lift manages only 3.03:1 against it,
-     which fails small text. This one clears 4.51:1. */
-  --gold-pale:  #EFD9AE;
+  /* The editorial interlude: near-black warmed toward the hero's red, so the
+     two sections meet without a seam. */
+  --ink-deep:   #0E0908;
 
   --line: color-mix(in oklab, var(--onyx) 16%, transparent);
 
@@ -50,6 +53,7 @@
   --color-gold: var(--gold);
   --color-gold-lift: var(--gold-lift);
   --color-red: var(--red);
+  --color-ink-deep: var(--ink-deep);
   --color-line: var(--line);
 
   --font-display: var(--font-bodoni);
@@ -66,21 +70,30 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Headings carry the personality. Tight tracking, tight leading. */
-.display {
-  font-family: var(--font-bodoni), ui-serif, Georgia, serif;
-  font-optical-sizing: auto;
-  letter-spacing: -0.015em;
-  line-height: 1.02;
-  text-wrap: balance;
-}
+/* Headings carry the personality. Tight tracking, tight leading.
+ *
+ * These live in @layer base deliberately. Tailwind v4 puts its utilities in a
+ * layer, and UNLAYERED css beats layered css outright — so as plain rules
+ * these silently overrode every leading-* and tracking-* utility written on a
+ * .display element. Measured: the hero wordmark asked for leading 0.82 and
+ * rendered at 1.02; this heading asked for -0.02em and got -0.015em. In the
+ * base layer they are defaults again, and utilities win as intended. */
+@layer base {
+  .display {
+    font-family: var(--font-bodoni), ui-serif, Georgia, serif;
+    font-optical-sizing: auto;
+    letter-spacing: -0.015em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
 
 /* Small caps label — tells you which shelf to put the section on */
-.label {
-  font-size: 0.6875rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  font-weight: 500;
+  .label {
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
 }
 
 /* Paper grain. Keeps large flat areas from reading as flat digital fill. */

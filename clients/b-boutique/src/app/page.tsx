@@ -1,6 +1,7 @@
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
 import { BrandMarquee } from "@/components/BrandMarquee";
+import { PointOfView } from "@/components/PointOfView";
 import { HorizontalRails } from "@/components/HorizontalRails";
 import { NewInRail } from "@/components/NewInRail";
 import { Homeware } from "@/components/Homeware";
@@ -18,13 +19,15 @@ export default function Home() {
         <Hero />
         {/* 02 A breath — what the shop is, in one moving line */}
         <BrandMarquee />
-        {/* 03 The rails — the heroic interaction */}
+        {/* 03 Editorial interlude — the statement, lit word by word */}
+        <PointOfView />
+        {/* 04 The rails — the heroic interaction */}
         <HorizontalRails />
         {/* 03 Proof — actual stock, moving weekly */}
         <NewInRail />
-        {/* 04 A second world — homeware */}
+        {/* 05 A second world — homeware */}
         <Homeware />
-        {/* 05 The ask — a postcode, not a basket */}
+        {/* 06 The ask — a postcode, not a basket */}
         <Visit />
       </main>
       <Footer />

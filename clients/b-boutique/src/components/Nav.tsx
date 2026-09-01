@@ -49,7 +49,7 @@ export function Nav() {
       <div className="relative mx-auto flex max-w-[100rem] items-center justify-between gap-3 px-4 py-4 sm:gap-6 sm:px-6">
         <div className="flex min-w-0 items-center gap-3 sm:gap-6 lg:gap-12">
           <a href="#top" className="flex items-baseline gap-1" aria-label="B Boutique, home">
-            <span className="display text-lg leading-none sm:text-xl">B Boutique</span>
+            <span className="display whitespace-nowrap text-lg leading-none sm:text-xl">B Boutique</span>
             <span className="hidden align-super text-[0.6rem] sm:inline">®</span>
           </a>
           <span
