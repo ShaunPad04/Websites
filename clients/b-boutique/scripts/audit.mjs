@@ -34,6 +34,15 @@ try {
 
   mkdirSync('.lighthouse', { recursive: true });
   writeFileSync('.lighthouse/report.html', report);
+  // metrics-dump: the category score alone does not say what regressed.
+  const m = ['first-contentful-paint','largest-contentful-paint','total-blocking-time',
+             'cumulative-layout-shift','speed-index','mainthread-work-breakdown',
+             'bootup-time','unused-javascript'];
+  console.log('\n  metrics');
+  for (const k of m) {
+    const a = lhr.audits[k];
+    if (a) console.log('   ', k.padEnd(28), (a.displayValue ?? '').padEnd(12), 'score', a.score);
+  }
 
   console.log(`\nLighthouse — ${url}\n`);
   let failed = false;

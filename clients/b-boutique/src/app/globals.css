@@ -213,8 +213,8 @@ body {
   /* Scale and opacity already carry most of the recession, so the mask only
      has to clean up the last few pixels. Narrow on purpose — a wide fade
      reads as fog. */
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 11%, #000 89%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 11%, #000 89%, transparent);
 }
 
 @media (min-width: 640px) {
@@ -281,4 +281,110 @@ body {
   }
   .logo3d-item { position: static; transform: none; opacity: 1 !important; }
   .logo3d-item[data-dup] { display: none; }
+}
+
+/* ── Hero scroll interaction ─────────────────────────────────────────────
+   The hero pins inside a slightly taller track and deconstructs as the track
+   passes: the photograph creeps closer, the secondary copy recedes, and the
+   base darkens towards the carousel's black so the boundary between the two
+   sections stops being a line. At progress 0 every value is its identity, so
+   the composition is exactly the approved still.
+
+   Driven by a native scroll-driven timeline rather than JavaScript. Motion's
+   useScroll was already compiling these to a ScrollTimeline underneath, but
+   reaching for it put motion/react on the critical path — the hero had to
+   become a client component, which cost 370ms of blocking time and 83KB of
+   JavaScript the page did not previously ship. Expressed directly in CSS it
+   is the same compositor work with none of that, and the hero goes back to
+   being a server component.
+
+   `contain 0% → contain 100%` is exactly the span the hero is pinned for:
+   for a subject taller than the viewport, the contain range runs from the
+   track's top meeting the viewport top to its bottom meeting the bottom.
+
+   Where scroll-driven animations are unsupported, nothing runs and the
+   approved static hero is what shows — which is the correct fallback. */
+.hero-track { height: 118vh; }
+.hero-pin { position: sticky; top: 0; }
+
+@media (min-width: 1024px) {
+  .hero-track { height: 140vh; }
+}
+
+/* Reduced motion: no track, no pin. The animations are already gated off
+   below, but leaving the track tall would hand these visitors 40vh of pinned
+   scrolling with nothing happening in it. Approved still, then ordinary page
+   scroll. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-track { height: auto; }
+  .hero-pin { position: static; }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-track {
+      view-timeline-name: --hero;
+      view-timeline-axis: block;
+    }
+    .hero-fx {
+      animation-timeline: --hero;
+      animation-range: contain 0% contain 100%;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+    }
+
+    /* The camera creeps in. Composed over the lg:scale-[1.04] base crop on
+       the parent, so the approved framing is untouched. */
+    .hero-fx-img { animation-name: hero-img; }
+
+    /* The wordmark is the anchor: it lifts and settles rather than leaving.
+       A percentage keeps the distance proportional, so a phone gets a
+       proportionally smaller move without a second set of numbers. */
+    .hero-fx-mark { animation-name: hero-mark; transform-origin: 50% 100%; }
+
+    /* Secondary copy clears out early, leaving image + wordmark. The holding
+       keyframe at 100% is what makes it stay gone. */
+    .hero-fx-aside { animation-name: hero-aside; }
+
+    /* Nobody needs telling to scroll once they are scrolling. */
+    .hero-fx-cue { animation-name: hero-cue; }
+
+    .hero-fx-veil { animation-name: hero-veil; }
+  }
+}
+
+@keyframes hero-img {
+  from { transform: scale(1); }
+  to   { transform: scale(1.05); }
+}
+@keyframes hero-mark {
+  from { transform: translateY(0) scale(1); }
+  to   { transform: translateY(-18%) scale(0.955); }
+}
+@keyframes hero-aside {
+  0%          { opacity: 1; transform: translateY(0); }
+  34%, 100%   { opacity: 0; transform: translateY(-14px); }
+}
+@keyframes hero-cue {
+  0%          { opacity: 1; }
+  12%, 100%   { opacity: 0; }
+}
+@keyframes hero-veil {
+  0%, 28%     { opacity: 0; }
+  100%        { opacity: 1; }
+}
+
+/* The registered mark on the giant wordmark. Sized off the wordmark itself
+   so it holds its proportion at every clamp step, and raised to sit against
+   the cap line of the final "e" rather than floating. It inherits the chrome
+   fill, so it is the same ivory as the letters. */
+.hero-reg {
+  font-size: 0.155em;
+  /* In em against the mark's OWN size, so this is ~0.5em of the wordmark —
+     roughly its cap line. 0.72em looked like a footnote sitting on the
+     baseline. */
+  vertical-align: 2.75em;
+  letter-spacing: 0;
+  margin-left: 0.1em;
 }

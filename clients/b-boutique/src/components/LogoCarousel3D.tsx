@@ -60,9 +60,9 @@ export function LogoCarousel3D({
   gap = 150,
   cycleSeconds = 56,
   scaleAt = [{ maxWidth: 640, scale: 0.8 }, { maxWidth: 1024, scale: 0.9 }],
-  minScale = 0.84,
+  minScale = 0.82,
   maxScale = 1,
-  minOpacity = 0.4,
+  minOpacity = 0.3,
   tilt = 7,
   className = "",
   label,
@@ -165,7 +165,11 @@ export function LogoCarousel3D({
         const itemCentre = x + wI / 2;
         const signed = (itemCentre - centre) / half;
         const d = Math.min(Math.abs(signed), 1);
-        const eased = d * d; // holds the centre sharp, then falls away
+        /* d² held the centre far too flat: a mark halfway to the edge still
+           sat at 0.96 scale, so the centre barely led. ^1.2 keeps the centre
+           sharp while reaching 0.92/0.70 at the half mark and 0.82/0.30 at
+           the edge — the hierarchy asked for. */
+        const eased = Math.pow(d, 1.2);
 
         const scale = maxScale - (maxScale - minScale) * eased;
         const opacity = 1 - (1 - minOpacity) * eased;

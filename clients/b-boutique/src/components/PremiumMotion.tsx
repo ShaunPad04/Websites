@@ -32,26 +32,12 @@ export function PremiumMotion() {
         });
       }
 
-      // 2. The photograph drifts slower than the page.
-      const heroImg = document.querySelector<HTMLElement>("[data-parallax-hero]");
-      if (heroImg) {
-        gsap.to(heroImg, {
-          yPercent: -9,
-          ease: "none",
-          scrollTrigger: { trigger: heroImg, start: "top top", end: "bottom top", scrub: 1 },
-        });
-      }
-
-      // 3. The wordmark lifts and fades as the hero leaves, so the section
-      //    below arrives over it rather than shunting it off screen.
-      if (mask) {
-        gsap.to(mask, {
-          yPercent: -30,
-          opacity: 0.25,
-          ease: "none",
-          scrollTrigger: { trigger: mask, start: "bottom bottom", end: "bottom top", scrub: 1 },
-        });
-      }
+      /* 2 and 3 — the hero photograph parallax and the wordmark lift — used
+         to live here as scrubbed ScrollTriggers on [data-parallax-hero] and
+         [data-mask]. The hero now drives both from its own scroll progress
+         with Motion values, and two systems writing transforms to the same
+         nodes would fight. GSAP keeps the entry reveal above, which runs on
+         the h1 while Motion drives its wrapper. */
 
       // 4. Section headings set themselves, character by character. Safe to
       //    split here — none of these carry a gradient fill.

@@ -33,12 +33,13 @@ export function BrandRail() {
   return (
     <section aria-labelledby="brands-heading" className="brand-rail-section">
       <div className="mx-auto flex max-w-7xl items-baseline justify-between px-6">
-        {/* 55% / 50% are the floor for AA on --panel: bone at 45% measures
-            4.19:1 and fails. Quieter than this needs a lighter ground. */}
-        <h2 id="brands-heading" className="label text-bone/55">
+        {/* Lifted a step from the 55/50 floor. AA needs 4.5:1 on --panel and
+            bone at 45% measures 4.19:1, so these cannot go quieter without
+            failing — 60/55 clears it with room. */}
+        <h2 id="brands-heading" className="label text-bone/60">
           Brands in store
         </h2>
-        <p className="label text-bone/50" aria-hidden="true">
+        <p className="label text-bone/55" aria-hidden="true">
           01 — {count}
         </p>
       </div>
