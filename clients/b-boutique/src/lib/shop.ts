@@ -105,10 +105,11 @@ export type Category = (typeof categories)[number];
 /** New in. Prices deliberately absent — the shop sells in person,
  *  and stock turns faster than a website does. */
 export const newIn = [
-  { slug: "linen-trouser",   name: "Wide-leg linen trouser", category: "Trousers",    tone: "bone" },
-  { slug: "wool-jacket",     name: "Cropped wool jacket",    category: "Jackets",     tone: "marble" },
+  { slug: "wool-trouser",    name: "Wide-leg wool trouser",  category: "Trousers",    tone: "bone" },
+  { slug: "camel-blazer",    name: "Tailored camel blazer",  category: "Jackets",     tone: "marble" },
   { slug: "lambswool-crew",  name: "Ribbed lambswool crew",  category: "Knitwear",    tone: "gold" },
-  { slug: "tea-dress",       name: "Midi tea dress",         category: "Dresses",     tone: "onyx" },
+  { slug: "cotton-tee",      name: "Heavyweight cotton tee", category: "Tops",        tone: "bone" },
+  { slug: "slip-dress",      name: "Bias-cut silk slip dress", category: "Dresses",   tone: "onyx" },
   { slug: "leather-crossbody", name: "Leather crossbody",    category: "Accessories", tone: "marble" },
   { slug: "silk-scarf",      name: "Silk twill scarf",       category: "Accessories", tone: "gold" },
   { slug: "stoneware-carafe", name: "Stoneware carafe",      category: "Homeware",    tone: "onyx" },

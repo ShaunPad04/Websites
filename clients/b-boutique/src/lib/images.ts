@@ -30,11 +30,22 @@ export const images: Partial<Record<string, string>> = {
   "panel-accessories": CDN + "hf_20260831_213132_410d532a-cd67-4c29-9277-1a33348ce3c2.png",
   "panel-homeware":    CDN + "hf_20260831_213133_3cad2c02-b79d-4c6f-bb3b-865418e5192e.png",
 
-  // New in
-  "new-linen-trouser":     CDN + "hf_20260831_213140_f9757bf0-e43b-427a-aac5-07105b13a68a.png",
-  "new-wool-jacket":       CDN + "hf_20260831_213143_2ed31437-4486-4ab3-8f74-35716f747a9c.png",
+  /* New in — one photograph per piece, keyed by slug.
+   *
+   * The trouser, blazer, tee and slip dress were shot 2026-09-01 as single
+   * garments: the brief was a dress, a jacket, trousers and a t-shirt that
+   * read as specific pieces rather than a rail or a still life. Same set as
+   * the rest — black marble with white veining, polished brass, warm window
+   * light from the left, 85mm — so they cut together with the originals.
+   *
+   * They replace the earlier linen trouser, cropped wool jacket and midi tea
+   * dress, whose slugs changed with them so a name can never drift from its
+   * photograph. The superseded URLs are in this file's git history. */
+  "new-wool-trouser":      CDN + "hf_20260901_211245_625772ec-5bbb-414c-a36a-c0087e92624a.png",
+  "new-camel-blazer":      CDN + "hf_20260901_211239_cc10350a-5a88-4247-bc86-014303508a30.png",
+  "new-cotton-tee":        CDN + "hf_20260901_211251_7a3352f0-d1b5-4990-b4e5-f2791eedd1a4.png",
+  "new-slip-dress":        CDN + "hf_20260901_211233_0610cafa-ecc2-4711-bacb-05061bc841ff.png",
   "new-lambswool-crew":    CDN + "hf_20260831_213144_1312c8d5-9154-4c77-9a39-380f7b328e63.png",
-  "new-tea-dress":         CDN + "hf_20260831_213222_3fb91d1a-d55d-40f0-b8d2-1dba64de063e.png",
   "new-leather-crossbody": CDN + "hf_20260831_213223_e22ab789-2dd1-4cf5-8b64-6bd4815a9348.png",
   "new-silk-scarf":        CDN + "hf_20260831_213229_80e138d9-ece1-4d14-9d7f-c00b7603590c.png",
   "new-stoneware-carafe":  CDN + "hf_20260831_213231_6b53732f-613b-42ee-82e6-a5b400917dde.png",
