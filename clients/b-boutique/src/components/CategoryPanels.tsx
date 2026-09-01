@@ -64,6 +64,8 @@ export function CategoryPanels() {
                 <ImageSlot
                   tone={TONES[i]}
                   seed={i}
+                  slot={`panel-${cat.slug}`}
+                  alt={`${cat.name} at B Boutique`}
                   className="absolute inset-0 h-full w-full"
                 />
                 {/* Gradient exit so type sits on the image instead of fighting it */}
@@ -112,7 +114,13 @@ export function CategoryPanels() {
       <ul className="mt-12 grid grid-cols-2 gap-3 px-6 md:hidden">
         {categories.map((cat, i) => (
           <li key={cat.slug} className="relative aspect-[3/4] overflow-hidden rounded-xl">
-            <ImageSlot tone={TONES[i]} seed={i} className="absolute inset-0 h-full w-full" />
+            <ImageSlot
+              tone={TONES[i]}
+              seed={i}
+              slot={`panel-${cat.slug}`}
+              alt={`${cat.name} at B Boutique`}
+              className="absolute inset-0 h-full w-full"
+            />
             <span
               aria-hidden="true"
               className="absolute inset-0"

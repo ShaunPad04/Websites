@@ -93,6 +93,8 @@ export function NewInRail() {
               <ImageSlot
                 tone={piece.tone as Tone}
                 seed={i + 11}
+                slot={`new-${piece.slug}`}
+                alt={piece.name}
                 className="absolute inset-0 h-full w-full transition-transform duration-700 ease-out group-hover:scale-[1.04]"
               />
             </div>

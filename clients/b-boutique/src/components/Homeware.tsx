@@ -42,10 +42,22 @@ export function Homeware() {
             template; the offset gives the composition somewhere to breathe. */}
         <Reveal delay={2} className="order-1 grid grid-cols-2 gap-4 lg:order-2">
           <div className="relative aspect-[3/4] overflow-hidden rounded-2xl">
-            <ImageSlot tone="gold" seed={21} className="absolute inset-0 h-full w-full" />
+            <ImageSlot
+              tone="gold"
+              seed={21}
+              slot="homeware-ceramics"
+              alt="Stoneware and candlelight at B Boutique"
+              className="absolute inset-0 h-full w-full"
+            />
           </div>
           <div className="relative mt-10 aspect-[3/4] overflow-hidden rounded-2xl">
-            <ImageSlot tone="bone" seed={22} className="absolute inset-0 h-full w-full" />
+            <ImageSlot
+              tone="bone"
+              seed={22}
+              slot="homeware-linen"
+              alt="Linen and glassware at B Boutique"
+              className="absolute inset-0 h-full w-full"
+            />
           </div>
         </Reveal>
       </div>

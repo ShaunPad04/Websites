@@ -87,12 +87,12 @@ export type Category = (typeof categories)[number];
 /** New in. Prices deliberately absent — the shop sells in person,
  *  and stock turns faster than a website does. */
 export const newIn = [
-  { name: "Wide-leg linen trouser", category: "Trousers",    tone: "bone" },
-  { name: "Cropped wool jacket",    category: "Jackets",     tone: "marble" },
-  { name: "Ribbed lambswool crew",  category: "Knitwear",    tone: "gold" },
-  { name: "Midi tea dress",         category: "Dresses",     tone: "onyx" },
-  { name: "Leather crossbody",      category: "Accessories", tone: "marble" },
-  { name: "Silk twill scarf",       category: "Accessories", tone: "gold" },
-  { name: "Stoneware carafe",       category: "Homeware",    tone: "onyx" },
-  { name: "Boucle overshirt",       category: "Jackets",     tone: "bone" },
+  { slug: "linen-trouser",   name: "Wide-leg linen trouser", category: "Trousers",    tone: "bone" },
+  { slug: "wool-jacket",     name: "Cropped wool jacket",    category: "Jackets",     tone: "marble" },
+  { slug: "lambswool-crew",  name: "Ribbed lambswool crew",  category: "Knitwear",    tone: "gold" },
+  { slug: "tea-dress",       name: "Midi tea dress",         category: "Dresses",     tone: "onyx" },
+  { slug: "leather-crossbody", name: "Leather crossbody",    category: "Accessories", tone: "marble" },
+  { slug: "silk-scarf",      name: "Silk twill scarf",       category: "Accessories", tone: "gold" },
+  { slug: "stoneware-carafe", name: "Stoneware carafe",      category: "Homeware",    tone: "onyx" },
+  { slug: "boucle-overshirt", name: "Boucle overshirt",      category: "Jackets",     tone: "bone" },
 ] as const;
