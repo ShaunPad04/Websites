@@ -36,10 +36,10 @@ export type LogoCarousel3DProps = {
  * Performance notes, since this runs every frame:
  *   - No React state in the loop. The rAF callback writes `transform`,
  *     `filter` and `opacity` straight to the DOM nodes it captured once.
- *   - Items are laid out absolutely from a measured step width, so nothing
+ *   - Items are laid out absolutely from their measured widths, so nothing
  *     reflows as they move; only compositor properties change.
- *   - The list is rendered twice and `offset` wraps modulo one set width, so
- *     the loop has no seam to jump at.
+ *   - The list is repeated until it outruns the viewport and `offset` wraps
+ *     modulo the whole track, so the loop has no seam to jump at.
  *   - IntersectionObserver stops the loop when the section is off screen, and
  *     visibilitychange stops it when the tab is hidden.
  *   - prefers-reduced-motion renders a static, unblurred row and never starts
@@ -72,7 +72,12 @@ export function LogoCarousel3D({
   const visible = useRef(true);
   const raf = useRef<number | undefined>(undefined);
   const trackWidth = useRef(0);
-  const step = useRef(logoSize + gap);
+  // Items are text wordmarks of very different widths ("HOMEWARE" vs
+  // "CHOSEN BY HAND"). A single fixed step lays the long ones on top of their
+  // neighbours, so every slot carries its own measured width and left edge.
+  const widths = useRef<number[]>([]);
+  const lefts = useRef<number[]>([]);
+  const gapPx = useRef(gap);
 
   /* How many times the list is repeated. One copy is never enough: the row
      has to be wider than the viewport plus a slot, or a gap opens at the
@@ -83,29 +88,44 @@ export function LogoCarousel3D({
     const vp = viewport.current;
     if (!vp) return;
     const w = vp.clientWidth;
-    // Scale the slot down on narrow screens so spacing stays even and the
-    // blur cost stays low on mobile GPUs.
+    // Tighten spacing on narrow screens so the row stays even and the blur
+    // cost stays low on mobile GPUs. Only the gap scales — the wordmarks size
+    // themselves from CSS, so their measured width is already correct.
     const scaleFactor = w < 640 ? 0.66 : w < 1024 ? 0.82 : 1;
-    step.current = (logoSize + gap) * scaleFactor;
+    gapPx.current = gap * scaleFactor;
 
-    const oneSet = step.current * items.length;
-    // Enough copies to cover the viewport plus a slot at each edge, and never
-    // fewer than two so there is always something following the last item.
-    const needed = Math.max(2, Math.ceil((w + step.current * 2) / oneSet) + 1);
-    setCopies((c) => (c === needed ? c : needed));
+    const els = nodes.current;
+    if (els.length === 0) return;
 
-    // Wrap over the FULL rendered width, not one set. Wrapping over one set
-    // puts every duplicate on top of its original: the copies coincide, the
-    // doubling does nothing, and the row cannot be wider than a single set.
-    trackWidth.current = step.current * items.length * needed;
-  }, [gap, items.length, logoSize]);
+    // offsetWidth is the untransformed layout width, so the running scale and
+    // blur written by paint() do not feed back into the measurement.
+    widths.current = els.map((n) => n.offsetWidth);
+
+    let cursor = 0;
+    lefts.current = els.map((n, i) => {
+      const at = cursor;
+      cursor += widths.current[i] + gapPx.current;
+      return at;
+    });
+    trackWidth.current = cursor;
+
+    // One set has to cover the viewport plus a slot at each edge, else a gap
+    // opens at the frame edge. Measure the set actually rendered.
+    const perSet = Math.min(items.length, els.length);
+    let setWidth = 0;
+    for (let i = 0; i < perSet; i++) setWidth += widths.current[i] + gapPx.current;
+    if (setWidth > 0) {
+      const needed = Math.max(2, Math.ceil((w + setWidth) / setWidth) + 1);
+      setCopies((c) => (c === needed ? c : needed));
+    }
+  }, [gap, items.length]);
 
   useEffect(() => {
     const vp = viewport.current;
     if (!vp) return;
 
-    measure();
     nodes.current = Array.from(vp.querySelectorAll<HTMLElement>("[data-logo]"));
+    measure();
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const narrow = window.matchMedia("(max-width: 640px)");
@@ -116,16 +136,21 @@ export function LogoCarousel3D({
       const half = w / 2 || 1;
       const blurCap = narrow.matches ? Math.min(maxBlur, 1.4) : maxBlur;
 
+      const total = trackWidth.current;
+      if (!total) return;
+
       for (let i = 0; i < nodes.current.length; i++) {
         const node = nodes.current[i];
-        // Wrap into a single set width so the second copy fills the gap the
-        // first one leaves — no seam, no reset jump.
-        let x = i * step.current + offset.current;
-        const total = trackWidth.current || step.current * nodes.current.length;
-        x = ((x % total) + total) % total;
-        if (x > total - step.current) x -= total;
+        const wI = widths.current[i] ?? 0;
 
-        const itemCentre = x + step.current / 2;
+        // Wrap over the whole measured track so the copies chain end to end —
+        // no seam, no reset jump. An item past the right edge comes back round
+        // to sit before the first, so the row is continuous in both directions.
+        let x = (lefts.current[i] ?? 0) + offset.current;
+        x = ((x % total) + total) % total;
+        if (x > total - wI) x -= total;
+
+        const itemCentre = x + wI / 2;
         const d = Math.min(Math.abs(itemCentre - centre) / half, 1);
         const eased = d * d; // bias the falloff so the centre stays sharp longer
 
@@ -133,7 +158,7 @@ export function LogoCarousel3D({
         const blur = reduced.matches ? 0 : blurCap * eased;
         const opacity = 1 - 0.55 * eased;
 
-        node.style.transform = `translate3d(${itemCentre}px, -50%, 0) translateX(-50%) scale(${scale})`;
+        node.style.transform = `translate3d(${x}px, -50%, 0) scale(${scale})`;
         node.style.filter = blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : "none";
         node.style.opacity = String(opacity);
         node.style.zIndex = String(Math.round((1 - d) * 100));
@@ -201,7 +226,18 @@ export function LogoCarousel3D({
     };
     window.addEventListener("resize", onResize);
 
+    // The wordmarks are set in a webfont. Widths measured against the fallback
+    // are wrong by enough to overlap, so re-measure once the real face lands.
+    let stale = false;
+    document.fonts?.ready.then(() => {
+      if (!stale) {
+        measure();
+        paint();
+      }
+    });
+
     return () => {
+      stale = true;
       stop();
       io.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);

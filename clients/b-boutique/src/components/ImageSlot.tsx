@@ -1,13 +1,13 @@
-/* A placeholder that is *designed*, not a grey box.
+/* An image slot whose *fallback* is designed, not a grey box.
  *
  * The dark slots render as veined black marble, echoing the feature wall in
- * the shop, so the page reads as finished while real photography is being
- * shot. Swapping in real images later means replacing this component with
- * next/image at the same call sites — the crops already match. */
-
-import NextImage from "next/image";
+ * the shop; the light ones as woven cloth. When `slot` resolves to a
+ * photograph, SlotPhoto layers it on top — and drops back to this artwork if
+ * the file fails to load, so a slot is never a broken-image icon. */
 
 import { imageFor } from "@/lib/images";
+
+import { SlotPhoto } from "./SlotPhoto";
 
 export type Tone = "bone" | "onyx" | "marble" | "gold" | "red";
 
@@ -98,33 +98,12 @@ export function ImageSlot({
       />
       <div className="grain absolute inset-0" />
       {src ? (
-        src.startsWith("/") ? (
-          /* Vendored in public/: next/image can encode AVIF/WebP and emit a
-             srcset, so it gets the real treatment. `fill` needs a positioned
-             parent, which the wrapper above provides. */
-          <NextImage
-            src={src}
-            alt={alt ?? ""}
-            fill
-            priority={priority}
-            sizes={sizes ?? "100vw"}
-            className="object-cover"
-            style={{ color: "transparent" }}
-          />
-        ) : (
-          /* Remote: the origin is unreachable from the build environment, so
-             the optimiser would fail. Serve it directly. */
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={src}
-            alt={alt ?? ""}
-            loading={priority ? "eager" : "lazy"}
-            decoding="async"
-            fetchPriority={priority ? "high" : "auto"}
-            style={{ color: "transparent" }}
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        )
+        <SlotPhoto
+          src={src}
+          alt={alt ?? ""}
+          priority={priority}
+          sizes={sizes ?? "100vw"}
+        />
       ) : null}
       {label ? (
         <span className="label absolute bottom-3 left-3 text-white/55">{label}</span>

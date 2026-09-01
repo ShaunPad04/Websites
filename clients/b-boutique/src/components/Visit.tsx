@@ -1,5 +1,6 @@
 import { shop, hours, formatHour } from "@/lib/shop";
 import { OpenBadge } from "./OpenBadge";
+import { MapPanel } from "./MapPanel";
 import { Reveal } from "./Reveal";
 
 const MAPS_QUERY = encodeURIComponent(
@@ -78,33 +79,13 @@ export function Visit() {
             })}
           </dl>
 
-          <div className="relative mt-8 h-64 overflow-hidden rounded-2xl border border-white/10 bg-onyx-lift">
-            {/* Fallback sits underneath: if the embed is blocked, this is what
-                shows, and it still tells you where the shop is. */}
-            <div className="absolute inset-0 grid place-items-center px-6 text-center">
-              <div>
-                <p className="display text-2xl text-bone">{shop.street}</p>
-                <p className="mt-1 text-sm text-bone/60">
-                  {shop.town} · {shop.postcode}
-                </p>
-                <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${MAPS_QUERY}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-block text-sm text-gold-lift underline underline-offset-4"
-                >
-                  Open in Google Maps
-                </a>
-              </div>
-            </div>
-            <iframe
-              title={`Map showing ${shop.name}, ${shop.street}, ${shop.town}`}
-              src={`https://www.google.com/maps?q=${MAPS_QUERY}&output=embed`}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className="absolute inset-0 h-full w-full border-0 grayscale-[0.3] contrast-[1.05]"
-            />
-          </div>
+          <MapPanel
+            street={shop.street}
+            town={shop.town}
+            postcode={shop.postcode}
+            query={MAPS_QUERY}
+            title={`Map showing ${shop.name}, ${shop.street}, ${shop.town}`}
+          />
         </Reveal>
       </div>
     </section>
