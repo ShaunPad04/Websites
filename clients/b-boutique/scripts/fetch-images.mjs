@@ -24,35 +24,55 @@ import { slots, sourceFor, VENDORED } from "../src/lib/images.ts";
 
 const MAX_W = 1600;      // 2x the widest slot on the page, and no more
 const QUALITY = 88;      // visually lossless at this scale; next/image re-encodes down
+const CONCURRENCY = 4;   // 19 files of ~8MB each; serial is a needlessly long wait
 const MANIFEST = "src/lib/images.ts";
 const force = process.argv.includes("--force");
 
 const kb = (n) => (n / 1024).toFixed(0).padStart(4) + " KB";
 
+/** A 4xx is the server telling you the answer will not change — a blocked
+ *  host, a dead URL, an expired signature. Retrying it four times with backoff
+ *  just multiplies the wait before the same failure: 19 slots against a
+ *  blocking proxy took ten minutes to report what the first response said. */
+class Permanent extends Error {}
+
 async function download(url, attempt = 1) {
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(60_000) });
+    const res = await fetch(url, { signal: AbortSignal.timeout(30_000) });
+    if (res.status >= 400 && res.status < 500) throw new Permanent(`HTTP ${res.status}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return Buffer.from(await res.arrayBuffer());
   } catch (err) {
-    if (attempt >= 4) throw err;
+    if (err instanceof Permanent || attempt >= 3) throw err;
     await new Promise((r) => setTimeout(r, 2 ** attempt * 1000));
     return download(url, attempt + 1);
   }
 }
 
+/** Run `worker` over `items`, at most `limit` in flight. */
+async function pool(items, limit, worker) {
+  const queue = [...items];
+  await Promise.all(
+    Array.from({ length: Math.min(limit, queue.length) }, async () => {
+      while (queue.length) await worker(queue.shift());
+    }),
+  );
+}
+
 await mkdir("public/img", { recursive: true });
 
 let done = 0, skipped = 0, failed = 0, bytesIn = 0, bytesOut = 0;
+const errors = [];
 
-for (const slot of slots) {
+// One line per slot, written whole: with work in flight, a half-written line
+// would interleave with another slot's result.
+await pool(slots, CONCURRENCY, async (slot) => {
   const out = `public/img/${slot}.webp`;
   if (!force && (await stat(out).catch(() => null))) {
     console.log(`  ${slot.padEnd(24)} skipped (exists)`);
     skipped++;
-    continue;
+    return;
   }
-  process.stdout.write(`  ${slot.padEnd(24)} `);
   try {
     const raw = await download(sourceFor(slot));
     const buf = await sharp(raw)
@@ -61,17 +81,23 @@ for (const slot of slots) {
       .toBuffer();
     await writeFile(out, buf);
     const { width, height } = await sharp(buf).metadata();
-    console.log(`${kb(raw.length)} -> ${kb(buf.length)}  ${width}x${height}`);
+    console.log(`  ${slot.padEnd(24)} ${kb(raw.length)} -> ${kb(buf.length)}  ${width}x${height}`);
     bytesIn += raw.length; bytesOut += buf.length; done++;
   } catch (err) {
-    console.log(`FAILED — ${err.message}`);
+    console.log(`  ${slot.padEnd(24)} FAILED — ${err.message}`);
+    errors.push(err.message);
     failed++;
   }
-}
+});
 
 if (failed) {
   console.error(`\n${failed} slot(s) failed. VENDORED left as-is so the site keeps`);
   console.error(`using the CDN rather than pointing at files that are not there.`);
+  if (errors.some((e) => e.includes("403"))) {
+    console.error(`\nEvery failure is a 403. That is the egress policy of wherever this`);
+    console.error(`ran, not a bad URL — the Claude Code sandbox denies this CDN. Run it`);
+    console.error(`from a machine with ordinary internet access.`);
+  }
   process.exit(1);
 }
 
