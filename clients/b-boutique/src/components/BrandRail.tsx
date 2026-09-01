@@ -1,4 +1,4 @@
-import { brands } from "@/lib/brands";
+import { brands, slotFor } from "@/lib/brands";
 
 /* The brand rail — a slow, flat marquee directly under the hero.
  *
@@ -23,29 +23,28 @@ export function BrandRail() {
       /* Copy two is decoration: the accessible list is copy one. */
       aria-hidden={hidden ? "true" : undefined}
     >
-      {brands.map((b) => (
-        <li key={b.name} className="brand-rail-item">
-          {b.src ? (
-            /* Recoloured with a mask rather than a fill so a single-colour
-               official SVG is never edited — the artwork is the stencil, the
-               bone comes from the site. */
+      {brands.map((b) => {
+        const slot = slotFor(b);
+        return (
+          <li key={b.name} className="brand-rail-item">
+            {/* Recoloured with a mask rather than a fill so the official
+                artwork is never edited — the file is the stencil, the bone
+                comes from the site. The slot is built to the asset's own
+                ratio, so `contain` fills it exactly and nothing is stretched,
+                cropped or letterboxed. */}
             <span
               className="brand-rail-mark"
               role="img"
               aria-label={hidden ? undefined : b.name}
               style={{
-                "--mark": `url(${b.src})`,
-                "--h": `${b.opticalHeight ?? 26}px`,
+                "--mark": `url("${b.src}")`,
+                "--w": `${slot.width.toFixed(1)}px`,
+                "--h": `${slot.height.toFixed(1)}px`,
               } as React.CSSProperties}
             />
-          ) : (
-            /* No official asset supplied. This is a plain typeset stand-in in
-               the site's own mono — deliberately NOT a facsimile of the real
-               wordmark, so it can never be mistaken for the trademark. */
-            <span className="brand-rail-pending">{b.name}</span>
-          )}
-        </li>
-      ))}
+          </li>
+        );
+      })}
     </ul>
   );
 

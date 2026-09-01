@@ -199,7 +199,7 @@ body {
   --rail-duration: 34s;      /* mobile: inside the 28–40s band */
   --rail-scale: 0.8;         /* optical heights step down on small screens */
   background: var(--panel);
-  padding-block: 36px 40px;  /* ~134px total at mobile, mid of the 120–150 band */
+  padding-block: 31px 34px;  /* holds the approved 134px section height */
 }
 
 @media (min-width: 640px) {
@@ -207,7 +207,7 @@ body {
     --rail-gap: 104px;       /* desktop: inside the 80–130px band */
     --rail-duration: 44s;    /* desktop: inside the 35–50s band */
     --rail-scale: 1;
-    padding-block: 50px 54px; /* ~166px total at desktop, mid of the 150–190 band */
+    padding-block: 44px 47px; /* holds the approved 166px section height */
   }
 }
 
@@ -246,7 +246,7 @@ body {
 .brand-rail-mark {
   display: block;
   height: calc(var(--h) * var(--rail-scale));
-  width: 12rem;
+  width: calc(var(--w) * var(--rail-scale));
   background-color: var(--bone);
   -webkit-mask-image: var(--mark);
   mask-image: var(--mark);
@@ -262,21 +262,7 @@ body {
   transition: opacity 240ms var(--ease-out);
 }
 
-/* Stand-in for a brand with no official asset yet. Set in the site's mono so
-   it reads as a placeholder rather than as anybody's wordmark. */
-.brand-rail-pending {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: calc(0.8125rem * var(--rail-scale));
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: var(--bone);
-  opacity: 0.68;
-  transition: opacity 240ms var(--ease-out);
-}
-
-.brand-rail-item:hover .brand-rail-mark,
-.brand-rail-item:hover .brand-rail-pending { opacity: 1; }
+.brand-rail-item:hover .brand-rail-mark { opacity: 1; }
 
 @keyframes brand-rail-scroll {
   from { transform: translate3d(0, 0, 0); }
