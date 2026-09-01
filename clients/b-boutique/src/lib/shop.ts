@@ -98,3 +98,20 @@ export const newIn = [
   { slug: "stoneware-carafe", name: "Stoneware carafe",      category: "Homeware",    tone: "onyx" },
   { slug: "boucle-overshirt", name: "Boucle overshirt",      category: "Jackets",     tone: "bone" },
 ] as const;
+
+/** The marquee below the hero.
+ *
+ *  Deliberately the shop's own language, not brand logos: naming labels a
+ *  real trading business may not stock is a claim, not decoration. Swap these
+ *  for `{ name, src: "/img/brands/x.svg" }` once the stockist list is known —
+ *  LogoCarousel3D already renders an <img> whenever `src` is present.
+ */
+export const marquee = [
+  { name: "WOMENSWEAR" },
+  { name: "ACCESSORIES" },
+  { name: "HOMEWARE" },
+  { name: "SMALL RUNS" },
+  { name: "NO REPEATS" },
+  { name: "CHOSEN BY HAND" },
+  { name: "SEAVIEW STREET" },
+] as const;

@@ -1,5 +1,6 @@
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
+import { BrandMarquee } from "@/components/BrandMarquee";
 import { HorizontalRails } from "@/components/HorizontalRails";
 import { NewInRail } from "@/components/NewInRail";
 import { Homeware } from "@/components/Homeware";
@@ -15,7 +16,9 @@ export default function Home() {
       <main id="main" className="flex-1">
         {/* 01 Hook — what this is */}
         <Hero />
-        {/* 02 The rails — the heroic interaction */}
+        {/* 02 A breath — what the shop is, in one moving line */}
+        <BrandMarquee />
+        {/* 03 The rails — the heroic interaction */}
         <HorizontalRails />
         {/* 03 Proof — actual stock, moving weekly */}
         <NewInRail />
