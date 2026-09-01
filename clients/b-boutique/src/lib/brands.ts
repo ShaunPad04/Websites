@@ -58,7 +58,7 @@ export type Brand = {
 };
 
 export const brands: Brand[] = [
-  { name: "Mos Mosh",       src: "/img/brands/mos-mosh.png",     iw: 5.9068,  mw: 10,      mh: 3.7267, ox: 2.0497, oy: 1.3665, cap: 22 },
+  { name: "Mos Mosh",       src: "/img/brands/mos-mosh.webp",    iw: 5.9068,  mw: 10,      mh: 3.7267, ox: 2.0497, oy: 1.3665, cap: 22 },
   { name: "Rino & Pelle",   src: "/img/brands/rino-pelle.svg",   iw: 12.8141, mw: 12.8141, mh: 1.0050, ox: 0,      oy: 0,      cap: 23 },
   { name: "Part Two",       src: "/img/brands/part-two.png",     iw: 9.1783,  mw: 9.1783,  mh: 1,      ox: 0,      oy: 0,      cap: 24 },
   { name: "b.young",        src: "/img/brands/byoung.svg",       iw: 4.6383,  mw: 4.6383,  mh: 1,      ox: 0,      oy: 0,      cap: 26 },
