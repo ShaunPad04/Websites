@@ -388,3 +388,104 @@ body {
   letter-spacing: 0;
   margin-left: 0.1em;
 }
+
+/* ── FAQ ─────────────────────────────────────────────────────────────────
+   Rules between rows, never boxes around them: the list should read as one
+   editorial column with hairlines in it, not as eight cards. */
+.faq-list { border-top: 1px solid var(--bone-line); }
+.faq-row { border-bottom: 1px solid var(--bone-line); }
+
+.faq-summary {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr auto;
+  align-items: baseline;
+  gap: 0 1rem;
+  /* Comfortably past the 44px touch minimum at every width. */
+  min-height: 3.75rem;
+  padding: 1.4rem 0;
+  cursor: pointer;
+  list-style: none;               /* Firefox marker */
+  color: var(--onyx);
+}
+.faq-summary::-webkit-details-marker { display: none; }
+
+.faq-summary:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.faq-n { color: color-mix(in oklab, var(--onyx) 45%, transparent); }
+
+.faq-q {
+  font-size: 1.0625rem;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+  transition: color 200ms var(--ease-out);
+}
+.faq-summary:hover .faq-q { color: var(--gold); }
+
+.faq-icon {
+  align-self: center;
+  flex: none;
+  color: color-mix(in oklab, var(--onyx) 55%, transparent);
+  transition: transform 260ms var(--ease-out), color 200ms var(--ease-out);
+}
+.faq-row[open] .faq-icon {
+  /* 45 degrees is the whole trick: the same two strokes become a cross. */
+  transform: rotate(45deg);
+  color: var(--onyx);
+}
+.faq-summary:hover .faq-icon { color: var(--gold); }
+
+.faq-answer {
+  grid-column: 2 / -1;
+  padding: 0 3.5rem 1.75rem 3.5rem;
+  max-width: 46rem;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: color-mix(in oklab, var(--onyx) 72%, transparent);
+}
+@media (max-width: 640px) {
+  .faq-answer { padding-inline: 0 1.5rem; }
+}
+
+/* Unconfirmed content. Deliberately loud in the oxblood so it cannot be
+   mistaken for copy, or shipped by accident. */
+.faq-pending {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+/* The open/close transition. `interpolate-size` is scoped to the rows rather
+   than set on :root, so enabling keyword interpolation cannot leak into any
+   other transition on the site. */
+@media (prefers-reduced-motion: no-preference) {
+  .faq-row { interpolate-size: allow-keywords; }
+  .faq-row::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition: block-size 260ms var(--ease-out), content-visibility 260ms;
+    transition-behavior: allow-discrete;
+  }
+  .faq-row[open]::details-content { block-size: auto; }
+}
+
+/* The staggered answer reveal, adapted from the reference component. Opacity
+   only on inline spans — no blur, no transform — so nothing is promoted to a
+   layer, text metrics are untouched, and the whole answer has landed inside
+   ~600ms rather than crawling in character by character. */
+@media (prefers-reduced-motion: no-preference) {
+  .faq-row[open] .faq-w {
+    animation: faq-word 300ms var(--ease-out) both;
+    animation-delay: calc(var(--i) * 18ms);
+  }
+}
+@keyframes faq-word {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

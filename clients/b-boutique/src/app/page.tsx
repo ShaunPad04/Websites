@@ -5,6 +5,7 @@ import { PointOfView } from "@/components/PointOfView";
 import { HorizontalRails } from "@/components/HorizontalRails";
 import { NewInRail } from "@/components/NewInRail";
 import { Homeware } from "@/components/Homeware";
+import { Faq } from "@/components/Faq";
 import { Visit } from "@/components/Visit";
 import { Footer } from "@/components/Footer";
 import { MotionLayer } from "@/components/MotionLayer";
@@ -27,7 +28,9 @@ export default function Home() {
         <NewInRail />
         {/* 05 A second world — homeware */}
         <Homeware />
-        {/* 06 The ask — a postcode, not a basket */}
+        {/* 06 The practical questions, once they are interested */}
+        <Faq />
+        {/* 07 The ask — a postcode, not a basket */}
         <Visit />
       </main>
       <Footer />
