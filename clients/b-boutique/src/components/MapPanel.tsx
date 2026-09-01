@@ -21,6 +21,7 @@ export function MapPanel({
   town,
   postcode,
   query,
+  embedSrc,
   title,
   /** Layout only — the panel keeps its own surface and border. Lets the
    *  footer run a taller map than the Visit section without either one
@@ -31,6 +32,9 @@ export function MapPanel({
   town: string;
   postcode: string;
   query: string;
+  /** Where the iframe points. Separate from `query`, which is the readable
+   *  address used for the links a person clicks. */
+  embedSrc: string;
   title: string;
   className?: string;
 }) {
@@ -68,7 +72,7 @@ export function MapPanel({
       {shown ? (
         <iframe
           title={title}
-          src={`https://www.google.com/maps?q=${query}&output=embed`}
+          src={embedSrc}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
           className="absolute inset-0 h-full w-full border-0 grayscale-[0.3] contrast-[1.05]"

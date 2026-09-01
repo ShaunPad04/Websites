@@ -1,4 +1,4 @@
-import { footerNav, socials, directionsHref, mapsQuery } from "@/lib/nav";
+import { footerNav, socials, directionsHref, mapsQuery, mapEmbedSrc } from "@/lib/nav";
 import { MapPanel } from "./MapPanel";
 import { shop, addressLines } from "@/lib/shop";
 
@@ -45,6 +45,7 @@ export function Footer() {
               town={shop.town}
               postcode={shop.postcode}
               query={mapsQuery}
+              embedSrc={mapEmbedSrc}
               title={`Map showing ${shop.name}, ${shop.street}, ${shop.town}`}
               className="mt-5 h-[17rem] sm:h-[20rem]"
             />

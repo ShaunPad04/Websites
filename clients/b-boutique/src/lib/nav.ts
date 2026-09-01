@@ -41,8 +41,17 @@ export const mapsQuery = encodeURIComponent(
   `${shop.name}, ${shop.street}, ${shop.town} ${shop.postcode}`,
 );
 
-/** Real directions link, built from the real address. Not a placeholder. */
+/** Real directions link, built from the real address. Not a placeholder.
+ *  Deliberately the address rather than the coordinates: this one is read by a
+ *  person, and "18 Sea View Street" is a destination they can check, where a
+ *  decimal pair is not. */
 export const directionsHref = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+
+/** The embedded map, pinned to the shop's own point rather than searched for
+ *  by name. B Boutique is new and may not be listed yet — the client's own
+ *  link was to the street address, not to a business — so a name search could
+ *  land anywhere. A lat/lng pin cannot. */
+export const mapEmbedSrc = `https://www.google.com/maps?q=${shop.lat},${shop.lng}&z=17&output=embed`;
 
 /** Footer navigation.
  *

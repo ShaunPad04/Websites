@@ -1,6 +1,6 @@
 import { shop, hours, formatHour } from "@/lib/shop";
 import { OpenBadge } from "./OpenBadge";
-import { mapsQuery } from "@/lib/nav";
+import { mapEmbedSrc, mapsQuery } from "@/lib/nav";
 import { MapPanel } from "./MapPanel";
 import { Reveal } from "./Reveal";
 
@@ -81,6 +81,7 @@ export function Visit() {
             town={shop.town}
             postcode={shop.postcode}
             query={mapsQuery}
+              embedSrc={mapEmbedSrc}
             title={`Map showing ${shop.name}, ${shop.street}, ${shop.town}`}
           />
         </Reveal>
