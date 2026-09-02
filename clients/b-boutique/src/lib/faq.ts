@@ -47,7 +47,19 @@ function openingSummary(): string {
 export const faq: FaqItem[] = [
   {
     q: "Where is B Boutique?",
-    a: `${shop.street}, ${shop.town} ${shop.postcode}. Sea View Street runs up from the seafront — there is on-street parking at the top, and the Market Place car park is a two-minute walk.`,
+    /* The address only. The wayfinding sentence that used to follow it —
+       "Sea View Street runs up from the seafront, there is on-street parking
+       at the top, and the Market Place car park is a two-minute walk" — was
+       never confirmed by anyone. Parking availability, a car park's name and
+       a walking time are all checkable claims a customer would act on, and
+       confirming the address did not confirm any of them.
+       Removed rather than hedged: "there may be parking nearby" is still an
+       assertion, just a vaguer one. Nothing replaces it.
+       The whole sentence went, not only the parking half — "runs up from the
+       seafront" came from the same unverified source, and clipping the clause
+       would have left a fragment of it standing as fact.
+       Restore it, in the client's own words, if and when they confirm it. */
+    a: `${shop.street}, ${shop.town} ${shop.postcode}.`,
   },
   {
     q: "What are your opening hours?",
