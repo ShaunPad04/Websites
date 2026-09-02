@@ -12,6 +12,19 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   reporter: process.env.CI ? 'github' : 'list',
+  // Visual-regression defaults. `animations: 'disabled'` is Playwright's own
+  // freeze; tests/helpers/stabilise.ts handles what it cannot reach (GSAP's
+  // ticker, Lenis, timers, fonts, lazy images).
+  expect: {
+    toHaveScreenshot: {
+      animations: 'disabled',
+      caret: 'hide',
+      scale: 'css',
+      maxDiffPixelRatio: 0.01,
+    },
+  },
+  // A baseline is only comparable against the platform that produced it.
+  snapshotPathTemplate: '{testDir}/{testFileName}-snapshots/{projectName}/{arg}{ext}',
   use: {
     baseURL: 'http://127.0.0.1:3000',
     trace: 'on-first-retry',
