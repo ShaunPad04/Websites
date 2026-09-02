@@ -106,12 +106,43 @@ export function VisitMap({
   return (
     <>
       <div className="vm-panel">
+        {/* Underneath the map, not instead of it. If the embed is blocked by a
+            consent tool, an ad blocker or a dead network, this is what is left
+            in the panel — the address, still legible, rather than a grey hole. */}
         <div className="vm-panel-inner">
           <p className="vm-panel-street">{street}</p>
           <p className="vm-panel-sub">
             {town} &middot; {postcode}
           </p>
         </div>
+
+        {/* The map, visible in place rather than only behind a button.
+            Three things make that safe:
+              loading="lazy"  — nothing is fetched until the section is near
+                                the viewport, so it stays off the critical path
+                                and the top of the page still loads with zero
+                                third-party requests;
+              pointer-events  — none, in CSS. An iframe sitting in a page eats
+                                the wheel the moment the pointer crosses it,
+                                halfway down a homepage. This one cannot: it is
+                                a picture of a map, and "Expand map" is the way
+                                in to a real one;
+              tabIndex/aria   — a frame is focusable and would otherwise be a
+                                second, dead stop in the tab order announcing a
+                                duplicate map. The interactive one is in the
+                                dialog. Both attributes are needed together:
+                                aria-hidden on a focusable element is itself a
+                                violation. */}
+        <iframe
+          title={`Map showing ${street}, ${town}`}
+          src={embedSrc}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          className="vm-preview"
+          tabIndex={-1}
+          aria-hidden="true"
+        />
+        <span className="vm-preview-scrim" aria-hidden="true" />
 
         <button
           ref={opener}

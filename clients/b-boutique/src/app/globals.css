@@ -1533,6 +1533,42 @@ body {
   color: rgba(255, 255, 255, 0.6);
 }
 
+/* The collapsed map.
+   Monochrome and inverted so a bright Google surface does not punch a white
+   hole in a near-black section — grayscale first, then invert, which turns a
+   light map into a dark one without the colour artefacts a straight invert
+   leaves behind. 0.92 rather than a full invert keeps the labels off pure
+   white. Nothing here is interactive; see the note in VisitMap.tsx. */
+.vm-preview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none;
+  /* White, deliberately, and it is the whole trick. The filter below inverts
+     whatever this element paints, and a Google map IS a white surface — so
+     giving the frame the same white ground means a map and an empty frame get
+     treated identically and both come out near-black. Without it the browser's
+     error document is transparent, the panel's own #0D0D0D shows through, and
+     the invert turns the panel into a pale grey rectangle: measured, and it is
+     exactly what a blocked embed looked like before this line existed. */
+  background-color: #ffffff;
+  filter: grayscale(1) invert(0.92) contrast(1.05) brightness(0.95);
+}
+
+/* Keeps "Expand map" legible wherever the map happens to be pale, and settles
+   the frame into the section's black rather than letting it sit on top as a
+   lit rectangle. */
+.vm-preview-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to top, rgba(5, 5, 5, 0.55) 0%, rgba(5, 5, 5, 0.12) 42%, transparent 70%),
+    rgba(5, 5, 5, 0.18);
+}
+
 .vm-expand {
   position: absolute;
   right: 16px;
