@@ -5,6 +5,7 @@ import { PointOfView } from "@/components/PointOfView";
 import { HorizontalRails } from "@/components/HorizontalRails";
 import { NewInRail } from "@/components/NewInRail";
 import { Homeware } from "@/components/Homeware";
+import { Testimonials } from "@/components/Testimonials";
 import { Faq } from "@/components/Faq";
 import { Visit } from "@/components/Visit";
 import { Footer } from "@/components/Footer";
@@ -36,6 +37,8 @@ export default function Home() {
         <NewInRail />
         {/* 04 A second world — homeware */}
         <Homeware />
+        {/* The customer voice — the black break between two light sections */}
+        <Testimonials />
         {/* 05 The practical questions, once they are interested */}
         <Faq />
         {/* 06 The ask — a postcode, not a basket */}

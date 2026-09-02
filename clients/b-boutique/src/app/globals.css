@@ -386,6 +386,186 @@ body {
 
    Where scroll-driven animations are unsupported, nothing runs and the
    approved static hero is what shows — which is the correct fallback. */
+/* ── Testimonials ─────────────────────────────────────────────────────────
+   The black break between two cool-white sections. Split composition, no
+   container, no card, no rounded anything — the photograph and the quote are
+   one thing. */
+.tm {
+  background: var(--bb-black);
+  color: var(--bb-white);
+  display: flex;
+  flex-direction: column;
+  touch-action: pan-y;   /* the page still scrolls vertically through a swipe */
+}
+
+@media (min-width: 1024px) {
+  .tm { flex-direction: row; align-items: stretch; min-height: 650px; }
+  .tm-media { flex: 0 0 47%; }
+  .tm-body  { flex: 1 1 53%; display: flex; align-items: center; }
+}
+
+.tm-media { position: relative; overflow: hidden; aspect-ratio: 4 / 3; }
+@media (min-width: 1024px) { .tm-media { aspect-ratio: auto; } }
+@media (max-width: 1023px) { .tm-media { aspect-ratio: 3 / 2; } }
+
+/* Crossfade with a breath of scale. The panel never slides across — that
+   reads as a slideshow; this reads as one composition changing its mind. */
+.tm-shot {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(1.022);
+  transition: opacity 760ms var(--bb-ease), transform 760ms var(--bb-ease);
+}
+.tm-shot.is-active  { opacity: 1; transform: scale(1); }
+.tm-shot.is-leaving { opacity: 0; transform: scale(1.014); }
+
+.tm-shot img {
+  /* Light touch: this photography is already black marble and brass, so it
+     sits on the black without much help. Enough to sink it behind the type. */
+  filter: grayscale(22%) brightness(0.86) contrast(1.02);
+}
+
+.tm-body { padding: clamp(40px, 6vw, 90px) 18px clamp(42px, 5vw, 80px); }
+@media (min-width: 768px) { .tm-body { padding-inline: clamp(40px, 6vw, 90px); } }
+
+.tm-inner { width: 100%; max-width: 640px; }
+
+.tm-eyebrow {
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 28px;
+}
+
+/* The stage reserves the tallest slide's height, so a slide change never
+   moves the controls or shifts anything below the section. */
+.tm-stage { position: relative; display: grid; }
+.tm-stage > * { grid-area: 1 / 1; }
+
+.tm-slide {
+  margin: 0;
+  opacity: 0;
+  transform: translateY(13px);
+  transition: opacity 600ms var(--bb-ease), transform 600ms var(--bb-ease);
+  pointer-events: none;
+}
+.tm-slide.is-active  { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.tm-slide.is-leaving { opacity: 0; transform: translateY(-12px); }
+
+.tm-stars {
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  color: var(--bb-white);   /* never gold */
+  margin-bottom: 22px;
+}
+
+.tm-quote {
+  font-family: var(--font-bodoni), "Libre Bodoni", "Bodoni 72", Didot, serif;
+  font-weight: 400;
+  font-size: clamp(29px, 3.2vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  max-width: 620px;
+  color: var(--bb-white);
+}
+@media (min-width: 768px) { .tm-quote { font-size: clamp(34px, 3.2vw, 52px); } }
+
+.tm-meta { display: flex; flex-direction: column; gap: 6px; margin-top: 30px; }
+.tm-name,
+.tm-source {
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+.tm-name { color: var(--bb-white); }
+.tm-source { color: rgba(255, 255, 255, 0.55); }
+
+/* The internal marker. Same convention as the newsletter and socials markers:
+   impossible to mistake for content, and it disappears on its own the moment
+   `pending` is removed from the data. */
+.tm-pending {
+  margin-top: 26px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--bb-white);
+  border: 1px solid var(--bb-dark-border);
+  padding: 8px 12px;
+  display: inline-block;
+}
+
+.tm-controls { display: flex; align-items: center; gap: 6px; margin-top: 38px; }
+
+.tm-arrow {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--bb-white);
+  background: none;
+  border: 0;
+  transition: opacity var(--bb-dur-quick) var(--bb-ease);
+}
+.tm-arrow:hover { opacity: 0.55; }
+
+.tm-count {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.72);
+  font-variant-numeric: tabular-nums;
+  min-width: 56px;
+  text-align: center;
+}
+
+.tm-track {
+  position: relative;
+  display: block;
+  flex: 1 1 auto;
+  max-width: 180px;
+  height: 1px;
+  margin-left: 14px;
+  background: rgba(255, 255, 255, 0.2);
+}
+.tm-track-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: block;
+  background: rgba(255, 255, 255, 0.72);
+  transition: width 600ms var(--bb-ease);
+}
+
+/* Entrance, once. The slide transitions above are separate and unaffected. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .tm-media {
+      animation: tm-fade 800ms var(--bb-ease) both;
+      animation-timeline: view();
+      animation-range: entry 4% entry 34%;
+    }
+    .tm-inner {
+      animation: tm-in 800ms var(--bb-ease) both;
+      animation-timeline: view();
+      animation-range: entry 6% entry 38%;
+    }
+  }
+}
+
+@keyframes tm-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes tm-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tm-shot, .tm-slide, .tm-track-fill { transition: none; }
+}
+
 /* ── Homeware ─────────────────────────────────────────────────────────────
    Same cool white as New In. The only thing between them is a hairline: the
    change of pace comes from the composition, not from another colour band. */
