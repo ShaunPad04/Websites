@@ -79,6 +79,9 @@ export const footerNav: { heading: string; items: MenuItem[] }[] = [
     items: [
       { n: "", label: "The Boutique", href: "#our-story" },
       { n: "", label: "The Rails", href: "#rails" },
+      /* #brands became a real anchor when the marquee was rebuilt; it was
+         reachable from the header but not from here. */
+      { n: "", label: "Brands", href: "#brands" },
       { n: "", label: "Questions", href: "#faq" },
       { n: "", label: "Visit Us", href: "#visit" },
     ],

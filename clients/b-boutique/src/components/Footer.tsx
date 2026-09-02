@@ -1,202 +1,118 @@
-import { footerNav, socials, directionsHref, mapsQuery, mapEmbedSrc } from "@/lib/nav";
-import { MapPanel } from "./MapPanel";
+import { footerNav, socials, directionsHref } from "@/lib/nav";
 import { shop, addressLines } from "@/lib/shop";
+import { GiantWordmark } from "./GiantWordmark";
 
 /* The closing page of the editorial.
  *
- * Structurally this follows the reference — brand, navigation, socials,
- * diagonal divider, copyright — but laid out as an editorial grid rather than
- * a centred column, and with the reference's SaaS tells removed: no pill
- * background growing behind links on hover, no 1.05 scale, no spring at
- * stiffness 260. Those read as software. This is a shop.
+ * A server component apart from the wordmark's observer, so almost all of
+ * this ships no JavaScript.
  *
- * The entrance stagger is the part worth keeping, and it is done with a
- * scroll-driven CSS timeline rather than Motion's whileInView. Same
- * intersection-triggered result, but the footer stays a server component and
- * ships no JavaScript — which matters here, because motion/react is
- * deliberately kept off this page's critical path. Where scroll-driven
- * animation is unsupported the footer simply renders, fully visible.
+ * ── What is deliberately NOT here ─────────────────────────────────────────
+ * The newsletter. There is no handler, no action, no endpoint and no list
+ * provider anywhere in this project — the field submitted to nothing. A form
+ * that silently swallows an address is worse than no form: the visitor
+ * believes they subscribed. It returns the day there is somewhere to send it.
  *
- * The top-left block is the map; the brand statement is the closing
- * wordmark alone.
+ * The map. Visit now owns the whole location experience one section above,
+ * and a second map on the same screen is repetition, not service. MapPanel is
+ * left in the tree for the cleanup pass rather than deleted here.
  *
- * Every href resolves. There is one route in this project, so navigation is
- * section anchors; /privacy, /terms and /cookies do not exist and are not
- * linked. See footerNav. */
+ * Socials. `socials` is empty because no handles are held anywhere in this
+ * project, and a guessed URL sends customers to somebody else's account. The
+ * row renders itself the moment real ones exist.
+ *
+ * Phone and email. Both empty in shop.ts, so neither is printed — not even as
+ * a marker. The FAQ carries the internal note; a customer-facing footer is
+ * not the place for one.
+ *
+ * The registered mark. There is no evidence anywhere in this project that
+ * B Boutique holds a registered trademark, and ® is a legal claim, not a
+ * decoration. It was inferred from a visual reference and is now removed. */
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="footer-shell relative bg-panel text-bone">
-      <div className="mx-auto max-w-7xl px-6 pt-20 sm:pt-28">
-        {/* ── Brand + newsletter ─────────────────────────────────────── */}
-        <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-24">
-          {/* The map, not a second wordmark. The closing mark at the foot of
-              the page carries the brand on its own now, and a shop's footer is
-              a more useful place for a pin than for a repeat signature.
-              Reuses the Visit section's MapPanel rather than a second map:
-              same click-to-load behaviour, so Google's cookies still are not
-              set until someone asks for them, and no extra weight — the
-              component is already on the page. */}
-          <div className="footer-rise" style={{ "--d": "0%" } as React.CSSProperties}>
-            <p className="label text-bone/55">Find us</p>
-            <MapPanel
-              street={shop.street}
-              town={shop.town}
-              postcode={shop.postcode}
-              query={mapsQuery}
-              embedSrc={mapEmbedSrc}
-              title={`Map showing ${shop.name}, ${shop.street}, ${shop.town}`}
-              className="mt-5 h-[17rem] sm:h-[20rem]"
-            />
-          </div>
+    <footer className="ft">
+      <div className="ft-top">
+        <div className="ft-brand ft-rise">
+          <p className="ft-name">B Boutique</p>
+          {/* Genuine existing project copy — the same sentence the site's
+              metadata description already uses. Not a new manifesto. */}
+          <p className="ft-statement">
+            An independent boutique on {shop.street.replace(/^\d+\s/, "")},{" "}
+            {shop.town}. Womenswear, accessories and homeware, chosen one piece
+            at a time.
+          </p>
 
-          <div className="footer-rise" style={{ "--d": "6%" } as React.CSSProperties}>
-            <p className="label text-bone/55">Newsletter</p>
-            <p className="display mt-4 text-[clamp(1.4rem,2.4vw,1.9rem)] leading-tight">
-              A few good things, occasionally.
-            </p>
-            <p className="mt-4 text-[0.9375rem] leading-relaxed text-bone/60">
-              New arrivals, in-store edits and the occasional note from Sea View
-              Street.
-            </p>
+          <address className="ft-address">
+            {addressLines.map((line) => (
+              <span key={line}>{line}</span>
+            ))}
+          </address>
 
-            <form className="footer-form mt-8" noValidate>
-              <label htmlFor="footer-email" className="label text-bone/50">
-                Email address
-              </label>
-              <div className="footer-field">
-                <input
-                  id="footer-email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="you@example.com"
-                  className="footer-input"
-                />
-                {/* type="button", and no action on the form: there is no
-                    provider connected, and a submit here would reload the page
-                    with the address in the query string. Wired up properly the
-                    moment a list provider is chosen. */}
-                <button type="button" className="footer-send" aria-describedby="footer-note">
-                  <span className="sr-only">Sign up</span>
-                  <svg viewBox="0 0 16 16" width="15" height="15" fill="none" aria-hidden="true">
-                    <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-              </div>
-              <p id="footer-note" className="footer-pending">
-                [NEWSLETTER NOT CONNECTED — AWAITING LIST PROVIDER]
-              </p>
-            </form>
-          </div>
+          <a
+            className="ft-directions"
+            href={directionsHref}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Get directions <span aria-hidden="true">&#8599;</span>
+          </a>
         </div>
 
-        {/* ── Navigation ─────────────────────────────────────────────── */}
-        <nav
-          aria-label="Footer"
-          className="mt-20 grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-16"
-        >
-          {footerNav.map((group, gi) => (
-            <div
+        <div className="ft-nav">
+          {footerNav.map((group, i) => (
+            <nav
               key={group.heading}
-              className="footer-rise"
-              style={{ "--d": `${12 + gi * 5}%` } as React.CSSProperties}
+              aria-label={group.heading}
+              className="ft-rise"
+              style={{ "--d": `${(i + 1) * 50}ms` } as React.CSSProperties}
             >
-              <h2 className="label text-bone/50">{group.heading}</h2>
-              <ul className="mt-5 space-y-3">
+              <h2 className="ft-group">{group.heading}</h2>
+              <ul>
                 {group.items.map((item) => (
                   <li key={item.label}>
-                    <a href={item.href} className="footer-link">
+                    <a href={item.href} className="ft-link">
                       {item.label}
                     </a>
                   </li>
                 ))}
               </ul>
-            </div>
+            </nav>
           ))}
 
-          <div className="footer-rise" style={{ "--d": "22%" } as React.CSSProperties}>
-            <h2 className="label text-bone/50">Visit</h2>
-            <address className="mt-5 space-y-3 not-italic">
-              {addressLines.map((line) => (
-                <p key={line} className="text-[0.9375rem] text-bone/70">
-                  {line}
-                </p>
-              ))}
-            </address>
-            <a
-              href={directionsHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="footer-link mt-3 inline-block"
-            >
-              Get directions
-              <span className="footer-arrow" aria-hidden="true"> ↗</span>
-            </a>
-          </div>
-        </nav>
-
-        {/* ── Socials ────────────────────────────────────────────────── */}
-        <div className="footer-rise mt-16" style={{ "--d": "28%" } as React.CSSProperties}>
+          {/* Renders only when real accounts exist. Nothing is invented and
+              no platform homepage is linked as a stand-in. */}
           {socials.length > 0 ? (
-            <ul className="flex flex-wrap gap-x-8 gap-y-3">
-              {socials.map((s) => (
-                <li key={s.name}>
-                  <a
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="footer-social label"
-                  >
-                    {s.name}
-                    <span className="footer-arrow" aria-hidden="true"> ↗</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="footer-pending">
-              [CLIENT TO CONFIRM SOCIAL ACCOUNTS — INSTAGRAM, FACEBOOK, TIKTOK]
-            </p>
-          )}
+            <nav aria-label="Follow" className="ft-rise" style={{ "--d": "150ms" } as React.CSSProperties}>
+              <h2 className="ft-group">Follow</h2>
+              <ul>
+                {socials.map((s) => (
+                  <li key={s.name}>
+                    <a href={s.href} target="_blank" rel="noopener noreferrer" className="ft-link">
+                      {s.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ) : null}
         </div>
       </div>
 
-      {/* ── Woven rule ─────────────────────────────────────────────────
-          The reference's diagonal band, slowed right down and dropped to a
-          whisper: at 30s a cycle and 6% ivory it reads as printed texture
-          across the page rather than as something loading. */}
-      <div className="footer-weave mt-20" aria-hidden="true">
-        <div className="footer-weave-inner" />
+      {/* The payoff. aria-hidden because "B Boutique" is already the first
+          thing in this footer as real text, and again in the header — a third
+          announcement is noise to a screen reader and adds nothing. The brand
+          is not hidden, only this decorative repetition of it. */}
+      <div className="ft-wordmark" aria-hidden="true">
+        <GiantWordmark>B Boutique</GiantWordmark>
       </div>
 
-      {/* ── Closing wordmark ───────────────────────────────────────────
-          Bookends the hero. Sized in vw and allowed to breathe rather than
-          bleed, so it is never clipped at any width. */}
-      <div className="mx-auto max-w-[100rem] px-6">
-        <p
-          className="footer-mark footer-rise display select-none"
-          style={{ "--d": "34%" } as React.CSSProperties}
-        >
-          {shop.name}
-          <span className="footer-reg-lg" aria-hidden="true">®</span>
-        </p>
-      </div>
-
-      {/* ── Legal ──────────────────────────────────────────────────────
-          No privacy, terms or cookies links: those routes do not exist in
-          this project, and three links to 404s is worse than none. */}
-      <div className="mx-auto max-w-7xl px-6 pb-10">
-        {/* /55, not the /45 this first shipped with: bone at 45% measures
-            4.19:1 on --panel and fails AA. The brand rail hit the identical
-            floor earlier and carries the same note. */}
-        <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-t border-white/10 pt-8">
-          <p className="label text-bone/55">
-            © {year} {shop.name}
-          </p>
-          <p className="label text-bone/55">Tuesday to Sunday, 10 till 4</p>
-        </div>
+      <div className="ft-meta">
+        <p>&copy; {year} B Boutique</p>
+        {/* No Privacy, Terms or Cookies: this project is a single route and
+            none of those pages exist. Three links to 404s is worse than none.
+            No builder credit either — nobody asked for one. */}
       </div>
     </footer>
   );
