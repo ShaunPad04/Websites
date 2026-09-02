@@ -25,6 +25,40 @@ export function PremiumMotion() {
          JavaScript and cannot fight Lenis. Nothing hero-related belongs in
          this file any more. */
 
+      /* The philosophy statement rises line by line out of its own mask.
+       *
+       * Lines, not characters: the sentence is one thought and it should
+       * arrive in the shapes the reader will actually read it in. GSAP's own
+       * `mask: "lines"` builds the overflow wrapper, and `autoSplit` re-splits
+       * on resize — without it a desktop line break freezes into the mobile
+       * layout, which is the classic failure of this effect.
+       *
+       * `aria: "auto"` puts the original sentence on the element and hides the
+       * generated line spans, so a screen reader meets the sentence once.
+       *
+       * once: true. It plays as the section arrives and never again; replaying
+       * on every scroll direction change is what makes this pattern annoying. */
+      document.querySelectorAll<HTMLElement>("[data-lines]").forEach((el) => {
+        SplitText.create(el, {
+          type: "lines",
+          mask: "lines",
+          linesClass: "split-line",
+          aria: "auto",
+          autoSplit: true,
+          onSplit(self) {
+            return gsap.from(self.lines, {
+              yPercent: 105,
+              duration: 0.9,
+              stagger: 0.08,
+              // Closest built-in to the site's cubic-bezier(.22,1,.36,1):
+              // fast departure, long settle. Not worth another plugin.
+              ease: "power4.out",
+              scrollTrigger: { trigger: el, start: "top 85%", once: true },
+            });
+          },
+        });
+      });
+
       // 4. Section headings set themselves, character by character. Safe to
       //    split here — none of these carry a gradient fill.
       document.querySelectorAll<HTMLElement>("[data-split]").forEach((el) => {

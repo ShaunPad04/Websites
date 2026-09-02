@@ -116,3 +116,61 @@ export const newIn = [
   { slug: "boucle-overshirt", name: "Boucle overshirt",      category: "Jackets",     tone: "bone" },
 ] as const;
 
+
+/** The five featured category panels.
+ *
+ *  A subset of `categories` above rather than a second taxonomy — `slug` is
+ *  the join, so a rename in one place cannot leave the two disagreeing. Only
+ *  what the panels add lives here: the photograph, its alt text and the
+ *  displayed number.
+ *
+ *  `href` is "#visit" for all five because no category route exists yet, and
+ *  a link to a page that 404s is worse than a link to the one place these
+ *  clothes can actually be seen — the shop sells in person, not online. When
+ *  real category pages exist, change these five hrefs and nothing else moves.
+ *
+ *  The images are the final approved assets: real WebP, 1500x2000, 3:4,
+ *  full colour at source. The monochrome resting state is a CSS filter, never
+ *  baked into the file. */
+export const featured = [
+  {
+    slug: "jackets",
+    number: "01",
+    name: "Jackets",
+    image: "/img/category-jackets.webp",
+    alt: "Model wearing a structured black jacket",
+    href: "#visit",
+  },
+  {
+    slug: "trousers",
+    number: "02",
+    name: "Trousers",
+    image: "/img/category-trousers.webp",
+    alt: "Model wearing tailored black trousers",
+    href: "#visit",
+  },
+  {
+    slug: "dresses",
+    number: "03",
+    name: "Dresses",
+    image: "/img/category-dresses.webp",
+    alt: "Model wearing a black midi dress",
+    href: "#visit",
+  },
+  {
+    slug: "knitwear",
+    number: "04",
+    name: "Knitwear",
+    image: "/img/category-knitwear.webp",
+    alt: "Model wearing charcoal knitwear",
+    href: "#visit",
+  },
+  {
+    slug: "accessories",
+    number: "05",
+    name: "Accessories",
+    image: "/img/category-accessories.webp",
+    alt: "Model carrying a structured black handbag",
+    href: "#visit",
+  },
+] as const;

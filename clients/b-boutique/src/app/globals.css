@@ -247,66 +247,91 @@ body {
    A centre-weighted carousel under the hero. Positioning and motion are
    written by LogoCarousel3D straight to the nodes; everything here is static
    geometry, so no rule below is recalculated during the animation. */
-.brand-rail-section {
-  --rail-scale: 0.8;   /* mark sizes step down with the spacing on small screens */
-  background: var(--panel);
-  padding-block: 32px 34px;
-}
-
-@media (min-width: 640px) {
-  .brand-rail-section { --rail-scale: 1; padding-block: 44px 46px; }
-}
-
-.logo3d {
-  position: relative;
-  margin-top: 26px;
-  height: 52px;
-  touch-action: pan-y;
-  user-select: none;
-  /* The tilt is read against a distant camera: any closer and the rotation
-     reads as a card turning rather than a line receding. */
-  perspective: 1600px;
-  overflow: hidden;
-  /* Scale and opacity already carry most of the recession, so the mask only
-     has to clean up the last few pixels. Narrow on purpose — a wide fade
-     reads as fog. */
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 11%, #000 89%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 11%, #000 89%, transparent);
-}
-
-@media (min-width: 640px) {
-  .logo3d { height: 68px; margin-top: 28px; }
-}
-
-.logo3d-stage { position: absolute; inset: 0; }
-
-.logo3d-item {
-  position: absolute;
-  left: 0;
-  top: 50%;
+/* ── Brand marquee ────────────────────────────────────────────────────────
+   A thin band, hairline-ruled top and bottom, sitting straight under the hero
+   with nothing between them. */
+.brand-rail {
+  --rail-scale: 0.78;
+  background: var(--bb-black);
+  border-top: 1px solid var(--bb-dark-border);
+  border-bottom: 1px solid var(--bb-dark-border);
+  height: 60px;
   display: flex;
   align-items: center;
-  /* Every item is centred on the same axis by its own box centre — and the
-     box is the ink, so it is the artwork that lines up, not the padding. */
-  transform: translate3d(0, -50%, 0);
-  /* No will-change: an animated transform/opacity is promoted anyway, and
-     declaring it here pins a composited layer per mark for the life of the
-     page — memory the section does not need to spend. */
+  overflow: hidden;
 }
 
-/* The official artwork is used as a mask, never restyled: the file supplies
-   the shape, the bone comes from the site's own token.
+@media (min-width: 640px) {
+  .brand-rail { --rail-scale: 1; height: 68px; }
+}
 
-   The box is the mark's ink, and the mask is scaled (--mw/--mh) and offset
-   (--ox/--oy) so the ink lands exactly in it. Transparent padding in the
-   supplied file therefore costs nothing: it falls outside the box, so the
-   rail's spacing is true ink-to-ink rather than box-to-box. */
+.brand-viewport {
+  width: 100%;
+  overflow: hidden;
+  /* Narrow fades at both ends so marks arrive and leave rather than being
+     clipped by the viewport edge. Wide fades read as fog. */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.brand-track {
+  display: flex;
+  width: max-content;
+  /* 38s for one full pass of the doubled track. Slow enough to read a mark as
+     it goes by, which is the entire job of this band. */
+  animation: brand-marquee 38s linear infinite;
+}
+
+.brand-set {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.brand-item {
+  display: flex;
+  align-items: center;
+  gap: clamp(26px, 3.4vw, 54px);
+  padding-inline-end: clamp(26px, 3.4vw, 54px);
+}
+
+.brand-sep {
+  color: var(--bb-grey-dark);
+  font-size: 12px;
+  line-height: 1;
+  user-select: none;
+}
+
+/* -50% lands copy two exactly where copy one began, so the loop has no seam
+   and needs nothing hidden. */
+@keyframes brand-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Reduced motion: the band stops. It becomes an ordinary scrollable row —
+   every brand is still there, still readable, just not moving. */
+@media (prefers-reduced-motion: reduce) {
+  .brand-rail { height: auto; padding-block: 14px; }
+  .brand-viewport {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+    scrollbar-width: none;
+  }
+  .brand-viewport::-webkit-scrollbar { display: none; }
+  .brand-track { animation: none; }
+  /* The duplicate exists only to make the loop seamless; with no loop it is
+     just the same eight brands announced twice to nobody's benefit. */
+  .brand-track .brand-set[aria-hidden="true"] { display: none; }
+}
+
 .brand-rail-mark {
   --c: calc(var(--cap) * var(--rail-scale));
   display: block;
   height: var(--c);
   width: calc(var(--c) * var(--iw));
-  background-color: var(--bone);
+  background-color: var(--bb-grey-light);
   -webkit-mask-image: var(--mark);
   mask-image: var(--mark);
   -webkit-mask-repeat: no-repeat;
@@ -361,6 +386,261 @@ body {
 
    Where scroll-driven animations are unsupported, nothing runs and the
    approved static hero is what shows — which is the correct fallback. */
+/* ── Featured category rail ───────────────────────────────────────────────
+   Five photographs that should read as one contact sheet: no radius, no
+   shadow, no border, no padding around the image, and a 2px gap that is a
+   seam rather than a gutter. */
+.cats {
+  background: var(--bb-black);
+  padding-block: 0 0;
+}
+
+.cats-rail {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-inline: 18px;
+  padding-bottom: 4px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.cats-rail::-webkit-scrollbar { display: none; }
+
+.cats-card {
+  flex: 0 0 78vw;
+  height: min(116vw, 560px);
+  scroll-snap-align: start;
+  position: relative;
+  overflow: hidden;
+  background: var(--bb-black-soft);
+}
+
+@media (min-width: 1024px) {
+  .cats-rail {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2px;
+    width: calc(100% - 52px);
+    margin-inline: 26px;
+    padding: 0;
+    overflow: visible;
+  }
+  .cats-card { flex: initial; height: clamp(420px, 38vw, 600px); }
+}
+
+.cats-link {
+  position: absolute;
+  inset: 0;
+  display: block;
+  /* The focus ring is drawn inside: an outline on a flush 2px-gap grid would
+     be clipped by the neighbouring card. */
+  outline-offset: -3px;
+}
+
+.cats-img {
+  object-fit: cover;
+  object-position: center center;
+  /* The source files are colour. The resting state is a filter, never a
+     second monochrome asset — one file per category, and the colour is always
+     one property away. */
+  filter: grayscale(100%) brightness(0.82) contrast(1.03);
+  transform: scale(1);
+  transition:
+    filter 650ms var(--bb-ease),
+    transform 750ms var(--bb-ease);
+}
+
+/* Colour on hover, and on keyboard focus — the reveal is the content here, so
+   reaching a card by tab has to show the same thing reaching it by mouse does. */
+/* Hover and keyboard focus do the same thing, so they are one rule. The
+   reveal IS the content here: reaching a card by tab has to show what
+   reaching it by mouse shows. */
+.cats-card:hover .cats-img,
+.cats-card:has(.cats-link:focus-visible) .cats-img {
+  filter: grayscale(0%) brightness(1) contrast(1);
+  transform: scale(1.025);
+}
+
+/* The others step back very slightly — enough to name the one you are
+   pointing at, not enough to look switched off.
+   The :not(:has(...)) matters: without it this rule out-specifies the reveal
+   above and a card focused by keyboard while the mouse happens to rest
+   elsewhere in the rail stays grey. Measured exactly that, tabbing to Dresses
+   with the pointer still over Accessories. */
+@media (hover: hover) {
+  .cats-rail:hover .cats-card:not(:hover):not(:has(.cats-link:focus-visible)) .cats-img {
+    filter: grayscale(100%) brightness(0.76) contrast(1.03);
+  }
+}
+
+/* Touch: whichever card the observer finds nearest the middle. */
+.cats-card[data-live="true"] .cats-img {
+  filter: grayscale(0%) brightness(1) contrast(1);
+  transition: filter 600ms var(--bb-ease);
+}
+@media (max-width: 1023px) {
+  .cats-img { filter: grayscale(72%) brightness(0.86) contrast(1.03); }
+}
+
+.cats-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.24) 28%,
+    rgba(0, 0, 0, 0.04) 56%,
+    transparent 72%
+  );
+}
+
+.cats-meta {
+  position: absolute;
+  left: 22px;
+  bottom: 24px;
+  z-index: 1;
+  display: block;
+}
+
+.cats-number {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.cats-name {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--font-bodoni), "Libre Bodoni", "Bodoni 72", Didot, serif;
+  font-weight: 400;
+  font-size: clamp(23px, 1.9vw, 31px);
+  line-height: 1;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  color: var(--bb-white);
+}
+
+.cats-explore {
+  display: block;
+  margin-top: 16px;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.78);
+  transition: color 500ms var(--bb-ease);
+}
+
+.cats-arrow {
+  display: inline-block;
+  transition: transform 500ms var(--bb-ease);
+}
+
+.cats-card:hover .cats-explore,
+.cats-link:focus-visible .cats-explore { color: var(--bb-white); }
+.cats-card:hover .cats-arrow,
+.cats-link:focus-visible .cats-arrow { transform: translateX(4px); }
+
+/* Entrance: the five arrive together, staggered, once. A view timeline rather
+   than a scroll listener, so it costs nothing and cannot desync. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .cats-card {
+      animation: cats-in 800ms var(--bb-ease) both;
+      animation-timeline: view();
+      animation-range: entry 8% entry 46%;
+    }
+    .cats-card:nth-child(2) { animation-delay: 60ms; }
+    .cats-card:nth-child(3) { animation-delay: 120ms; }
+    .cats-card:nth-child(4) { animation-delay: 180ms; }
+    .cats-card:nth-child(5) { animation-delay: 240ms; }
+  }
+}
+
+@keyframes cats-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Our philosophy ───────────────────────────────────────────────────────
+   Controlled, not cinematic: a block with real padding rather than a 100vh
+   section holding one sentence. */
+.pov {
+  background: var(--bb-black);
+  color: var(--bb-white);
+  padding-block: 56px 52px;
+  padding-inline: var(--bb-gutter-editorial);
+}
+
+@media (min-width: 1024px) {
+  .pov { padding-block: 64px 56px; }
+}
+
+.pov-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+@media (min-width: 1024px) {
+  .pov-inner {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: clamp(48px, 6vw, 120px);
+  }
+}
+
+.pov-eyebrow {
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--bb-white);
+  margin-bottom: 20px;
+}
+
+.pov-statement {
+  font-family: var(--font-bodoni), "Libre Bodoni", "Bodoni 72", Didot, serif;
+  font-weight: 400;
+  font-size: clamp(48px, 4.8vw, 76px);
+  line-height: 0.93;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  text-wrap: initial;   /* balance fights the line splitter for control */
+  max-width: 780px;
+  color: var(--bb-white);
+}
+
+/* The masked reveal, when PremiumMotion splits this into lines. GSAP writes
+   the wrapper; this only has to stop `balance` and any inherited leading from
+   changing the measured line boxes underneath it. */
+.pov-statement .split-line { will-change: transform; }
+
+.pov-note { display: flex; gap: 20px; align-items: stretch; }
+
+.pov-rule {
+  width: 1px;
+  flex: 0 0 1px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.pov-note-text {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 2.15;
+  text-transform: uppercase;
+  letter-spacing: 0.19em;
+  color: rgba(255, 255, 255, 0.82);
+}
+
 /* ── Hero ─────────────────────────────────────────────────────────────────
    Height: 100svh, floored and capped. svh rather than vh so a mobile
    browser's collapsing toolbar cannot crop the face; the cap keeps the

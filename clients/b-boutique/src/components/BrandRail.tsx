@@ -1,54 +1,58 @@
 import { brands } from "@/lib/brands";
-import { LogoCarousel3D } from "./LogoCarousel3D";
 
-/* The brand rail — one centre-weighted carousel directly under the hero.
+/* The brand marquee — one thin band directly under the hero.
  *
- * The section owns the composition; LogoCarousel3D owns the motion. Each mark
- * is a span sized to its own measured INK bounds, with the official artwork
- * used as a CSS mask so the file is never edited and the colour comes from
- * --bone. Because the box is the ink and not the file, every mark is centred
- * on the same optical axis and the spacing between them is artwork-to-artwork
- * rather than padding-to-padding. */
+ * Each mark is the official artwork used as a CSS mask, sized to its own
+ * measured INK bounds and painted in --bb-grey-light. The file is never
+ * edited: a brand's trademark stays exactly as supplied, and the monochrome
+ * treatment is presentation. Because the box is the ink rather than the file,
+ * the marks sit on one optical axis and the spacing between them is
+ * artwork-to-artwork instead of padding-to-padding.
+ *
+ * Seamless loop: the same list is rendered twice and the track translates by
+ * exactly -50%. At that point copy two sits precisely where copy one started,
+ * so the reset is invisible — there is no jump to hide and no pause between
+ * repetitions. The second copy is aria-hidden, so the row is announced once.
+ *
+ * This replaces the centre-weighted 3D carousel that used to live here. The
+ * approved band is 68px tall; a carousel with perspective and per-mark scale
+ * cannot say anything in 68px, and the two ideas were fighting. */
 export function BrandRail() {
-  const count = String(brands.length).padStart(2, "0");
-
-  const items = brands.map((b) => ({
-    name: b.name,
-    node: (
+  const marks = brands.map((b) => (
+    <span key={b.name} className="brand-item">
       <span
         className="brand-rail-mark"
-        style={{
-          "--mark": `url("${b.src}")`,
-          "--cap": `${b.cap}px`,
-          "--iw": b.iw,
-          "--mw": b.mw,
-          "--mh": b.mh,
-          "--ox": b.ox,
-          "--oy": b.oy,
-        } as React.CSSProperties}
+        style={
+          {
+            "--mark": `url("${b.src}")`,
+            "--cap": `${b.cap}px`,
+            "--iw": b.iw,
+            "--mw": b.mw,
+            "--mh": b.mh,
+            "--ox": b.ox,
+            "--oy": b.oy,
+          } as React.CSSProperties
+        }
       />
-    ),
-  }));
+      <span className="brand-sep" aria-hidden="true">
+        &mdash;
+      </span>
+    </span>
+  ));
 
   return (
-    <section
-      id="brands" aria-labelledby="brands-heading" className="brand-rail-section">
-      <div className="mx-auto flex max-w-7xl items-baseline justify-between px-6">
-        {/* Lifted a step from the 55/50 floor. AA needs 4.5:1 on --panel and
-            bone at 45% measures 4.19:1, so these cannot go quieter without
-            failing — 60/55 clears it with room. */}
-        <h2 id="brands-heading" className="label text-bone/60">
-          Brands in store
-        </h2>
-        {/* A count of the logos, deliberately NOT the "NN — Label" shape the
-            numbered sections use: this sat one screen above "01 — Our point
-            of view" and read as a second section 01. */}
-        <p className="label text-bone/55" aria-hidden="true">
-          01/{count}
-        </p>
+    <section id="brands" aria-labelledby="brands-heading" className="brand-rail">
+      <h2 id="brands-heading" className="sr-only">
+        Brands in store
+      </h2>
+      <div className="brand-viewport">
+        <div className="brand-track">
+          <div className="brand-set">{marks}</div>
+          <div className="brand-set" aria-hidden="true">
+            {marks}
+          </div>
+        </div>
       </div>
-
-      <LogoCarousel3D items={items} label="Brands in store" />
     </section>
   );
 }
