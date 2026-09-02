@@ -8,46 +8,82 @@
    ============================================================ */
 
 :root {
-  /* The marble wall — warm near-black, never a cold neutral */
-  --onyx:       #141110;
-  --onyx-lift:  #221D1A;
-  --onyx-veil:  #2E2725;
+  /* ── bb primitives — the single source of truth ────────────────────────
+     Cool, not warm. The room this was originally drawn from (black marble,
+     brass rails, a bone floor) gave a palette that read brown wherever two
+     surfaces met; the approved direction is a cool fashion-gallery white
+     against a true black, with the only warm colour coming out of the hero
+     photograph itself. No brown, tan, beige, cream, champagne or gold UI. */
+  --bb-black:        #050505;
+  --bb-black-soft:   #090909;
+  --bb-black-raised: #0D0D0D;
 
-  /* The tiled floor — light surfaces */
-  --bone:       #F7F4EF;
-  --bone-deep:  #EBE4DA;
-  --bone-line:  #D9CFC2;
+  --bb-white:        #F5F5F2;
+  --bb-white-pure:   #FAFAF8;
 
-  /* The rails. Two golds, split by the surface they sit on, because a
-     single mid gold cannot clear 4.5:1 against both bone and onyx.
-       --gold      4.58:1 on bone  (text on light)
-       --gold-lift 9.14:1 on onyx  (text on dark) */
-  --gold:       #8A6A2C;
-  --gold-lift:  #D4B06A;
+  --bb-grey-light:   #D8D8D4;
+  --bb-grey-mid:     #979793;
+  --bb-grey-dark:    #646460;
 
-  /* Sampled from the hero photograph itself, not guessed — a deep blood
-     red, far darker than a bright crimson reads on screen. Bone clears
-     9.05:1 on it and --gold-lift clears 4.83:1, so no separate pale gold is
-     needed. The guessed #C1121F made the mobile band under the photograph
-     visibly brighter than the photograph. */
-  --red:        #8A070B;
+  --bb-dark-border:  rgba(255, 255, 255, 0.14);
+  --bb-light-border: rgba(10, 10, 10, 0.14);
 
-  /* The editorial interlude: near-black warmed toward the hero's red, so the
-     two sections meet without a seam. */
-  --ink-deep:   #0E0908;
+  /* Measured, not assumed. Each grey is safe on exactly ONE ground:
+       grey-mid   6.95:1 on black   ·  2.68:1 on white  <- FAILS on light
+       grey-dark  5.44:1 on white   ·  3.43:1 on black  <- large text only
+     So: grey-mid is a dark-section colour, grey-dark a light-section one.
+     Do not swap them. For muted text at an opacity instead: white/55 is
+     5.82:1 on black, black/65 is 6.42:1 on white — both clear AA. */
 
-  /* The menu panel. Deliberately NEUTRAL, not the warm --ink-deep: at
-     #0E0908 the red in it reads as brown against the hero photograph.
-     --panel-lift is the hover step, kept on the same neutral axis: --onyx-lift
-     is warm and reads brown the moment it sits beside the panel. */
-  --panel:      #0A0A0A;
-  --panel-lift: #1A1A1A;
+  /* The hero's own red, sampled from the photograph rather than guessed.
+     The one warm colour in the system, and it earns its place by being in
+     the artwork already. --bb-white clears 9.09:1 on it. */
+  --red: #8A070B;
 
-  --line: color-mix(in oklab, var(--onyx) 16%, transparent);
+  /* ── legacy semantic names, re-pointed ────────────────────────────────
+     Twenty components already reference these. Re-pointing them here turns
+     the whole site cool in one place rather than in a hundred edits, and
+     keeps this commit reviewable. New work should use the bb-* names. */
+  --onyx:       var(--bb-black);
+  --onyx-lift:  var(--bb-black-raised);
+  --onyx-veil:  var(--bb-grey-dark);   /* muted text on light: 5.44:1 */
 
-  /* Motion — one language across the whole site */
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* bone was the LIGHTER of the pair and bone-deep the darker band behind
+     Homeware. white-pure is lighter than white, so the pair maps in that
+     order — flipping it would inverse a contrast the layout depends on. */
+  --bone:       var(--bb-white-pure);
+  --bone-deep:  var(--bb-white);
+  --bone-line:  var(--bb-grey-light);
+
+  /* There is no gold any more. These two names survive only because
+     components still call them, and both now resolve to maximum contrast
+     against the ground they were chosen for. Delete on sight. */
+  --gold:       var(--bb-black);   /* was #8A6A2C — on light grounds */
+  --gold-lift:  var(--bb-white);   /* was #D4B06A — on dark grounds  */
+
+  --ink-deep:   var(--bb-black-soft);
+  --panel:      var(--bb-black);
+  --panel-lift: var(--bb-black-raised);
+
+  --line: var(--bb-light-border);
+
+  /* ── motion — one language across the whole site ──────────────────────
+     A single easing, and three durations that name intent rather than a
+     number, so a section cannot quietly invent its own timing. */
+  --bb-ease:          cubic-bezier(0.22, 1, 0.36, 1);
+  --bb-dur-quick:     220ms;   /* hover, focus, small state changes */
+  --bb-dur-normal:    650ms;   /* the default: 550-850ms band        */
+  --bb-dur-editorial: 1000ms;  /* large reveals: 900-1200ms band     */
+
+  /* Kept: .reveal and the hero timelines already reference these. */
+  --ease-out: var(--bb-ease);
   --ease-spring: cubic-bezier(0.34, 1.4, 0.44, 1);
+
+  /* ── layout ───────────────────────────────────────────────────────────
+     Two gutters: the normal one, and the wider editorial one for sections
+     that should breathe. Neither caps the page inside a narrow container. */
+  --bb-gutter: 32px;
+  --bb-gutter-editorial: clamp(32px, 7.5vw, 120px);
 }
 
 @theme inline {
@@ -65,10 +101,23 @@
   --color-panel-lift: var(--panel-lift);
   --color-line: var(--line);
 
+  --color-bb-black: var(--bb-black);
+  --color-bb-black-soft: var(--bb-black-soft);
+  --color-bb-black-raised: var(--bb-black-raised);
+  --color-bb-white: var(--bb-white);
+  --color-bb-white-pure: var(--bb-white-pure);
+  --color-bb-grey-light: var(--bb-grey-light);
+  --color-bb-grey-mid: var(--bb-grey-mid);
+  --color-bb-grey-dark: var(--bb-grey-dark);
+
+  /* Bodoni Moda stays — it is the approved wordmark face and the whole
+     editorial voice. Everything else in the UI is Inter. The three legacy
+     aliases resolve to it too, so every existing font-sans / font-grotesk /
+     font-mono className keeps working while the callers are migrated. */
   --font-display: var(--font-bodoni);
-  --font-sans: var(--font-jost);
-  --font-grotesk: var(--font-grotesk);
-  --font-mono: var(--font-mono);
+  --font-sans: var(--font-inter);
+  --font-grotesk: var(--font-inter);
+  --font-mono: var(--font-inter);
 }
 
 html { scroll-behavior: smooth; }
@@ -77,7 +126,7 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--bone);
   color: var(--onyx);
-  font-family: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -91,19 +140,22 @@ body {
  * base layer they are defaults again, and utilities win as intended. */
 @layer base {
   .display {
-    font-family: var(--font-bodoni), ui-serif, Georgia, serif;
+    font-family: var(--font-bodoni), "Libre Bodoni", "Bodoni 72", Didot, serif;
     font-optical-sizing: auto;
-    letter-spacing: -0.015em;
-    line-height: 1.02;
+    font-weight: 400;          /* never a faked bold Bodoni */
+    letter-spacing: -0.025em;
+    line-height: 1.02;         /* the loose end of the .92-1.02 band */
     text-wrap: balance;
   }
 
 /* Small caps label — tells you which shelf to put the section on */
   .label {
-    font-size: 0.6875rem;
-    letter-spacing: 0.22em;
+    font-family: var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 0.6875rem;      /* 11px, inside the 9-12px band */
+    letter-spacing: 0.18em;    /* inside .12-.20em; was .22em, past the band */
     text-transform: uppercase;
     font-weight: 500;
+    font-variant-numeric: tabular-nums;
   }
 }
 

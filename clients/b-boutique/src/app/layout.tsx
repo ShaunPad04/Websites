@@ -1,14 +1,27 @@
 import type { Metadata } from "next";
-import { Archivo, Bodoni_Moda, JetBrains_Mono, Jost } from "next/font/google";
+import { Bodoni_Moda, Inter } from "next/font/google";
 import { directionsHref } from "@/lib/nav";
 import { shop, hours } from "@/lib/shop";
 import "./globals.css";
 
-/* The shop is black marble and polished gold, so the type is high-contrast
-   fashion-plate rather than soft and crafty. Bodoni Moda has the thick/thin
-   stress that suits the room; Jost is a geometric sans that keeps the body
-   crisp beside it. Deliberately not Playfair + Inter, the default pairing on
-   every boutique site on the internet. */
+/* Two faces, and only two.
+ *
+ * Bodoni Moda carries the whole editorial voice — the wordmark, the
+ * manifesto, section headings, category names, the address, the giant footer
+ * wordmark. It is the approved face and it does not change. Weight stays at
+ * 400: a faked bold Bodoni loses the thick/thin stress that is the entire
+ * reason for choosing it.
+ *
+ * Inter takes every piece of UI: navigation, labels, buttons, prices, FAQ,
+ * numbers, microcopy. It replaces the three faces that used to split that
+ * job between them — Jost for body, Archivo for the corner menu, JetBrains
+ * Mono for labels and numbers. Three UI faces was one more idea than the
+ * page needed, and it cost three font downloads to say the same thing.
+ *
+ * The old comment here argued against Playfair + Inter as the default pairing
+ * on every boutique site. That still holds, and this is not it: the display
+ * face is Bodoni, which is a far sharper, higher-contrast letter than
+ * Playfair. Inter is doing the quiet half of the job, not the loud one. */
 const bodoni = Bodoni_Moda({
   variable: "--font-bodoni",
   subsets: ["latin"],
@@ -16,24 +29,8 @@ const bodoni = Bodoni_Moda({
   display: "swap",
 });
 
-const jost = Jost({
-  variable: "--font-jost",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-/* Menu only. The corner menu is deliberately a different register from the
-   hero: a heavy grotesque in caps for the labels and a monospace for every
-   small element — index numbers, section labels, contact details. The hero
-   keeps Bodoni; that contrast is the point. */
-const archivo = Archivo({
-  variable: "--font-grotesk",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const jetbrains = JetBrains_Mono({
-  variable: "--font-mono",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
 });
@@ -111,7 +108,7 @@ export default function RootLayout({
   return (
     <html
       lang="en-GB"
-      className={`${bodoni.variable} ${jost.variable} ${archivo.variable} ${jetbrains.variable} h-full antialiased`}
+      className={`${bodoni.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bone text-onyx">
         <script
