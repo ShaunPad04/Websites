@@ -108,9 +108,29 @@ export const newIn = [
  *  clothes can actually be seen — the shop sells in person, not online. When
  *  real category pages exist, change these five hrefs and nothing else moves.
  *
- *  The images are the final approved assets: real WebP, 1500x2000, 3:4,
+ *  The images are the final approved assets: real WebP, 2048x2731, 3:4,
  *  full colour at source. The monochrome resting state is a CSS filter, never
- *  baked into the file. */
+ *  baked into the file.
+ *
+ *  ── Provenance ────────────────────────────────────────────────────────────
+ *  Regenerated 2026-09-02 from 3456x4608 masters, because the first set was
+ *  produced at the model's `basic` quality floor and went soft on desktop,
+ *  where the card asks for ~900 device pixels of a 3:4 frame. Note what was
+ *  NOT the cause: the old files sat at 0.03-0.12 bytes/px, which looks like
+ *  brutal compression but is simply what a grey seamless backdrop and flat black
+ *  cloth cost to encode. Re-encoding soft pixels harder would have changed
+ *  nothing; the source had to be regenerated.
+ *
+ *    jackets      faf1f70e-5273-4f69-b6a1-c0d4a6e92d6c
+ *    trousers     02371941-6555-4380-8303-25f04a6de673
+ *    dresses      eb49b432-29b5-4ee0-8c9e-2ec37d0bab6d
+ *    knitwear     f9696429-d9f2-43ca-a44a-e843e2a46722
+ *    accessories  e8444812-3e46-487f-bfa3-9a2754ed9455
+ *
+ *  The PNG masters are not in the working tree — at 14-21MB each they are
+ *  recoverable from commits b9a5f22, e1b8b2e and 06867fa rather than carried.
+ *  Jackets and accessories are cropped in from those masters: the re-run came
+ *  back framed wider than the approved composition, and the crop restores it. */
 export const featured = [
   {
     slug: "jackets",
