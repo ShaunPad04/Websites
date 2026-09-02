@@ -386,6 +386,195 @@ body {
 
    Where scroll-driven animations are unsupported, nothing runs and the
    approved static hero is what shows — which is the correct fallback. */
+/* ── New in this week ─────────────────────────────────────────────────────
+   The first light section after the black chapter. A crisp boundary, no
+   divider, no rounded corner, no floating panel — black stops and cool white
+   begins. */
+.newin {
+  background: var(--bb-white);
+  color: var(--bb-black-soft);
+  padding-block: 84px 96px;
+  scroll-margin-top: 96px;
+}
+
+.newin-head,
+.newin-foot {
+  padding-inline: 18px;
+}
+
+.newin-rail { padding-inline: 18px; }
+
+@media (min-width: 768px) {
+  .newin-head,
+  .newin-foot,
+  .newin-rail { padding-inline: var(--bb-gutter-editorial); }
+}
+
+.newin-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 44px;
+}
+
+.newin-eyebrow {
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--bb-black-soft);
+  margin-bottom: 18px;
+}
+
+.newin-h2 {
+  font-family: var(--font-bodoni), "Libre Bodoni", "Bodoni 72", Didot, serif;
+  font-weight: 400;
+  font-size: clamp(46px, 4vw, 62px);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  color: var(--bb-black-soft);
+}
+
+/* A bare arrow with a 44px target around it. The visible mark stays small —
+   the hit area does the accessibility work, not a drawn button. */
+.newin-controls { display: none; gap: 4px; flex: 0 0 auto; }
+@media (min-width: 768px) { .newin-controls { display: flex; } }
+
+.newin-arrow {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--bb-black-soft);
+  background: none;
+  border: 0;
+  transition: opacity var(--bb-dur-quick) var(--bb-ease);
+}
+.newin-arrow:hover:not(:disabled) { opacity: 0.55; }
+.newin-arrow:disabled { opacity: 0.22; cursor: default; }
+
+.newin-rail {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 18px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  list-style: none;
+}
+.newin-rail::-webkit-scrollbar { display: none; }
+@media (min-width: 768px) { .newin-rail { scroll-padding-left: var(--bb-gutter-editorial); } }
+
+/* 1.28 pieces on a phone, 3 on a tablet, 5 across a wide desktop — the widths
+   are derived from the gap so the last card lands flush rather than being
+   nudged by a hard-coded rem. */
+.newin-item { flex: 0 0 78vw; scroll-snap-align: start; }
+@media (min-width: 768px)  { .newin-item { flex: 0 0 calc((100% - 32px) / 3); } }
+@media (min-width: 1280px) { .newin-item { flex: 0 0 calc((100% - 64px) / 5); } }
+
+/* No card. No radius, no shadow, no surface, no border — the photograph and
+   its two lines of type sit directly on the white. */
+.newin-media {
+  position: relative;
+  /* 3:4, which is the source ratio exactly, so cover crops nothing. */
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--bb-white);
+}
+
+/* Scoped to this section's photographs only — Homeware is a separate
+   decision and must not inherit this.
+   The files are warm on purpose: brass, marble, a bone floor, warm window
+   light. This does not try to erase that, it calms it just enough to sit in a
+   cool room, and there is still real colour in it. Nothing is baked into a
+   source file. */
+.newin-media img {
+  filter: grayscale(25%) saturate(0.82) brightness(0.98) contrast(1.02);
+  transform: scale(1);
+  transition:
+    filter 620ms var(--bb-ease),
+    transform 700ms var(--bb-ease);
+}
+
+.newin-item:hover .newin-media img,
+.newin-item:focus-within .newin-media img {
+  filter: grayscale(0%) saturate(1) brightness(1) contrast(1);
+  transform: scale(1.018);
+}
+
+.newin-cat {
+  margin-top: 17px;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--bb-grey-dark);
+}
+
+.newin-name {
+  margin-top: 6px;
+  font-family: var(--font-bodoni), "Libre Bodoni", "Bodoni 72", Didot, serif;
+  font-weight: 400;
+  font-size: clamp(16px, 1.2vw, 19px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--bb-black-soft);
+}
+
+.newin-foot {
+  margin-top: 40px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--bb-grey-dark);
+}
+
+.newin-viewall {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--bb-black-soft);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 1px;
+  white-space: nowrap;
+}
+.newin-viewall-arrow {
+  display: inline-block;
+  transition: transform 450ms var(--bb-ease);
+}
+.newin-viewall:hover .newin-viewall-arrow,
+.newin-viewall:focus-visible .newin-viewall-arrow { transform: translateX(4px); }
+
+/* Entrance. The header rises as the white section arrives, then the pieces
+   follow. Transform and opacity only — the layout never moves, so nothing
+   here can contribute to CLS. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .newin-title {
+      animation: newin-rise 800ms var(--bb-ease) both;
+      animation-timeline: view();
+      animation-range: entry 4% entry 34%;
+    }
+    .newin-item {
+      animation: newin-item 760ms var(--bb-ease) both;
+      animation-timeline: view();
+      animation-range: entry 6% entry 42%;
+      animation-delay: calc(var(--i, 0) * 55ms);
+    }
+  }
+}
+
+@keyframes newin-rise { from { opacity: 0; transform: translateY(52px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes newin-item { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
 /* ── Featured category rail ───────────────────────────────────────────────
    Five photographs that should read as one contact sheet: no radius, no
    shadow, no border, no padding around the image, and a 2px gap that is a
