@@ -53,51 +53,19 @@ export const hours: readonly { day: string; short: string; hours: Hours }[] = [
   { day: "Sunday",    short: "Sun", hours: { open: 10, close: 16 } },
 ];
 
-/** hours[] is indexed Monday-first; Date.getDay() is Sunday-first. */
-export function hoursForWeekday(jsDay: number): Hours {
-  return hours[(jsDay + 6) % 7].hours;
-}
-
+/** 12-hour display for the hours table. Kept: Visit prints every row. */
 export function formatHour(h: number): string {
   const suffix = h < 12 ? "am" : "pm";
   const twelve = h % 12 === 0 ? 12 : h % 12;
   return `${twelve}${suffix}`;
 }
 
-export type OpenState =
-  | { state: "open"; closesAt: string }
-  | { state: "opening-soon"; opensAt: string }
-  | { state: "closed"; nextDay: string; opensAt: string };
-
-/** Derives the badge copy from a given moment. Pure, so it is testable
- *  and so server and client can agree on the result. */
-export function openState(now: Date): OpenState {
-  const today = hoursForWeekday(now.getDay());
-  const minutes = now.getHours() * 60 + now.getMinutes();
-
-  if (today) {
-    if (minutes >= today.open * 60 && minutes < today.close * 60) {
-      return { state: "open", closesAt: formatHour(today.close) };
-    }
-    if (minutes < today.open * 60) {
-      return { state: "opening-soon", opensAt: formatHour(today.open) };
-    }
-  }
-
-  // Walk forward to the next day that actually opens.
-  for (let i = 1; i <= 7; i++) {
-    const day = (now.getDay() + i) % 7;
-    const next = hoursForWeekday(day);
-    if (next) {
-      return {
-        state: "closed",
-        nextDay: i === 1 ? "tomorrow" : hours[(day + 6) % 7].day,
-        opensAt: formatHour(next.open),
-      };
-    }
-  }
-  return { state: "closed", nextDay: "soon", opensAt: "10am" };
-}
+/* openState(), OpenState and hoursForWeekday() lived here and are gone with
+   OpenBadge, their only consumer. They derived a live "open now" badge from
+   the VISITOR's clock rather than the shop's, so the badge was wrong for
+   anyone outside UK time — which is why the badge was removed and the plain
+   hours table kept. Reinstate them together, timezone-aware, if the badge
+   ever comes back. */
 
 /** The rails. These drive the expanding panels. */
 export const categories = [

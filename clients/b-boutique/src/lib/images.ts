@@ -27,22 +27,28 @@ const CDN =
 /** The slots whose photograph is vendored in public/img as <slot>.webp.
  *
  *  A set, not a boolean. The upload arrived 16 of 19 complete, and a single
- *  flag would have forced a choice between pointing three slots at files that
- *  do not exist or leaving all nineteen on an unreachable CDN. Per-slot, the
- *  sixteen load locally and the three fall back to the CDN — which the
- *  sandbox cannot reach, so here they show their designed marble and cloth,
- *  while a real visitor gets the photograph. Add a slot when its file lands.
+ *  flag would have forced a choice between pointing slots at files that do not
+ *  exist or leaving all of them on an unreachable CDN. Per-slot, the vendored
+ *  ones load locally and the rest fall back to the CDN — which the sandbox
+ *  cannot reach, so here they show their designed marble and cloth, while a
+ *  real visitor gets the photograph. Add a slot when its file lands.
  *
- *  Missing, and why: their source PNG was not in the upload.
- *    panel-jackets · new-boucle-overshirt · homeware-ceramics */
+ *  Not vendored:
+ *    new-boucle-overshirt · homeware-ceramics
+ *      their source PNG was not in the upload.
+ *    panel-tops · panel-dresses · panel-accessories
+ *      vendored once, for a category-panel treatment the rail replaced. The
+ *      .webp files were removed in the release cleanup because nothing on the
+ *      page rendered them; their CDN source below is kept so the photograph
+ *      can come back if a slot ever needs it again.
+ *
+ *  panel-jackets is gone entirely: it had no local file AND no consumer, so
+ *  it was one dead remote URL the page could never have used. */
 const vendored = new Set<string>(
   [
   "panel-all",
-  "panel-tops",
-  "panel-dresses",
   "panel-knitwear",
   "panel-trousers",
-  "panel-accessories",
   "panel-homeware",
   "new-wool-trouser",
   "new-camel-blazer",
@@ -63,7 +69,6 @@ const shot: Record<string, string> = {
   "panel-all":         "hf_20260901_005602_d257ff55-dc4f-40c5-bd57-f948cfbb8480.png",
   "panel-tops":        "hf_20260901_005609_b5cc1ef9-3ce9-4b5a-a591-78da88a8f43f.png",
   "panel-dresses":     "hf_20260831_213118_14e2c6f8-dcde-4c09-986b-584661bb7fb6.png",
-  "panel-jackets":     "hf_20260831_213120_c83fcbf8-6a0f-4e60-806b-a8ce0a32417f.png",
   "panel-knitwear":    "hf_20260831_213122_f1b362aa-51b9-415a-87ee-792954a78c57.png",
   "panel-trousers":    "hf_20260831_213130_a30796f6-3422-4bef-9404-01110b1701da.png",
   "panel-accessories": "hf_20260831_213132_410d532a-cd67-4c29-9277-1a33348ce3c2.png",

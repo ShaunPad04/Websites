@@ -14,8 +14,9 @@ import { GiantWordmark } from "./GiantWordmark";
  * believes they subscribed. It returns the day there is somewhere to send it.
  *
  * The map. Visit now owns the whole location experience one section above,
- * and a second map on the same screen is repetition, not service. MapPanel is
- * left in the tree for the cleanup pass rather than deleted here.
+ * and a second map on the same screen is repetition, not service. The
+ * MapPanel component that used to draw it here was deleted in the release
+ * cleanup once nothing rendered it.
  *
  * Socials. `socials` is empty because no handles are held anywhere in this
  * project, and a guessed URL sends customers to somebody else's account. The

@@ -15,7 +15,6 @@ export function PremiumMotion() {
     gsap.registerPlugin(ScrollTrigger, SplitText);
 
     const mm = gsap.matchMedia();
-    const splits: SplitText[] = [];
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
       /* The hero used to be driven from here: a masked reveal on the giant
@@ -59,32 +58,18 @@ export function PremiumMotion() {
         });
       });
 
-      // 4. Section headings set themselves, character by character. Safe to
-      //    split here — none of these carry a gradient fill.
-      document.querySelectorAll<HTMLElement>("[data-split]").forEach((el) => {
-        const split = new SplitText(el, { type: "chars,words", aria: "auto" });
-        splits.push(split);
-        gsap.from(split.chars, {
-          opacity: 0,
-          yPercent: 55,
-          duration: 0.6,
-          stagger: 0.011,
-          ease: "expo.out",
-          scrollTrigger: { trigger: el, start: "top 85%", once: true },
-        });
-      });
+      /* Two generic handlers lived here — [data-split], which set headings
+         character by character, and [data-stagger], which rose a group's
+         children on a short delay. Both were removed in the release cleanup.
+         Neither had matched an element since the homepage was rebuilt, and a
+         dormant rule that animates "every heading" or "every group" the moment
+         someone adds an attribute is exactly the site-wide reveal this page
+         is built to avoid: the editorial hierarchy here comes from each
+         section choosing its own entrance, not from one handler applying the
+         same one everywhere.
 
-      // 5. Cards and panels rise in on a short stagger as their row arrives.
-      document.querySelectorAll<HTMLElement>("[data-stagger]").forEach((group) => {
-        gsap.from(group.children, {
-          opacity: 0,
-          y: 26,
-          duration: 0.7,
-          stagger: 0.06,
-          ease: "power2.out",
-          scrollTrigger: { trigger: group, start: "top 88%", once: true },
-        });
-      });
+         What remains above is the only GSAP on the page, and it is
+         section-specific: the philosophy statement's masked line reveal. */
     });
 
     const refresh = () => ScrollTrigger.refresh();
@@ -93,7 +78,6 @@ export function PremiumMotion() {
 
     return () => {
       window.removeEventListener("load", refresh);
-      splits.forEach((s) => s.revert());
       mm.revert();
     };
   }, []);

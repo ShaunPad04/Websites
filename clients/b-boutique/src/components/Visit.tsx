@@ -14,12 +14,11 @@ import { VisitMap } from "./VisitMap";
  * has confirmed, and the address confirmation does not cover it. It is not
  * softened or hedged here — it is simply not asserted.
  *
- * The live "open now" badge is gone too. openState() reads the VISITOR's
- * clock, not Cleethorpes': at one instant when the shop is genuinely open, a
- * New York visitor was told "Opening at 10am" and a Sydney visitor "Closed —
- * open tomorrow". A wrong opening claim is worse than none, and the hours
- * table below says the same thing without ever being wrong. OpenBadge and
- * openState are untouched and still there for when the timezone is fixed. */
+ * The live "open now" badge is gone too. openState() read the VISITOR's clock,
+ * not the shop's, so the badge told anyone outside UK time the wrong thing;
+ * the table below says the same thing without ever being wrong. OpenBadge and
+ * openState were deleted in the release cleanup — reinstate them together, and
+ * timezone-aware, if the badge is ever wanted back. */
 export function Visit() {
   return (
     <section id="visit" aria-labelledby="visit-heading" className="visit">

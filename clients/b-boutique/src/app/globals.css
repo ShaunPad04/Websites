@@ -363,29 +363,6 @@ body {
   mask-position: calc(-1 * var(--c) * var(--ox)) calc(-1 * var(--c) * var(--oy));
 }
 
-/* Reduced motion: no loop, no depth, no transforms — the component writes
-   none. One plain scrollable row instead, showing each brand once. */
-@media (prefers-reduced-motion: reduce) {
-  .logo3d {
-    height: auto;
-    overflow-x: auto;
-    overflow-y: hidden;
-    perspective: none;
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-  .logo3d-stage {
-    position: static;
-    display: flex;
-    align-items: center;
-    gap: 72px;
-    padding-inline: 1.5rem;
-    width: max-content;
-  }
-  .logo3d-item { position: static; transform: none; opacity: 1 !important; }
-  .logo3d-item[data-dup] { display: none; }
-}
-
 /* ── Hero scroll interaction ─────────────────────────────────────────────
    The hero pins inside a slightly taller track and deconstructs as the track
    passes: the photograph creeps closer, the secondary copy recedes, and the
