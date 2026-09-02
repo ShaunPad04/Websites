@@ -18,34 +18,12 @@ export function PremiumMotion() {
     const splits: SplitText[] = [];
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      // 1. The wordmark rises out of its own mask. Not SplitText: splitting
-      //    would give each character its own background-clip box and shatter
-      //    the single chrome sweep across the word.
-      const mask = document.querySelector<HTMLElement>("[data-mask]");
-      const word = mask?.querySelector("h1");
-      if (word) {
-        /* Travel the mask's full height, not a percentage of the word's own
-           line box. The mask is taller than the h1 by the .hero-word descender
-           safe area, so a yPercent tuned to the h1 would leave the bottom of
-           the glyphs showing under the clip before the reveal starts. Reading
-           the mask means the safe area can change without re-tuning this. */
-        gsap.from(word, {
-          // +12 is headroom: the ink starts only ~3px inside the box top at the
-          // desktop clamp, so an exact travel leaves nothing for a different
-          // face metric or a zoomed rounding.
-          y: mask!.offsetHeight + 12,
-          duration: 1.25,
-          ease: "expo.out",
-          delay: 0.15,
-        });
-      }
-
-      /* 2 and 3 — the hero photograph parallax and the wordmark lift — used
-         to live here as scrubbed ScrollTriggers on [data-parallax-hero] and
-         [data-mask]. The hero now drives both from its own scroll progress
-         with Motion values, and two systems writing transforms to the same
-         nodes would fight. GSAP keeps the entry reveal above, which runs on
-         the h1 while Motion drives its wrapper. */
+      /* The hero used to be driven from here: a masked reveal on the giant
+         wordmark, plus scrubbed ScrollTriggers on the photograph. The wordmark
+         is gone from the hero — it lives in the footer now — and the hero's
+         drift is four CSS keyframes on a root scroll timeline, which costs no
+         JavaScript and cannot fight Lenis. Nothing hero-related belongs in
+         this file any more. */
 
       // 4. Section headings set themselves, character by character. Safe to
       //    split here — none of these carry a gradient fill.

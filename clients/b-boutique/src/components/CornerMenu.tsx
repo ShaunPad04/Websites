@@ -18,7 +18,11 @@ const EASE = [0.22, 1, 0.36, 1] as const;
  * Every destination is a real <a href> to a section that exists, so the links
  * are crawlable and work with JavaScript disabled. The animation is layered
  * on top of working markup, not a prerequisite for it. */
-export function CornerMenu({ scrolled }: { scrolled: boolean }) {
+/* The trigger sits on a dark ground in both header states now — transparent
+   over the photograph, near-black once scrolled — so it no longer needs to
+   know which. The `scrolled` prop it used to take was only ever there to flip
+   the chip between bone and onyx, and the chip is gone. */
+export function CornerMenu() {
   const [open, setOpen] = useState(false);
   const reduced = usePrefersReducedMotion();
   const panelId = useId();
@@ -105,35 +109,26 @@ export function CornerMenu({ scrolled }: { scrolled: boolean }) {
         /* relative z-[60] keeps the trigger above the panel. The panel is a
            sibling inside <header>, so its z-50 competes here, not against the
            header's own z-index — raising the header alone changed nothing. */
-        /* Open: the chip takes the panel's own neutral black. --onyx is warm,
-           and beside the panel it reads visibly brown. Scrolled-but-closed
-           keeps --onyx, which is correct against the bone header bar. */
-        className={`group relative z-[60] inline-flex shrink-0 items-center gap-2.5 rounded-full px-4 py-2.5 font-mono text-[0.6875rem] tracking-[0.14em] transition-colors ${
-          open
-            ? "bg-panel text-bone hover:bg-panel-lift"
-            : scrolled
-              ? "bg-onyx text-bone hover:bg-onyx-lift"
-              : "bg-bone text-onyx hover:bg-white"
-        }`}
+        /* No pill, no capsule, no container — the header is printed onto the
+           photograph and a filled chip broke that. Just the word and two thin
+           rules, in the same 10px Inter as the rest of the header. The old
+           bone-filled chip is gone with the bone header it belonged to. */
+        className="group relative z-[60] inline-flex shrink-0 items-center gap-2.5 text-[10px] font-semibold uppercase leading-none tracking-[0.14em] text-bb-white transition-opacity duration-200 hover:opacity-70"
       >
-        <span className="uppercase">{open ? "Close" : "Menu"}</span>
-        {/* The 45-degree hover turn belongs to the arrow only — applied to
-            the close glyph it rotates the cross into a plus. */}
-        <svg
-          width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"
-          className={
-            open
-              ? ""
-              : "transition-transform duration-300 ease-out group-hover:rotate-45"
-          }
-        >
-          {open ? (
-            <path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-          ) : (
-            <path d="M3 11L11 3M11 3H4.5M11 3v6.5" stroke="currentColor" strokeWidth="1.6"
-              strokeLinecap="round" strokeLinejoin="round" />
-          )}
-        </svg>
+        <span>{open ? "Close" : "Menu"}</span>
+        {/* Two 1px rules, not a hamburger. On open they cross into a close
+            mark, which keeps one mark doing both jobs rather than swapping
+            glyphs. */}
+        <span aria-hidden="true" className="relative block h-[9px] w-[18px]">
+          <span
+            className="absolute left-0 block h-px w-full bg-current transition-transform duration-300 ease-out"
+            style={{ top: open ? "4px" : "1px", transform: open ? "rotate(45deg)" : "none" }}
+          />
+          <span
+            className="absolute left-0 block h-px w-full bg-current transition-transform duration-300 ease-out"
+            style={{ top: open ? "4px" : "7px", transform: open ? "rotate(-45deg)" : "none" }}
+          />
+        </span>
       </button>
 
       <AnimatePresence>

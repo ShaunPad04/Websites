@@ -1,150 +1,119 @@
+import { HERO_CATEGORIES } from "@/lib/nav";
 import { HeroPicture } from "./HeroPicture";
 
-/* Full-bleed cinematic hero.
+/* The campaign hero.
  *
- * One DOM tree, two layouts. Below `lg` the photograph takes a portrait band
- * at the top with the type beneath it on solid red; from `lg` the same
- * element becomes the full-bleed background and the brand runs enormous
- * across the bottom, cropped by the viewport edge.
+ * One full-bleed photograph and four small pieces of type placed on it: the
+ * categories at the left edge, the philosophy line at the right, SCROLL at the
+ * bottom. That is the whole composition. The giant "B Boutique" wordmark that
+ * used to run across the bottom of this section is deliberately gone — the
+ * page has exactly one of those and it belongs at the very end, in the footer,
+ * where it reads as a sign-off rather than a title card.
  *
- * Mobile is a different layout rather than the desktop one squeezed:
- * force-cropping a 16:9 frame into a phone viewport shows about a fifth of
- * the image and destroys the composition.
+ * ── Height ────────────────────────────────────────────────────────────────
+ * 100svh, floored at 720 and capped at 1050. svh not vh, so a mobile browser's
+ * collapsing toolbar cannot crop the face. The cap stops the photograph
+ * becoming a mural on a tall desktop display and pushing the brand rail past
+ * the fold on every screen.
  *
- * ── The scroll interaction ────────────────────────────────────────────────
- * The hero pins inside a slightly taller track and deconstructs as the track
- * passes: the photograph creeps closer, the secondary copy recedes, and the
- * base darkens towards the carousel's black so the boundary between the two
- * sections stops being a line. At progress 0 the composition is exactly the
- * approved still — every transform starts at its identity value.
+ * ── No pin ────────────────────────────────────────────────────────────────
+ * This section used to sit inside a 140vh sticky track, which held it in place
+ * for 40vh of scrolling before the page moved on. That is scroll-jacking by
+ * another name, and it put a blank spacer between the hero and the brand rail.
+ * The section is now exactly its own height and the two meet directly.
  *
- * Driven entirely by Motion values off one `useScroll`, which reads the same
- * scroll position Lenis writes. No second rAF loop, no scroll listener, no
- * per-frame React state: Motion writes transform and opacity straight to the
- * nodes. Nothing here animates a layout property.
- *
- * The GSAP hero tweens that used to scrub [data-parallax-hero] and
- * [data-mask] have been removed — they wrote transforms to these same
- * elements and the two systems would have fought. GSAP keeps the entry
- * reveal, which runs on the h1 itself while Motion drives the wrapper, so
- * the two never touch the same node. */
+ * ── Overlay ───────────────────────────────────────────────────────────────
+ * No full-frame scrim. The red is the whole point of the picture and a black
+ * wash turns it burgundy. What is here instead: two narrow edge gradients,
+ * left and right only, sized to sit under the type and nothing else. The
+ * centre of the frame — the eye, the hand, the ring, the earring — is
+ * untouched. */
 export function Hero() {
   return (
-    <div className="hero-track">
-      <div className="hero-pin">
-        <section
-          id="top"
-          /* pb on lg is the red buffer the wordmark sits above: the section is
-             pinned at exactly 100svh, so the only way to get red between the
-             mark and the brand rail is to lift the mark off the section's
-             bottom edge. Below lg the mark already has the copy block and its
-             pb-14 beneath it. */
-          className="relative isolate flex flex-col justify-end bg-red lg:min-h-[100svh] lg:overflow-hidden lg:pb-[8vh]"
-        >
-          <div
-            data-parallax-hero
-            className="relative aspect-[941/1672] max-h-[66svh] w-full overflow-hidden lg:absolute lg:inset-0 lg:-z-10 lg:aspect-auto lg:max-h-none lg:scale-[1.04]"
-          >
-            <div className="hero-fx hero-fx-img h-full w-full">
-              <HeroPicture />
-            </div>
-          </div>
-
-          {/* Mobile: fade the band into the red the type sits on */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-[46svh] h-[22svh] lg:hidden"
-            style={{
-              background:
-                "linear-gradient(to top, var(--red) 0%, rgba(138,7,11,.6) 45%, transparent 100%)",
-            }}
-          />
-
-          {/* Desktop scrims, tinted into the photograph's own red — a black scrim
-              greys out the one colour the image is built on. */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 -z-10 hidden lg:block"
-            style={{
-              background:
-                "linear-gradient(to top, rgba(52,3,6,.90) 0%, rgba(52,3,6,.46) 28%, rgba(52,3,6,.04) 56%, rgba(52,3,6,.30) 100%)",
-            }}
-          />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 -z-10 hidden lg:block"
-            style={{
-              background:
-                "linear-gradient(to right, rgba(52,3,6,.58) 0%, rgba(52,3,6,.16) 32%, transparent 56%)",
-            }}
-          />
-
-          <div
-            aria-hidden="true"
-            className="hero-fx hero-fx-veil pointer-events-none absolute inset-0 -z-10"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(10,10,10,0) 0%, rgba(10,10,10,.32) 52%, rgba(10,10,10,.86) 88%, var(--panel) 100%)",
-            }}
-          />
-
-          <ul
-            className="hero-fx hero-fx-aside absolute left-6 top-1/2 hidden -translate-y-1/2 space-y-1 text-[0.9375rem] font-medium leading-tight text-bone lg:block"
-          >
-            <li>Womenswear</li>
-            <li>Accessories</li>
-            <li>Homeware</li>
-          </ul>
-
-          <p
-            className="hero-fx hero-fx-aside pointer-events-none absolute bottom-[38%] right-6 hidden max-w-[22rem] text-right text-[0.9375rem] font-medium leading-snug text-bone lg:block"
-          >
-            Clothes you won&rsquo;t meet coming the other way down the high street.
-            One shop, on one street, every piece chosen by hand.
-          </p>
-
-          {/* Motion drives this wrapper; GSAP's entry reveal drives the h1
-              inside it. Two systems, two nodes, no contention. */}
-          <div className="hero-fx hero-fx-mark relative w-full">
-            <div className="relative w-full overflow-hidden" data-mask>
-              <h1
-                className="hero-word chrome display select-none whitespace-nowrap px-6 text-center text-[clamp(2.75rem,15.5vw,15rem)] leading-[0.86] lg:leading-[0.82]"
-              >
-                B Boutique
-                <span className="hero-reg" aria-hidden="true">
-                  ®
-                </span>
-              </h1>
-            </div>
-          </div>
-
-          {/* Mobile copy sits under the wordmark on solid red */}
-          <div className="hero-fx hero-fx-aside px-6 pb-14 pt-6 lg:hidden">
-            <p className="max-w-sm text-[0.9375rem] leading-relaxed text-bone">
-              Clothes you won&rsquo;t meet coming the other way down the high
-              street. Womenswear, accessories and homeware on Sea View Street.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <a href="#rails" className="rounded-full bg-bone px-6 py-3 text-sm text-onyx">
-                See what&rsquo;s in
-              </a>
-              <a href="#visit" className="rounded-full border border-bone/45 px-6 py-3 text-sm text-bone">
-                Visit
-              </a>
-            </div>
-          </div>
-
-          <div
-            aria-hidden="true"
-            className="hero-fx hero-fx-cue pointer-events-none absolute bottom-6 left-6 hidden items-center gap-3 lg:flex"
-          >
-            <span className="label text-bone/55">Scroll</span>
-            <span className="relative block h-10 w-px overflow-hidden bg-bone/25">
-              <span className="absolute inset-x-0 top-0 h-4 animate-[drop_2.4s_ease-in-out_infinite] bg-gold-lift" />
-            </span>
-          </div>
-        </section>
+    <section
+      id="top"
+      className="hero relative isolate w-full overflow-hidden bg-bb-black"
+    >
+      <div className="hero-media absolute inset-0 -z-10">
+        <HeroPicture />
       </div>
-    </div>
+
+      {/* Edge gradients only. Left carries the categories, right the
+          philosophy line; each stops well short of the portrait. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 left-0 -z-10 w-[34%] max-w-[420px]"
+        style={{
+          background:
+            "linear-gradient(to right, rgba(5,5,5,.52) 0%, rgba(5,5,5,.22) 45%, transparent 100%)",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 right-0 -z-10 hidden w-[30%] max-w-[380px] lg:block"
+        style={{
+          background:
+            "linear-gradient(to left, rgba(5,5,5,.46) 0%, rgba(5,5,5,.18) 48%, transparent 100%)",
+        }}
+      />
+      {/* A short foot, so SCROLL holds against the lightest part of the frame
+          and the hero meets the brand rail's black without a visible seam. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[22%]"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(5,5,5,.66) 0%, rgba(5,5,5,.20) 55%, transparent 100%)",
+        }}
+      />
+
+      {/* LEFT — a rule, then the three things the shop sells. Real anchors:
+          womenswear and accessories both live on the rails. */}
+      <nav
+        aria-label="Shop categories"
+        className="hero-fx hero-fx-left absolute left-[18px] sm:left-8 lg:left-9"
+      >
+        <div className="flex items-center gap-[22px]">
+          <span
+            aria-hidden="true"
+            className="block h-16 w-px shrink-0"
+            style={{ background: "rgba(255,255,255,.65)" }}
+          />
+          <ul className="space-y-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-bb-white"
+              style={{ lineHeight: 1.9 }}>
+            {HERO_CATEGORIES.map((c) => (
+              <li key={c.label}>
+                <a href={c.href} className="nav-link">{c.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
+
+      {/* RIGHT — the philosophy line. On desktop it sits below the vertical
+          middle at the right edge, clear of the face. On a phone there is no
+          right half to sit in, so it drops to the lower left instead, under
+          the hand and above SCROLL: same words, no overlap with the portrait
+          either way. */}
+      <p
+        className="hero-fx hero-fx-right absolute bottom-[112px] left-[18px] w-[min(76%,320px)] text-[12px] font-normal sm:left-8 lg:bottom-auto lg:left-auto lg:right-9 lg:top-[58%] lg:w-[264px]"
+        style={{ lineHeight: 1.7, color: "rgba(255,255,255,.94)" }}
+      >
+        Clothes you won&rsquo;t meet coming the other way down the high street.
+        One shop, on one street, every piece chosen by hand.
+      </p>
+
+      {/* BOTTOM — SCROLL, and a hairline that runs to the edge of the frame. */}
+      <div className="hero-fx hero-fx-scroll absolute inset-x-0 bottom-0 flex flex-col items-center">
+        <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-bb-white">
+          Scroll
+        </span>
+        <span
+          aria-hidden="true"
+          className="mt-3 block w-px"
+          style={{ height: 44, background: "rgba(255,255,255,.60)" }}
+        />
+      </div>
+    </section>
   );
 }

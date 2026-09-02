@@ -84,3 +84,26 @@ export const footerNav: { heading: string; items: MenuItem[] }[] = [
     ],
   },
 ];
+
+/** The hero's centre navigation.
+ *
+ *  Every href is an anchor that exists on this page — checked, not assumed.
+ *  There are no product routes yet, so Clothing and Accessories both land on
+ *  the rails, which is where both actually live. That is honest rather than
+ *  lossy: the alternative is a 404 dressed as a category.
+ *
+ *  When real routes exist, change the href here and nothing else moves. */
+export const PRIMARY = [
+  { label: "New In", href: "#new-in" },
+  { label: "Clothing", href: "#rails" },
+  { label: "Accessories", href: "#rails" },
+  { label: "Brands", href: "#brands" },
+  { label: "About", href: "#our-story" },
+] as const;
+
+/** The hero's left micro navigation. The three things the shop sells. */
+export const HERO_CATEGORIES = [
+  { label: "Womenswear", href: "#rails" },
+  { label: "Accessories", href: "#rails" },
+  { label: "Homeware", href: "#homeware" },
+] as const;

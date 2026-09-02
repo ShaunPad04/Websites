@@ -31,7 +31,8 @@ export function BrandRail() {
   }));
 
   return (
-    <section aria-labelledby="brands-heading" className="brand-rail-section">
+    <section
+      id="brands" aria-labelledby="brands-heading" className="brand-rail-section">
       <div className="mx-auto flex max-w-7xl items-baseline justify-between px-6">
         {/* Lifted a step from the 55/50 floor. AA needs 4.5:1 on --panel and
             bone at 45% measures 4.19:1, so these cannot go quieter without
