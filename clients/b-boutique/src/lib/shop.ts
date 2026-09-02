@@ -12,14 +12,25 @@ export const shop = {
   street: "18 Sea View Street",
   town: "Cleethorpes",
 
-  /* The shop's own point, taken from the client's Google Maps link on
-     2026-09-01 (the !3d/!4d pair — the @ pair in a Maps URL is the viewport
-     centre and sat 170m west of the building).
-     The address is Google's, on the client's instruction 2026-09-01: it was
-     briefed as "18 Seaview Street … DN35 8HY", and Google resolves the
-     building as "18 Sea View St … DN35 8EZ". Both the street spelling and the
-     postcode changed. "Street" is written out rather than Google's "St",
-     which is a display abbreviation, not part of the name. */
+  /* ── ADDRESS: CONFIRMED BY THE CLIENT 2026-09-02 ──────────────────────
+     18 Sea View Street, Cleethorpes, DN35 8EZ. Personally confirmed as the
+     physical boutique. This is now settled fact, not a best guess.
+
+     History, so nobody re-opens it: the project was originally briefed
+     "18 Seaview Street … DN35 8HY". Google resolved the building as
+     "18 Sea View St … DN35 8EZ", and the two disagreed on both the street
+     spelling and the postcode. That was flagged rather than silently
+     resolved, and the client has now confirmed the second. DN35 8HY is
+     wrong and must not come back. "Street" is written out rather than
+     Google's "St", which is a display abbreviation, not part of the name.
+
+     Coordinates are the shop's own point from the client's Google Maps link
+     — the !3d/!4d pair. The @ pair in a Maps URL is the viewport centre and
+     sat 170m west of the building.
+
+     Every address on the site derives from here: Visit, the FAQ, the footer,
+     the corner menu, the JSON-LD LocalBusiness block, the map embed and the
+     directions link. There is no second copy to keep in step. */
   lat: 53.5574101,
   lng: -0.0259913,
   county: "North East Lincolnshire",
