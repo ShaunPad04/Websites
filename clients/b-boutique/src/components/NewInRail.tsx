@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { newIn } from "@/lib/shop";
+import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import { ImageSlot, type Tone } from "./ImageSlot";
 
 /* New in this week — the first light section after the black chapter.
@@ -26,10 +27,21 @@ import { ImageSlot, type Tone } from "./ImageSlot";
  * and the site around them is cool. They are not recoloured to fix that: the
  * files stay exactly as shot and a CSS filter calms them just enough to sit in
  * a cool room. Point at one and it returns to its own colour. */
+const ADVANCE = 4200;      /* one card every 4.2s — slow enough to read a name */
+const RESUME_AFTER = 9000; /* and it stays out of the way this long after a touch */
+
 export function NewInRail() {
   const rail = useRef<HTMLUListElement>(null);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
+  const reduced = usePrefersReducedMotion();
+  const [hovered, setHovered] = useState(false);
+  const [tabHidden, setTabHidden] = useState(false);
+  /* Bumped by any deliberate interaction — an arrow, a drag, a keypress. The
+     timer effect depends on it, so touching the rail restarts the clock for
+     free rather than needing a separate "stop" to remember to call. */
+  const [touchedAt, setTouchedAt] = useState(0);
+  const [tick, setTick] = useState(0);
 
   const sync = useCallback(() => {
     const el = rail.current;
@@ -44,17 +56,69 @@ export function NewInRail() {
     return () => window.removeEventListener("resize", sync);
   }, [sync]);
 
-  const nudge = (dir: 1 | -1) => {
+  const nudge = useCallback((dir: 1 | -1) => {
     const el = rail.current;
     if (!el) return;
     // One card plus its gap, so a card never lands half-cropped.
     const card = el.firstElementChild as HTMLElement | null;
     const step = card ? card.offsetWidth + 16 : el.clientWidth * 0.8;
     el.scrollBy({ left: step * dir, behavior: "smooth" });
-  };
+  }, []);
+
+  /* The rail walks itself along.
+   *
+   * It advances the same way the arrows do — one card, native smooth scroll,
+   * snap settles it — so autoplay is not a second animation system layered
+   * over the scroller. Everything the rail could already do still works: you
+   * can grab it, flick it, tab into it, use the arrows.
+   *
+   * It stops for: a pointer over it, focus inside it, a hidden tab, reduced
+   * motion, and any deliberate interaction (for RESUME_AFTER). That last one
+   * matters most — nothing is worse than a carousel that drags itself out
+   * from under the piece you were looking at.
+   *
+   * WCAG 2.2.2 wants a way to pause motion that runs past five seconds.
+   * Hovering, focusing, or simply touching the rail all do it here; there is
+   * no separate play/pause control, which is a judgement call rather than a
+   * certainty — see the note in the report. */
+  useEffect(() => {
+    if (reduced || hovered || tabHidden) return;
+    const since = Date.now() - touchedAt;
+    const wait = since < RESUME_AFTER ? RESUME_AFTER - since : ADVANCE;
+    const t = window.setTimeout(() => {
+      const el = rail.current;
+      if (!el) return;
+      const end = el.scrollLeft + el.clientWidth >= el.scrollWidth - 8;
+      if (end) el.scrollTo({ left: 0, behavior: "smooth" });
+      else nudge(1);
+      /* Re-runs the effect, which schedules the next step. A setInterval here
+         would keep firing while a smooth scroll was still settling. */
+      setTick((v) => v + 1);
+    }, wait);
+    return () => window.clearTimeout(t);
+  }, [reduced, hovered, tabHidden, touchedAt, tick, nudge]);
+
+  useEffect(() => {
+    const onVis = () => setTabHidden(document.visibilityState === "hidden");
+    onVis();
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, []);
+
+  const handled = useCallback(() => setTouchedAt(Date.now()), []);
 
   return (
-    <section id="new-in" aria-labelledby="newin-heading" className="newin">
+    <section
+      id="new-in"
+      aria-labelledby="newin-heading"
+      className="newin"
+      onPointerEnter={() => setHovered(true)}
+      onPointerLeave={() => setHovered(false)}
+      onFocusCapture={() => setHovered(true)}
+      onBlurCapture={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setHovered(false);
+      }}
+    >
       <div className="newin-head">
         <div className="newin-title">
           <p className="newin-eyebrow">New arrivals</p>
@@ -68,7 +132,7 @@ export function NewInRail() {
         <div className="newin-controls">
           <button
             type="button"
-            onClick={() => nudge(-1)}
+            onClick={() => { handled(); nudge(-1); }}
             disabled={atStart}
             aria-label="Show previous pieces"
             aria-controls="newin-rail"
@@ -78,7 +142,7 @@ export function NewInRail() {
           </button>
           <button
             type="button"
-            onClick={() => nudge(1)}
+            onClick={() => { handled(); nudge(1); }}
             disabled={atEnd}
             aria-label="Show more pieces"
             aria-controls="newin-rail"
@@ -93,6 +157,9 @@ export function NewInRail() {
         id="newin-rail"
         ref={rail}
         onScroll={sync}
+        onPointerDown={handled}
+        onKeyDown={handled}
+        onWheel={handled}
         tabIndex={0}
         aria-label="New arrivals"
         className="newin-rail"

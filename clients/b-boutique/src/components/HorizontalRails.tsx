@@ -92,10 +92,16 @@ export function HorizontalRails() {
                 src={c.image}
                 alt={c.alt}
                 fill
-                /* One column of five on a wide screen, most of the width on a
-                   phone. Without this the browser assumes 100vw and fetches a
-                   far larger file than a 300px column can use. */
-                sizes="(min-width: 1024px) 20vw, 78vw"
+                /* These are wider than the column they sit in, and that is
+                   not a mistake. The card is 372x600 at 1920 while the source
+                   is 3:4, so object-fit: cover scales the photograph to 450
+                   wide and crops the sides — the browser only knows the 372px
+                   box and would fetch for that, leaving the visible pixels
+                   upscaled. 30vw covers the crop across 1024-1920 (the true
+                   need runs 23-31vw), and 88vw covers it on a phone, where a
+                   78vw card 452 tall needs 339 of a 3:4 frame. */
+                sizes="(min-width: 1024px) 30vw, 88vw"
+                quality={90}
                 className="cats-img"
               />
               <span aria-hidden="true" className="cats-scrim" />
