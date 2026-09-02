@@ -121,7 +121,16 @@ export default function RootLayout({
         />
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-4 focus:rounded-full focus:bg-onyx focus:px-5 focus:py-3 focus:text-bone"
+          /* fixed, not absolute, and above the header rather than under it.
+             As an absolutely-positioned z-50 element it had two failures, both
+             measured: at the top of the page it rendered BEHIND the z-[60]
+             header, so elementFromPoint at its own centre returned the
+             wordmark link — a click on the visible skip control hit the wrong
+             target; and because it scrolled with the document, focusing it
+             after any scrolling put it at y -3584, so keyboard focus simply
+             vanished off the top of the screen. Neither is visible until
+             someone tabs, which is exactly who this control is for. */
+          className="sr-only focus:not-sr-only focus:fixed focus:z-[70] focus:m-4 focus:rounded-full focus:bg-onyx focus:px-5 focus:py-3 focus:text-bone"
         >
           Skip to content
         </a>

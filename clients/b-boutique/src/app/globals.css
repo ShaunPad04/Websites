@@ -1721,9 +1721,14 @@ body {
   color: var(--bb-grey-dark);
 }
 
-/* ── Rows ── */
-.faq-row { border-top: 1px solid rgba(10, 10, 10, 0.16); }
-.faq-row:last-of-type { border-bottom: 1px solid rgba(10, 10, 10, 0.16); }
+/* ── Rows ──
+   The one hairline on the page that was not the system's. Every other rule
+   resolves to --bb-light-border (rgba(10,10,10,.14)) or --bb-dark-border
+   (rgba(255,255,255,.14)); these eight were hard-coded at .16 — a near-miss
+   of the token rather than a decision, and the only rule family on the page
+   that did not match the others. */
+.faq-row { border-top: 1px solid var(--bb-light-border); }
+.faq-row:last-of-type { border-bottom: 1px solid var(--bb-light-border); }
 
 .faq-summary {
   display: grid;
