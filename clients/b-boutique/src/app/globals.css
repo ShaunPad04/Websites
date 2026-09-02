@@ -1289,105 +1289,186 @@ body {
   opacity: 0.65;
 }
 
-/* ── FAQ ─────────────────────────────────────────────────────────────────
-   Rules between rows, never boxes around them: the list should read as one
-   editorial column with hairlines in it, not as eight cards. */
-.faq-list { border-top: 1px solid var(--bone-line); }
-.faq-row { border-bottom: 1px solid var(--bone-line); }
+/* ── FAQ ──────────────────────────────────────────────────────────────────
+   Rules, not boxes. The whole section is a left column of type and a list of
+   hairlines; there is no card anywhere in it. */
+.faq {
+  background: var(--bb-white);
+  color: var(--bb-black-soft);
+  padding-block: 80px 88px;
+  padding-inline: 18px;
+  scroll-margin-top: 96px;
+}
+
+@media (min-width: 768px) { .faq { padding-inline: var(--bb-gutter-editorial); } }
+@media (min-width: 1024px) { .faq { padding-block: 108px 120px; } }
+
+.faq-inner { display: flex; flex-direction: column; gap: 44px; }
+
+@media (min-width: 1024px) {
+  .faq-inner { flex-direction: row; align-items: flex-start; gap: clamp(48px, 5vw, 104px); }
+  .faq-intro { flex: 0 0 36%; }
+  .faq-list  { flex: 1 1 64%; min-width: 0; }
+}
+
+.faq-eyebrow {
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--bb-black-soft);
+  margin-bottom: 20px;
+}
+
+.faq-h2 {
+  font-family: var(--font-bodoni), "Libre Bodoni", "Bodoni 72", Didot, serif;
+  font-weight: 400;
+  font-size: clamp(42px, 4.5vw, 66px);
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+  max-width: 430px;
+  color: var(--bb-black-soft);
+}
+@media (min-width: 640px) { .faq-h2 { font-size: clamp(50px, 4.5vw, 66px); } }
+
+.faq-lede {
+  margin-top: 22px;
+  max-width: 340px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--bb-grey-dark);
+}
+
+/* ── Rows ── */
+.faq-row { border-top: 1px solid rgba(10, 10, 10, 0.16); }
+.faq-row:last-of-type { border-bottom: 1px solid rgba(10, 10, 10, 0.16); }
 
 .faq-summary {
   display: grid;
-  grid-template-columns: 2.5rem 1fr auto;
-  align-items: baseline;
-  gap: 0 1rem;
-  /* Comfortably past the 44px touch minimum at every width. */
-  min-height: 3.75rem;
-  padding: 1.4rem 0;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 8px;
+  min-height: 74px;
+  padding-block: 14px;
   cursor: pointer;
-  list-style: none;               /* Firefox marker */
-  color: var(--onyx);
+  list-style: none;
+  transition: opacity var(--bb-dur-quick) var(--bb-ease);
 }
 .faq-summary::-webkit-details-marker { display: none; }
+.faq-summary:hover { opacity: 0.68; }
+/* The ring is drawn just inside the row, so it is not clipped by the rules. */
+.faq-summary:focus-visible { outline: 2px solid currentColor; outline-offset: -4px; }
 
-.faq-summary:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 4px;
-  border-radius: 2px;
+@media (min-width: 640px) { .faq-summary { grid-template-columns: 56px 1fr 56px; } }
+
+.faq-n {
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  color: var(--bb-grey-dark);
+  font-variant-numeric: tabular-nums;
 }
 
-.faq-n { color: color-mix(in oklab, var(--onyx) 45%, transparent); }
-
+/* Inter, not Bodoni. The editorial serif belongs to the heading; the
+   questions are utility, and the contrast between the two is the point. */
 .faq-q {
-  font-size: 1.0625rem;
+  font-size: 15px;
+  font-weight: 500;
   line-height: 1.35;
   letter-spacing: -0.005em;
-  transition: color 200ms var(--ease-out);
+  color: var(--bb-black-soft);
 }
-.faq-summary:hover .faq-q { color: var(--gold); }
+@media (min-width: 640px) { .faq-q { font-size: 16px; } }
 
 .faq-icon {
-  align-self: center;
-  flex: none;
-  color: color-mix(in oklab, var(--onyx) 55%, transparent);
-  transition: transform 260ms var(--ease-out), color 200ms var(--ease-out);
+  display: grid;
+  place-items: center;
+  color: var(--bb-black-soft);
+  transition: transform 380ms var(--bb-ease);
 }
-.faq-row[open] .faq-icon {
-  /* 45 degrees is the whole trick: the same two strokes become a cross. */
-  transform: rotate(45deg);
-  color: var(--onyx);
-}
-.faq-summary:hover .faq-icon { color: var(--gold); }
+.faq-row[open] .faq-icon { transform: rotate(45deg); }
 
+/* Answers sit under the QUESTION column, not the number — the grid holds. */
 .faq-answer {
-  grid-column: 2 / -1;
-  padding: 0 3.5rem 1.75rem 3.5rem;
-  max-width: 46rem;
-  font-size: 0.9375rem;
+  padding: 0 44px 26px 44px;
+  max-width: 680px;
+  font-size: 14px;
   line-height: 1.7;
-  color: color-mix(in oklab, var(--onyx) 72%, transparent);
+  color: var(--bb-grey-dark);
 }
-@media (max-width: 640px) {
-  .faq-answer { padding-inline: 0 1.5rem; }
-}
+@media (min-width: 640px) { .faq-answer { padding-left: 56px; padding-right: 56px; } }
 
-/* Unconfirmed content. Deliberately loud in the oxblood so it cannot be
-   mistaken for copy, or shipped by accident. */
 .faq-pending {
-  margin-top: 0.5rem;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--red);
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--bb-black-soft);
+  border: 1px solid rgba(10, 10, 10, 0.22);
+  padding: 7px 10px;
+  display: inline-block;
 }
+.faq-answer p + .faq-pending { margin-top: 14px; }
 
-/* The open/close transition. `interpolate-size` is scoped to the rows rather
-   than set on :root, so enabling keyword interpolation cannot leak into any
-   other transition on the site. */
-@media (prefers-reduced-motion: no-preference) {
-  .faq-row { interpolate-size: allow-keywords; }
+/* Height 0 -> auto, natively. interpolate-size makes `auto` animatable and
+   ::details-content is the box the browser opens; together they give the real
+   thing rather than a max-height guess that either clips a long answer or
+   leaves dead space under a short one. Browsers without it snap open, which
+   is an honest degradation of the same markup. */
+@supports (interpolate-size: allow-keywords) {
+  :root { interpolate-size: allow-keywords; }
+
   .faq-row::details-content {
-    block-size: 0;
+    height: 0;
+    opacity: 0;
     overflow: hidden;
-    transition: block-size 260ms var(--ease-out), content-visibility 260ms;
-    transition-behavior: allow-discrete;
+    transition:
+      height 400ms var(--bb-ease),
+      content-visibility 400ms allowed-discrete,
+      opacity 400ms var(--bb-ease);
   }
-  .faq-row[open]::details-content { block-size: auto; }
+  .faq-row[open]::details-content { height: auto; opacity: 1; }
 }
 
-/* The staggered answer reveal, adapted from the reference component. Opacity
-   only on inline spans — no blur, no transform — so nothing is promoted to a
-   layer, text metrics are untouched, and the whole answer has landed inside
-   ~600ms rather than crawling in character by character. */
-@media (prefers-reduced-motion: no-preference) {
-  .faq-row[open] .faq-w {
-    animation: faq-word 300ms var(--ease-out) both;
-    animation-delay: calc(var(--i) * 18ms);
+/* Entrance — the quietest on the page. No SplitText: the philosophy section
+   owns that effect and repeating it everywhere spends its impact. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .faq-intro > * {
+      animation: faq-rise 800ms var(--bb-ease) both;
+      animation-timeline: view();
+      animation-range: entry 4% entry 32%;
+    }
+    .faq-intro > :nth-child(2) { animation-delay: 60ms; }
+    .faq-intro > :nth-child(3) { animation-delay: 120ms; }
+
+    .faq-row {
+      animation: faq-row-in 700ms var(--bb-ease) both;
+      animation-timeline: view();
+      animation-range: entry 5% entry 36%;
+    }
+    .faq-row:nth-of-type(2) { animation-delay: 35ms; }
+    .faq-row:nth-of-type(3) { animation-delay: 70ms; }
+    .faq-row:nth-of-type(4) { animation-delay: 105ms; }
+    .faq-row:nth-of-type(5) { animation-delay: 140ms; }
+    .faq-row:nth-of-type(6) { animation-delay: 175ms; }
+    .faq-row:nth-of-type(7) { animation-delay: 210ms; }
+    .faq-row:nth-of-type(8) { animation-delay: 245ms; }
+    .faq-row:nth-of-type(9) { animation-delay: 280ms; }
+    .faq-row:nth-of-type(10) { animation-delay: 315ms; }
+    .faq-row:nth-of-type(11) { animation-delay: 350ms; }
+    .faq-row:nth-of-type(12) { animation-delay: 385ms; }
   }
 }
-@keyframes faq-word {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+
+@keyframes faq-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes faq-row-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-row::details-content { transition: none; }
+  .faq-icon { transition: none; }
 }
 
 /* ── Footer ──────────────────────────────────────────────────────────────
