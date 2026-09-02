@@ -42,6 +42,43 @@ const inter = Inter({
 const description =
   "An independent boutique on Sea View Street, Cleethorpes. Womenswear, accessories and homeware, chosen one piece at a time. Open Tuesday to Sunday, 10 till 4.";
 
+/* Indexing is OFF until someone deliberately turns it on.
+ *
+ * This site is a concept build on a public production URL. It carries
+ * placeholder testimonials, six FAQ answers still reading CLIENT TO CONFIRM,
+ * and LocalBusiness structured data naming the real shop at its real address.
+ * Google cannot tell a demo from a shopfront: indexed, it would answer
+ * "opening hours for B Boutique" with copy nobody has approved, and a wrong
+ * answer attached to a real business is worse than no answer.
+ *
+ * Default-deny rather than default-allow, because the failure modes are not
+ * symmetric. Forgetting to switch this ON costs a redeploy. Forgetting to
+ * switch it OFF puts unapproved claims about a real address into search
+ * results, where they persist long after the page is fixed.
+ *
+ * To go live: set ALLOW_INDEXING=true in the Vercel project's environment
+ * variables and redeploy. Read at build time, so it is a deploy-time
+ * decision — which is right, since going live IS a deploy.
+ *
+ * Deliberately NOT paired with a robots.txt Disallow. A disallow blocks the
+ * crawl, and a crawler that never fetches the page never reads the noindex
+ * below — Google can then list a bare URL it was never allowed to look at.
+ * Letting it crawl and telling it not to index is the combination that
+ * actually keeps the page out. */
+const indexable = process.env.ALLOW_INDEXING === "true";
+
+const robots: Metadata["robots"] = indexable
+  ? { index: true, follow: true }
+  : {
+      index: false,
+      follow: false,
+      nocache: true,
+      /* Google honours the generic directive, but its own bot takes extra
+         ones — noimageindex keeps the photography out of Images, where a
+         picture outlives the page it came from. */
+      googleBot: { index: false, follow: false, noimageindex: true },
+    };
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://bboutique.co.uk"),
   title: {
@@ -63,7 +100,7 @@ export const metadata: Metadata = {
     locale: "en_GB",
     siteName: "B Boutique",
   },
-  robots: { index: true, follow: true },
+  robots,
 };
 
 /* Schema.org. For a shop people have to physically find, this is not
