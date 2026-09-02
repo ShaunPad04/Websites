@@ -24,10 +24,37 @@
 const CDN =
   "https://d8j0ntlcm91z4.cloudfront.net/user_3HwrG1wTADv3RkUcvzwwuwfoAUh/";
 
-/** Flipped to true by scripts/fetch-images.mjs once public/img holds the set.
- *  A boolean beats rewriting each URL in this file by hand or by regex: the
- *  provenance below survives, and reverting is one character. */
-export const VENDORED = false;
+/** The slots whose photograph is vendored in public/img as <slot>.webp.
+ *
+ *  A set, not a boolean. The upload arrived 16 of 19 complete, and a single
+ *  flag would have forced a choice between pointing three slots at files that
+ *  do not exist or leaving all nineteen on an unreachable CDN. Per-slot, the
+ *  sixteen load locally and the three fall back to the CDN — which the
+ *  sandbox cannot reach, so here they show their designed marble and cloth,
+ *  while a real visitor gets the photograph. Add a slot when its file lands.
+ *
+ *  Missing, and why: their source PNG was not in the upload.
+ *    panel-jackets · new-boucle-overshirt · homeware-ceramics */
+const vendored = new Set<string>(
+  [
+  "panel-all",
+  "panel-tops",
+  "panel-dresses",
+  "panel-knitwear",
+  "panel-trousers",
+  "panel-accessories",
+  "panel-homeware",
+  "new-wool-trouser",
+  "new-camel-blazer",
+  "new-cotton-tee",
+  "new-slip-dress",
+  "new-lambswool-crew",
+  "new-leather-crossbody",
+  "new-silk-scarf",
+  "new-stoneware-carafe",
+  "homeware-linen"
+]
+);
 
 /** slot -> the generation's filename on the CDN. Order is the page's order. */
 const shot: Record<string, string> = {
@@ -71,9 +98,12 @@ const shot: Record<string, string> = {
 export const images: Partial<Record<string, string>> = Object.fromEntries(
   Object.entries(shot).map(([slot, file]) => [
     slot,
-    VENDORED ? `/img/${slot}.webp` : CDN + file,
+    vendored.has(slot) ? `/img/${slot}.webp` : CDN + file,
   ]),
 );
+
+/** Slots still waiting on their file. Empty means the set is complete. */
+export const notVendored = Object.keys(shot).filter((s) => !vendored.has(s));
 
 /** The CDN original for a slot, whatever `images` currently resolves to.
  *  scripts/fetch-images.mjs downloads from here. */

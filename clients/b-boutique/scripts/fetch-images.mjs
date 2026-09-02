@@ -10,9 +10,10 @@
  *
  * What it does, per slot:
  *   download the generation -> resize to MAX_W -> WebP -> public/img/<slot>.webp
- * then flips VENDORED in src/lib/images.ts, which is all it takes to point the
- * site at the local copies. SlotPhoto already routes a local path through
- * next/image, so AVIF and a per-breakpoint srcset come for free on top.
+ * then rewrites the `vendored` set in src/lib/images.ts from whatever is
+ * actually on disk, which is all it takes to point the site at the local
+ * copies. SlotPhoto already routes a local path through next/image, so AVIF
+ * and a per-breakpoint srcset come for free on top.
  *
  * The originals are 3456x4608 PNGs at roughly 8MB each. Committing twenty of
  * those would put ~175MB of source art in the repo to serve slots that are at
@@ -20,7 +21,7 @@
  * display can use. */
 import { mkdir, writeFile, readFile, stat } from "node:fs/promises";
 import sharp from "sharp";
-import { slots, sourceFor, VENDORED } from "../src/lib/images.ts";
+import { slots, sourceFor } from "../src/lib/images.ts";
 
 const MAX_W = 1600;      // 2x the widest slot on the page, and no more
 const QUALITY = 88;      // visually lossless at this scale; next/image re-encodes down
@@ -91,31 +92,37 @@ await pool(slots, CONCURRENCY, async (slot) => {
 });
 
 if (failed) {
-  console.error(`\n${failed} slot(s) failed. VENDORED left as-is so the site keeps`);
-  console.error(`using the CDN rather than pointing at files that are not there.`);
+  console.error(`\n${failed} slot(s) failed.`);
   if (errors.some((e) => e.includes("403"))) {
     console.error(`\nEvery failure is a 403. That is the egress policy of wherever this`);
     console.error(`ran, not a bad URL — the Claude Code sandbox denies this CDN. Run it`);
     console.error(`from a machine with ordinary internet access.`);
   }
-  process.exit(1);
 }
 
-if (done + skipped === slots.length) {
-  const src = await readFile(MANIFEST, "utf8");
-  const flipped = src.replace(
-    /export const VENDORED = (?:true|false);/,
-    "export const VENDORED = true;",
-  );
-  if (flipped === src && !VENDORED) {
-    console.error(`\nCould not find the VENDORED line in ${MANIFEST}; set it by hand.`);
-    process.exit(1);
-  }
-  await writeFile(MANIFEST, flipped);
+/* Rewrite the vendored set from what is on disk rather than from what this
+ * run happened to fetch. Idempotent, and it cannot claim a slot is local when
+ * its file is missing — which is the one way this file could lie. */
+const present = [];
+for (const slot of slots) {
+  if (await stat(`public/img/${slot}.webp`).catch(() => null)) present.push(slot);
 }
+const src = await readFile(MANIFEST, "utf8");
+const list = present.map((s) => `  "${s}",`).join("\n");
+const next = src.replace(
+  /const vendored = new Set<string>\(\n[\s\S]*?\n\);/,
+  `const vendored = new Set<string>([\n${list}\n]);`,
+);
+if (next === src) {
+  console.error(`\nCould not find the vendored set in ${MANIFEST}; update it by hand.`);
+  process.exit(1);
+}
+await writeFile(MANIFEST, next);
+console.log(`\n${present.length}/${slots.length} slots now vendored in public/img.`);
+if (failed) process.exit(1);
 
 console.log(
   `\n${done} fetched, ${skipped} already present.` +
     (done ? `  ${kb(bytesIn)} of source -> ${kb(bytesOut)} shipped.` : ""),
 );
-console.log(`${MANIFEST}: VENDORED = true. Run \`pnpm build\` and the slots fill in.`);
+console.log(`${MANIFEST} updated. Run \`pnpm build\` and the slots fill in.`);
