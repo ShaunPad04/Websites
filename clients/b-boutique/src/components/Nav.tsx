@@ -61,7 +61,9 @@ export function Nav() {
         <a
           href="#top"
           aria-label="B Boutique, home"
-          className="display shrink-0 text-[20px] leading-none tracking-[-0.02em] lg:text-[21px]"
+          /* py-3 for the same reason as the MENU button: a 20px-tall link in
+             a 72px items-center row becomes a 44px target and nothing moves. */
+          className="display shrink-0 py-3 text-[20px] leading-none tracking-[-0.02em] lg:text-[21px]"
         >
           B Boutique
         </a>

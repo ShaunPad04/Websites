@@ -18,7 +18,8 @@ export function HeroPicture({ className = "" }: { className?: string }) {
       {/* Mobile crop */}
       <source type="image/avif" srcSet="/img/hero-mobile.avif" />
       <source type="image/webp" srcSet="/img/hero-mobile.webp" />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* No eslint-disable needed: no-img-element allows a bare <img> inside
+          a <picture>, which is the whole reason this component exists. */}
       <img
         src="/img/hero-mobile.jpg"
         alt="A woman in gold jewellery against a deep red ground"

@@ -113,7 +113,11 @@ export function CornerMenu() {
            photograph and a filled chip broke that. Just the word and two thin
            rules, in the same 10px Inter as the rest of the header. The old
            bone-filled chip is gone with the bone header it belonged to. */
-        className="group relative z-[60] inline-flex shrink-0 items-center gap-2.5 text-[10px] font-semibold uppercase leading-none tracking-[0.14em] text-bb-white transition-opacity duration-200 hover:opacity-70"
+        /* py-[17px] is hit area, not spacing: 10px of type is a 10px-tall
+           tap target, and this is the primary navigation control on a phone.
+           The header is a fixed 72px flex row with items-center, so a taller
+           button changes nothing visible — verified pixel-identical. */
+        className="group relative z-[60] inline-flex shrink-0 items-center gap-2.5 py-[17px] text-[10px] font-semibold uppercase leading-none tracking-[0.14em] text-bb-white transition-opacity duration-200 hover:opacity-70"
       >
         <span>{open ? "Close" : "Menu"}</span>
         {/* Two 1px rules, not a hamburger. On open they cross into a close

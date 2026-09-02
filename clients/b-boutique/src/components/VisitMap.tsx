@@ -58,6 +58,12 @@ export function VisitMap({
   useEffect(() => {
     if (!open) return;
 
+    /* Captured here rather than read in the cleanup. It is the same node
+       either way — the trigger does not move while this component is
+       mounted — but reading a ref during cleanup is the pattern that bites
+       when it isn't, and the linter is right to say so. */
+    const openedBy = opener.current;
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") { e.preventDefault(); close(); return; }
       if (e.key !== "Tab") return;
@@ -93,7 +99,7 @@ export function VisitMap({
       window.clearTimeout(t);
       // Now that main is interactive again, send focus back where it came
       // from. Guarded because this cleanup also runs on unmount.
-      if (opener.current?.isConnected) opener.current.focus();
+      if (openedBy?.isConnected) openedBy.focus();
     };
   }, [open, close]);
 

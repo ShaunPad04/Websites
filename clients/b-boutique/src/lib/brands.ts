@@ -29,6 +29,16 @@ export type Brand = {
      The slot is built to the INK, not to the file box, because the two are
      rarely the same: mos-mosh is 73% transparent padding, ichi and numph
      about 25%, and three assets are not even centred inside their own box.
+
+     Two of these are re-encoded rather than as-supplied, and only in the way
+     a mask permits: part-two was a 4341x473 PNG rendering into a 220x24 box —
+     20x oversampled, 58 KB, and downloaded on every first load — and numph
+     was 2000x576 for a 115x33 box. Both are now lossless WebP at 4x their
+     largest rendered size (880 and 460 wide), 71 KB down to 19 KB. Lossless,
+     so the alpha the mask actually reads is bit-identical; and every number
+     in this table is a RATIO of the cap height, so resizing the file moves
+     nothing. The artwork is unedited: same shapes, fewer pixels. The
+     originals stay in public/img/brands for the cleanup pass.
      Sizing by file box would render those marks small and sitting off to one
      side, and mos-mosh would need a 100px-tall slot to show a 25px wordmark,
      blowing the section height.
@@ -60,10 +70,10 @@ export type Brand = {
 export const brands: Brand[] = [
   { name: "Mos Mosh",       src: "/img/brands/mos-mosh.webp",    iw: 5.9068,  mw: 10,      mh: 3.7267, ox: 2.0497, oy: 1.3665, cap: 22 },
   { name: "Rino & Pelle",   src: "/img/brands/rino-pelle.svg",   iw: 12.8141, mw: 12.8141, mh: 1.0050, ox: 0,      oy: 0,      cap: 23 },
-  { name: "Part Two",       src: "/img/brands/part-two.png",     iw: 9.1783,  mw: 9.1783,  mh: 1,      ox: 0,      oy: 0,      cap: 24 },
+  { name: "Part Two",       src: "/img/brands/part-two.webp",    iw: 9.1783,  mw: 9.1783,  mh: 1,      ox: 0,      oy: 0,      cap: 24 },
   { name: "b.young",        src: "/img/brands/byoung.svg",       iw: 4.6383,  mw: 4.6383,  mh: 1,      ox: 0,      oy: 0,      cap: 26 },
   { name: "Ichi",           src: "/img/brands/ichi.avif",        iw: 3.2661,  mw: 3.8337,  mh: 1.3304, ox: 0.3503, oy: 0.1508, cap: 22 },
-  { name: "Nümph",          src: "/img/brands/numph.png",        iw: 3.6476,  mw: 4.5881,  mh: 1.3216, ox: 0.4714, oy: 0.1498, cap: 25 },
+  { name: "Nümph",          src: "/img/brands/numph.webp",       iw: 3.6476,  mw: 4.5881,  mh: 1.3216, ox: 0.4714, oy: 0.1498, cap: 25 },
   { name: "Saint Tropez",   src: "/img/brands/saint-tropez.svg", iw: 2.0918,  mw: 2.2838,  mh: 1.0017, ox: 0.0968, oy: 0.0017, cap: 32 },
   { name: "Selected Femme", src: "/img/brands/selected.svg",     iw: 5.2117,  mw: 5.25,    mh: 1,      ox: 0,      oy: 0,      cap: 23 },
 ];

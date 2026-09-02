@@ -25,7 +25,11 @@ import "./globals.css";
 const bodoni = Bodoni_Moda({
   variable: "--font-bodoni",
   subsets: ["latin"],
-  style: ["normal", "italic"],
+  /* Normal only. The italic axis was requested and preloaded — 25 KB on the
+     critical path, competing with the hero image for a throttled connection —
+     and nothing on the site uses it: every italic face reported `unloaded`
+     and a sweep of the rendered page found zero elements computing
+     font-style: italic. Add it back the day something is set in italic. */
   display: "swap",
 });
 
