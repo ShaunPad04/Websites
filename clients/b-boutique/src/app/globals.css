@@ -1223,7 +1223,12 @@ body {
    the philosophy line, below the hand. Positioning only; the drift comes from
    the keyframes below, which is why there is no translate utility on the
    element competing with them. */
-.hero-fx-left { bottom: 196px; }
+/* 192px, not 196. This block is anchored by its bottom edge, and the
+   category hit areas took its height from 64px to 72px; left at 196 the whole
+   group would have risen 4px. Four off the offset puts its midpoint back
+   where it was — measured at 390: mid y616 before and after. Desktop needs no
+   equivalent, being centred rather than bottom-anchored. */
+.hero-fx-left { bottom: 192px; }
 
 @media (min-width: 1024px) {
   .hero-fx-left { bottom: auto; top: 50%; transform: translateY(-50%); }

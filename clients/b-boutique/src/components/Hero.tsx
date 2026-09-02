@@ -74,13 +74,23 @@ export function Hero() {
         className="hero-fx hero-fx-left absolute left-[18px] sm:left-8 lg:left-9"
       >
         <div className="flex items-center gap-[22px]">
+          {/* 72px, not 64: the rule reads as spanning the stack, so when the
+              stack grew to 72 for the hit areas the rule had to grow with it
+              or stop reaching the last label. */}
           <span
             aria-hidden="true"
-            className="block h-16 w-px shrink-0"
+            className="block h-[72px] w-px shrink-0"
             style={{ background: "rgba(255,255,255,.65)" }}
           />
+          {/* 2.4, not 1.9. At 10px that is a 24px line box, and since each
+              anchor is a block filling its line box, each target is exactly
+              24px high — WCAG 2.2 §2.5.8 — with the three touching edge to
+              edge and overlapping by nothing. The type itself is untouched:
+              same size, weight, colour and tracking. The 5px of extra pitch
+              is paid for by .hero-fx-left's bottom offset so the group keeps
+              its midpoint; see globals.css. */}
           <ul className="space-y-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-bb-white"
-              style={{ lineHeight: 1.9 }}>
+              style={{ lineHeight: 2.4 }}>
             {HERO_CATEGORIES.map((c) => (
               <li key={c.label}>
                 <a href={c.href} className="nav-link">{c.label}</a>
