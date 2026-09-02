@@ -1,87 +1,74 @@
 import { shop, hours, formatHour } from "@/lib/shop";
-import { OpenBadge } from "./OpenBadge";
-import { directionsHref } from "@/lib/nav";
-import { Reveal } from "./Reveal";
+import { directionsHref, mapEmbedSrc } from "@/lib/nav";
+import { VisitMap } from "./VisitMap";
 
-/* This is the conversion point. Not a basket — a postcode.
+/* The conversion point. Not a basket — a postcode.
  *
- * No map here. There was one, which made two on the homepage — this and the
- * footer's — and the second one is the better home for it: by then the reader
- * has finished and is deciding whether to make the trip. This section keeps
- * the address, the open badge, the hours and a directions link, which is what
- * someone reading it actually needs. */
+ * Every value here derives from shop.ts: the address, the coordinates behind
+ * the map, the directions link and the hours table. There is no second copy
+ * of any of it, so a change there changes this and the JSON-LD together.
+ *
+ * ── Two things deliberately absent ────────────────────────────────────────
+ * The parking sentence is gone. "On-street parking at the top, and the Market
+ * Place car park is a two-minute walk" is a checkable local claim that nobody
+ * has confirmed, and the address confirmation does not cover it. It is not
+ * softened or hedged here — it is simply not asserted.
+ *
+ * The live "open now" badge is gone too. openState() reads the VISITOR's
+ * clock, not Cleethorpes': at one instant when the shop is genuinely open, a
+ * New York visitor was told "Opening at 10am" and a Sydney visitor "Closed —
+ * open tomorrow". A wrong opening claim is worse than none, and the hours
+ * table below says the same thing without ever being wrong. OpenBadge and
+ * openState are untouched and still there for when the timezone is fixed. */
 export function Visit() {
   return (
-    <section
-      id="visit"
-      aria-labelledby="visit-heading"
-      className="relative grain scroll-mt-24 bg-panel py-20 text-bone sm:py-28"
-    >
-      <div className="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-2 lg:gap-20">
-        <Reveal>
-          <p className="label text-bone/55">06 — Come in</p>
-          <h2 id="visit-heading" data-split className="display mt-4 text-[clamp(2rem,4.5vw,3.5rem)]">
-            {shop.street}
+    <section id="visit" aria-labelledby="visit-heading" className="visit">
+      <div className="visit-inner">
+        <div className="visit-info">
+          <p className="visit-eyebrow">Visit B Boutique</p>
+
+          <h2 id="visit-heading" className="visit-address">
+            <span>{shop.street}</span>
+            <span>{shop.town}</span>
+            <span>{shop.postcode}</span>
           </h2>
 
-          <address className="mt-6 not-italic text-lg leading-relaxed text-bone/80">
-            {shop.street}
-            <br />
-            {shop.town}
-            <br />
-            {shop.postcode}
-          </address>
+          <a
+            href={directionsHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="visit-cta"
+          >
+            Get directions <span className="visit-cta-arrow" aria-hidden="true">&rarr;</span>
+          </a>
 
-          <div className="mt-6">
-            <OpenBadge onDark />
-          </div>
-
-          <div className="mt-9 flex flex-wrap gap-4">
-            <a
-              href={directionsHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full bg-bone px-7 py-3.5 text-onyx transition-colors hover:bg-gold hover:text-bone"
-            >
-              Get directions
-            </a>
-          </div>
-
-          <p className="mt-8 max-w-sm text-sm leading-relaxed text-bone/60">
-            Sea View Street runs up from the seafront. There is on-street parking
-            at the top and the Market Place car park is a two-minute walk.
-          </p>
-        </Reveal>
-
-        <Reveal delay={2}>
-          <h3 className="label text-bone/50">Opening times</h3>
-          <dl className="mt-5 divide-y divide-white/10 border-y border-white/10">
-            {hours.map((d) => {
-              const open = d.hours;
-              const closed = open === null;
-              return (
-                <div
-                  key={d.day}
-                  className="flex items-baseline justify-between gap-6 py-3.5"
-                >
-                  <dt className={closed ? "text-bone/40" : "text-bone"}>{d.day}</dt>
-                  <dd
-                    className={
-                      closed
-                        ? "text-bone/40"
-                        : "tabular-nums text-bone/85"
-                    }
-                  >
-                    {open === null
-                      ? "Closed"
-                      : `${formatHour(open.open)} — ${formatHour(open.close)}`}
+          <div className="visit-hours">
+            <h3 className="visit-hours-label">Opening hours</h3>
+            <dl className="visit-hours-list">
+              {hours.map((d) => (
+                <div key={d.day} className="visit-hours-row">
+                  <dt>{d.day}</dt>
+                  <dd className={d.hours ? "" : "is-closed"}>
+                    {d.hours
+                      ? `${formatHour(d.hours.open)} — ${formatHour(d.hours.close)}`
+                      : "Closed"}
                   </dd>
                 </div>
-              );
-            })}
-          </dl>
+              ))}
+            </dl>
+          </div>
+        </div>
 
-        </Reveal>
+        <div className="visit-map">
+          <VisitMap
+            street={shop.street}
+            town={shop.town}
+            postcode={shop.postcode}
+            embedSrc={mapEmbedSrc}
+            directionsHref={directionsHref}
+            title={`Map showing ${shop.name}, ${shop.street}, ${shop.town} ${shop.postcode}`}
+          />
+        </div>
       </div>
     </section>
   );

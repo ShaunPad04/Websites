@@ -1289,6 +1289,249 @@ body {
   opacity: 0.65;
 }
 
+/* ── Visit ────────────────────────────────────────────────────────────────
+   The last dark chapter before the footer. Cool white FAQ stops, black
+   begins — no divider, no transition band. */
+.visit {
+  background: var(--bb-black);
+  color: var(--bb-white);
+  padding-block: 80px 88px;
+  padding-inline: 18px;
+  scroll-margin-top: 96px;
+}
+
+@media (min-width: 768px) { .visit { padding-inline: var(--bb-gutter-editorial); } }
+@media (min-width: 1024px) { .visit { padding-block: 100px 112px; } }
+
+.visit-inner { display: flex; flex-direction: column; gap: 48px; }
+
+@media (min-width: 1024px) {
+  .visit-inner { flex-direction: row; align-items: flex-start; gap: clamp(48px, 5vw, 96px); }
+  /* The map leads slightly — this is a section about going somewhere. */
+  .visit-info { flex: 0 0 40%; }
+  .visit-map  { flex: 1 1 60%; min-width: 0; }
+}
+
+.visit-eyebrow {
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 22px;
+}
+
+/* The address is the typographic moment near the bottom of the page. Three
+   spans on their own lines rather than <br>, so each is a real box that wraps
+   on its own terms. */
+.visit-address {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-bodoni), "Libre Bodoni", "Bodoni 72", Didot, serif;
+  font-weight: 400;
+  font-size: clamp(38px, 4vw, 58px);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  color: var(--bb-white);
+}
+@media (min-width: 640px) { .visit-address { font-size: clamp(42px, 4vw, 58px); } }
+
+/* Bordered, not filled, and square. A white pill here would be the loudest
+   thing in the last three sections. */
+.visit-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 34px;
+  min-height: 44px;
+  padding: 0 22px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 0;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--bb-white);
+  transition:
+    background var(--bb-dur-quick) var(--bb-ease),
+    color var(--bb-dur-quick) var(--bb-ease),
+    border-color var(--bb-dur-quick) var(--bb-ease);
+}
+.visit-cta:hover,
+.visit-cta:focus-visible { background: var(--bb-white); color: var(--bb-black); border-color: var(--bb-white); }
+.visit-cta-arrow { display: inline-block; transition: transform 450ms var(--bb-ease); }
+.visit-cta:hover .visit-cta-arrow { transform: translateX(4px); }
+
+.visit-hours { margin-top: 46px; }
+
+.visit-hours-label {
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.17em;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 16px;
+}
+
+/* Rules, not a table. Faint enough to read as spacing. */
+.visit-hours-list { max-width: 380px; }
+.visit-hours-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding-block: 9px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 12px;
+}
+.visit-hours-row:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.14); }
+.visit-hours-row dt { color: rgba(255, 255, 255, 0.58); }
+.visit-hours-row dd { color: var(--bb-white); font-variant-numeric: tabular-nums; }
+.visit-hours-row dd.is-closed { color: rgba(255, 255, 255, 0.4); }
+
+/* ── The map panel ── */
+.vm-panel {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: clamp(280px, 76vw, 420px);
+  background: var(--bb-black-raised);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+@media (min-width: 1024px) { .vm-panel { height: clamp(500px, 38vw, 570px); } }
+
+.vm-panel-inner { text-align: center; padding-inline: 24px; }
+
+.vm-panel-street {
+  font-family: var(--font-bodoni), "Libre Bodoni", "Bodoni 72", Didot, serif;
+  font-weight: 400;
+  font-size: clamp(24px, 2.4vw, 34px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--bb-white);
+}
+.vm-panel-sub {
+  margin-top: 8px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.vm-expand {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 0 14px;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: var(--bb-white);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  transition: background var(--bb-dur-quick) var(--bb-ease), border-color var(--bb-dur-quick) var(--bb-ease);
+}
+.vm-expand:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.5); }
+
+/* ── Expanded ── */
+.vm-overlay { position: fixed; inset: 0; z-index: 90; }
+.vm-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: vm-fade 300ms var(--bb-ease) both;
+}
+
+.vm-dialog {
+  position: absolute;
+  inset: 0;
+  background: var(--bb-black);
+  overflow: hidden;
+  animation: vm-open 780ms var(--bb-ease) both;
+}
+/* dvh, not vh: on a phone the browser chrome collapses and a vh-sized dialog
+   leaves the close control under it. */
+@media (min-width: 768px) {
+  .vm-dialog { inset: 40px; width: auto; height: auto; }
+}
+
+.vm-frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* Sits under the frame, so it is what remains if the embed is blocked. */
+.vm-frame-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  padding-inline: 24px;
+}
+
+.vm-close,
+.vm-open-external {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  background: var(--bb-black);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: var(--bb-white);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+.vm-close { top: 16px; right: 16px; }
+.vm-open-external { bottom: 16px; left: 16px; }
+.vm-close:hover,
+.vm-open-external:hover { background: var(--bb-black-raised); border-color: rgba(255, 255, 255, 0.5); }
+.vm-close-x { font-size: 15px; line-height: 1; }
+
+@keyframes vm-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes vm-open {
+  from { opacity: 0; transform: scale(0.985) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Entrance */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .visit-info {
+      animation: visit-rise 840ms var(--bb-ease) both;
+      animation-timeline: view();
+      animation-range: entry 4% entry 34%;
+    }
+    .visit-map {
+      animation: visit-rise-map 860ms var(--bb-ease) both;
+      animation-timeline: view();
+      animation-range: entry 6% entry 38%;
+      animation-delay: 80ms;
+    }
+  }
+}
+
+@keyframes visit-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes visit-rise-map { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .vm-dialog, .vm-backdrop { animation-duration: 1ms; }
+  .visit-cta, .visit-cta-arrow, .vm-expand { transition: none; }
+}
+
 /* ── FAQ ──────────────────────────────────────────────────────────────────
    Rules, not boxes. The whole section is a left column of type and a list of
    hairlines; there is no card anywhere in it. */
