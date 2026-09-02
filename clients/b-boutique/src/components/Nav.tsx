@@ -76,7 +76,7 @@ export function Nav() {
               <li key={item.label}>
                 <a
                   href={item.href}
-                  className="nav-link text-[10px] font-semibold uppercase leading-none tracking-[0.14em]"
+                  className="nav-link nav-link--bar text-[10px] font-semibold uppercase leading-none tracking-[0.14em]"
                 >
                   {item.label}
                 </a>

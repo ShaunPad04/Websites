@@ -1283,7 +1283,32 @@ body {
    opacity. Anything louder competes with the photograph. */
 .nav-link {
   transition: opacity var(--bb-dur-quick) var(--bb-ease);
+
+  /* Hit area, not appearance. WCAG 2.2 §2.5.8 asks for 24x24 CSS px per
+     target; both of these are 10px type, and an inline <a> wrapped round
+     10px type is a 12px-tall target. Nothing visible may move, so the fix
+     is the box rather than the composition.
+
+     `block` + `fit-content` makes the anchor own its whole line box while
+     still shrink-wrapping the label horizontally, so the painted result is
+     identical: same font, same position, same width. */
+  display: block;
+  width: fit-content;
 }
+
+/* The header's five. The bar is a fixed 72px flex row with items-center and
+   the centre nav is absolutely positioned, so its static position stays
+   centred however tall it grows — block padding turns a 10px label into a
+   44px target and the bar does not move. Vertical only: the gap between
+   labels is the ul's, and it is untouched.
+
+   The padding is 19/15 rather than a symmetric 17/17 because the two are not
+   centred the same way. As an inline anchor the flex centring included the
+   font's descent, which sat the label's ink 2px below the bar's centre line;
+   as a padded block it would sit exactly on it. 4px more above than below
+   puts the ink back on the pixel it was already on — measured at 1440, ink
+   top y=32 before and after. */
+.nav-link--bar { padding-top: 19px; padding-bottom: 15px; }
 .nav-link:hover,
 .nav-link:focus-visible {
   opacity: 0.65;
