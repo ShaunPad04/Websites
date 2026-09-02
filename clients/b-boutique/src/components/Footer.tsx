@@ -66,7 +66,11 @@ export function Footer() {
               key={group.heading}
               aria-label={group.heading}
               className="ft-rise"
-              style={{ "--d": `${(i + 1) * 50}ms` } as React.CSSProperties}
+              /* A place in the stagger, not a delay: these columns share a
+                 top edge and are revealed by a scroll timeline, which ignores
+                 animation-delay outright. globals.css turns --d into scroll
+                 distance. */
+              style={{ "--d": i + 1 } as React.CSSProperties}
             >
               <h2 className="ft-group">{group.heading}</h2>
               <ul>
@@ -84,7 +88,7 @@ export function Footer() {
           {/* Renders only when real accounts exist. Nothing is invented and
               no platform homepage is linked as a stand-in. */}
           {socials.length > 0 ? (
-            <nav aria-label="Follow" className="ft-rise" style={{ "--d": "150ms" } as React.CSSProperties}>
+            <nav aria-label="Follow" className="ft-rise" style={{ "--d": 3 } as React.CSSProperties}>
               <h2 className="ft-group">Follow</h2>
               <ul>
                 {socials.map((s) => (

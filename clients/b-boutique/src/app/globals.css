@@ -79,6 +79,27 @@
   --ease-out: var(--bb-ease);
   --ease-spring: cubic-bezier(0.34, 1.4, 0.44, 1);
 
+  /* ── Entrance trigger grammar ─────────────────────────────────────────
+     Every section entrance on this page is a scroll-driven animation, and a
+     scroll-driven animation ignores animation-duration: the RANGE decides
+     both when a reveal starts and how long it lasts. The ranges used to be
+     written as `entry 4% entry 34%`, and entry percentages are relative to
+     the animated element's own height — so the same "4%" meant 3px of a FAQ
+     row and 31px of a category card. Two consequences, both visible: nearly
+     everything fired at its first visible pixel, and a FAQ row completed its
+     whole reveal inside 23px of scrolling while a category card took 146px.
+
+     These are viewport-relative instead, so one number means the same thing
+     everywhere: a reveal begins once its element is --bb-enter above the
+     fold edge and is finished by --bb-settle. --bb-step is one place in a
+     stagger, and it too has to be a distance rather than a delay: with a
+     scroll timeline attached, a time-based animation-delay is ignored
+     outright. Every stagger on this page was written in ms and none of them
+     were doing anything. */
+  --bb-enter:  15vh;   /* content is 15vh up from the fold before it moves */
+  --bb-settle: 42vh;   /* and has arrived well before the middle          */
+  --bb-step:    3vh;   /* one place in a stagger                          */
+
   /* ── layout ───────────────────────────────────────────────────────────
      Two gutters: the normal one, and the wider editorial one for sections
      that should breathe. Neither caps the page inside a narrow container. */
@@ -549,12 +570,17 @@ body {
     .tm-media {
       animation: tm-fade 800ms var(--bb-ease) both;
       animation-timeline: view();
-      animation-range: entry 4% entry 34%;
+      animation-range: entry var(--bb-enter) entry var(--bb-settle);
     }
+    /* The copy follows the photograph by one place. Everything inside it —
+       eyebrow, quote, name, counter, controls — moves as this one block; five
+       separately staggered elements would turn a quote into a title sequence. */
     .tm-inner {
       animation: tm-in 800ms var(--bb-ease) both;
       animation-timeline: view();
-      animation-range: entry 6% entry 38%;
+      animation-range:
+        entry calc(var(--bb-enter) + var(--bb-step))
+        entry calc(var(--bb-settle) + var(--bb-step));
     }
   }
 }
@@ -714,22 +740,25 @@ body {
 
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
+    /* No per-child offsets here, and none needed. These elements are stacked
+       vertically and each carries its own view timeline, so they already
+       arrive in reading order — the copy's four lines across ~120px, the three
+       figures across the height of the section. The ms delays that used to sit
+       here were inert (a scroll timeline ignores animation-delay) and would
+       have double-counted a cascade the layout was already providing. */
     .hw-copy > * {
       animation: hw-rise 840ms var(--bb-ease) both;
       animation-timeline: view();
-      animation-range: entry 4% entry 34%;
+      animation-range: entry var(--bb-enter) entry var(--bb-settle);
     }
-    .hw-copy > :nth-child(2) { animation-delay: 70ms; }
-    .hw-copy > :nth-child(3) { animation-delay: 140ms; }
-    .hw-copy > :nth-child(4) { animation-delay: 210ms; }
 
     .hw-fig {
       animation: hw-rise 800ms var(--bb-ease) both;
       animation-timeline: view();
-      animation-range: entry 6% entry 40%;
+      animation-range:
+        entry calc(var(--bb-enter) + var(--bb-step))
+        entry calc(var(--bb-settle) + var(--bb-step));
     }
-    .hw-b { animation-delay: 90ms; }
-    .hw-c { animation-delay: 180ms; }
   }
 }
 
@@ -920,13 +949,41 @@ body {
     .newin-title {
       animation: newin-rise 800ms var(--bb-ease) both;
       animation-timeline: view();
-      animation-range: entry 4% entry 34%;
+      animation-range: entry var(--bb-enter) entry var(--bb-settle);
     }
+
+    /* The rail names its own timeline, and the pieces inside it use that
+       rather than view().
+
+       They have to. view() resolves against the nearest ancestor SCROLL
+       CONTAINER, and the rail is one — overflow-x: auto for the snap
+       scrolling, which computes overflow-y to auto as well. So every piece
+       was measuring itself against a box that never scrolls vertically, and
+       its progress sat frozen: 0.947 at desktop, 1 on a phone, unchanged from
+       the top of the document to the bottom. This entrance had never once
+       run. Same failure the Homeware parallax had, same fix — name the
+       timeline on the element whose own scrollport is the document.
+
+       One shared subject for all nine is correct here rather than a
+       compromise: they share a top edge, so the cascade is the range offset
+       below, not their position. */
+    .newin-rail {
+      view-timeline-name: --newin-rail;
+      view-timeline-axis: block;
+    }
+    /* The pieces are a horizontal row: they share a top edge, so unlike every
+       stacked group on this page they get no cascade from the layout and the
+       stagger has to be written. As a scroll offset, not a delay.
+
+       Capped at four places. The rail holds nine and shows about four; without
+       the cap the ninth would start half a screen after the first, and it is
+       off to the right where nobody is watching it arrive. */
     .newin-item {
       animation: newin-item 760ms var(--bb-ease) both;
-      animation-timeline: view();
-      animation-range: entry 6% entry 42%;
-      animation-delay: calc(var(--i, 0) * 55ms);
+      animation-timeline: --newin-rail;
+      animation-range:
+        entry calc(var(--bb-enter)  + min(var(--i, 0), 4) * 0.7 * var(--bb-step))
+        entry calc(var(--bb-settle) + min(var(--i, 0), 4) * 0.7 * var(--bb-step));
     }
   }
 }
@@ -1099,15 +1156,30 @@ body {
    than a scroll listener, so it costs nothing and cannot desync. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
+    /* Five cards on one top edge, so — as with New In — the stagger is
+       written rather than inherited from the layout, and it is written as
+       scroll distance because animation-delay does nothing under a scroll
+       timeline. Left to right, one place each. */
+    /* Named for the same reason as New In's: below 1024 this rail is a
+       snap scroller, so view() bound the cards to the rail and the entrance
+       was dead on every phone while working on every desktop. The named
+       timeline behaves identically at both — the subject is the rail, whose
+       top edge is the cards' top edge. */
+    .cats-rail {
+      view-timeline-name: --cats-rail;
+      view-timeline-axis: block;
+    }
     .cats-card {
       animation: cats-in 800ms var(--bb-ease) both;
-      animation-timeline: view();
-      animation-range: entry 8% entry 46%;
+      animation-timeline: --cats-rail;
+      animation-range:
+        entry calc(var(--bb-enter)  + var(--n, 0) * var(--bb-step))
+        entry calc(var(--bb-settle) + var(--n, 0) * var(--bb-step));
     }
-    .cats-card:nth-child(2) { animation-delay: 60ms; }
-    .cats-card:nth-child(3) { animation-delay: 120ms; }
-    .cats-card:nth-child(4) { animation-delay: 180ms; }
-    .cats-card:nth-child(5) { animation-delay: 240ms; }
+    .cats-card:nth-child(2) { --n: 1; }
+    .cats-card:nth-child(3) { --n: 2; }
+    .cats-card:nth-child(4) { --n: 3; }
+    .cats-card:nth-child(5) { --n: 4; }
   }
 }
 
@@ -1173,6 +1245,25 @@ body {
 .pov-statement .split-line { will-change: transform; }
 
 .pov-note { display: flex; gap: 20px; align-items: stretch; }
+
+/* The annotation, kept far quieter than the statement it annotates: opacity
+   and 12px where the heading rises 105% out of a mask. It had no motion at
+   all, which meant that on a desktop width — where it sits beside the heading
+   — four lines of small caps were already fully present while the sentence
+   they annotate was still arriving. Its own view timeline is its timing: level
+   with the heading on desktop, below it on a phone, so it follows the first
+   line naturally without a delay anyone has to tune. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .pov-note {
+      animation: pov-note-in 720ms var(--bb-ease) both;
+      animation-timeline: view();
+      animation-range: entry var(--bb-enter) entry var(--bb-settle);
+    }
+  }
+}
+
+@keyframes pov-note-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
 .pov-rule {
   width: 1px;
@@ -1543,13 +1634,16 @@ body {
     .visit-info {
       animation: visit-rise 840ms var(--bb-ease) both;
       animation-timeline: view();
-      animation-range: entry 4% entry 34%;
+      animation-range: entry var(--bb-enter) entry var(--bb-settle);
     }
+    /* The panel follows the address by one place — side by side on desktop,
+       so without an offset the two would arrive as one slab. */
     .visit-map {
       animation: visit-rise-map 860ms var(--bb-ease) both;
       animation-timeline: view();
-      animation-range: entry 6% entry 38%;
-      animation-delay: 80ms;
+      animation-range:
+        entry calc(var(--bb-enter) + var(--bb-step))
+        entry calc(var(--bb-settle) + var(--bb-step));
     }
   }
 }
@@ -1709,30 +1803,28 @@ body {
    owns that effect and repeating it everywhere spends its impact. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
+    /* Stacked, one timeline each, so the cascade is the layout's. The ms
+       delays that were here did nothing under a scroll timeline. */
     .faq-intro > * {
       animation: faq-rise 800ms var(--bb-ease) both;
       animation-timeline: view();
-      animation-range: entry 4% entry 32%;
+      animation-range: entry var(--bb-enter) entry var(--bb-settle);
     }
-    .faq-intro > :nth-child(2) { animation-delay: 60ms; }
-    .faq-intro > :nth-child(3) { animation-delay: 120ms; }
 
+    /* Eight rows, 75px apart, each on its own timeline: the list already
+       arrives one row at a time as you scroll, which is the whole stagger the
+       section wants. The twelve nth-of-type delays that used to follow this
+       rule were inert, and this is the calmest section on the page — the
+       right amount of choreography here is none.
+
+       The range matters more than it looks: at `entry 5% entry 36%` a 75px
+       row completed its entire reveal inside 23px of scrolling, which reads
+       as a snap rather than a rise. On the shared grammar it takes 27vh. */
     .faq-row {
       animation: faq-row-in 700ms var(--bb-ease) both;
       animation-timeline: view();
-      animation-range: entry 5% entry 36%;
+      animation-range: entry var(--bb-enter) entry var(--bb-settle);
     }
-    .faq-row:nth-of-type(2) { animation-delay: 35ms; }
-    .faq-row:nth-of-type(3) { animation-delay: 70ms; }
-    .faq-row:nth-of-type(4) { animation-delay: 105ms; }
-    .faq-row:nth-of-type(5) { animation-delay: 140ms; }
-    .faq-row:nth-of-type(6) { animation-delay: 175ms; }
-    .faq-row:nth-of-type(7) { animation-delay: 210ms; }
-    .faq-row:nth-of-type(8) { animation-delay: 245ms; }
-    .faq-row:nth-of-type(9) { animation-delay: 280ms; }
-    .faq-row:nth-of-type(10) { animation-delay: 315ms; }
-    .faq-row:nth-of-type(11) { animation-delay: 350ms; }
-    .faq-row:nth-of-type(12) { animation-delay: 385ms; }
   }
 }
 
@@ -1752,7 +1844,12 @@ body {
   color: var(--bb-white);
   border-top: 1px solid var(--bb-dark-border);
   padding-inline: 18px;
-  overflow: hidden;          /* the wordmark's mask needs a clean edge */
+  /* clip, not hidden. It does the same clipping, but an overflow:hidden box
+     is a scroll container — which made the footer the scrollport for the
+     column reveal inside it, and a box that never scrolls froze that reveal
+     at a fixed progress. overflow:clip is not a scroll container, so the
+     columns measure themselves against the document again. */
+  overflow: clip;
 }
 
 @media (min-width: 768px) { .ft { padding-inline: var(--bb-gutter-editorial); } }
@@ -1903,11 +2000,15 @@ body {
 /* Upper footer entrance. Per column, not per link. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
+    /* Three columns on one top edge at desktop width, so --d is a place in
+       the stagger rather than a delay — as a delay it was ignored and the
+       three arrived as one block. */
     .ft-rise {
       animation: ft-rise 760ms var(--bb-ease) both;
       animation-timeline: view();
-      animation-range: entry 2% entry 30%;
-      animation-delay: var(--d, 0ms);
+      animation-range:
+        entry calc(var(--bb-enter)  + var(--d, 0) * var(--bb-step))
+        entry calc(var(--bb-settle) + var(--d, 0) * var(--bb-step));
     }
   }
 }
