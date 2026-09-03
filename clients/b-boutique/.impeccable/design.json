@@ -1,0 +1,267 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-03T00:00:00.000Z",
+  "title": "Design System: B Boutique",
+  "extensions": {
+    "colorMeta": {
+      "red": {
+        "role": "primary",
+        "displayName": "Hero Red",
+        "canonical": "#8A070B",
+        "note": "Sampled from the hero photograph, not chosen. The only warm colour in the system. Bone clears 9.09:1 on it.",
+        "tonalRamp": ["#1C0102", "#3A0305", "#580406", "#77060A", "#8A070B", "#B4292E", "#D9686B", "#F2C3C4"]
+      },
+      "black": {
+        "role": "neutral",
+        "displayName": "True Black",
+        "canonical": "#050505",
+        "note": "Deliberately a hair off pure black so large fields do not read as a void.",
+        "tonalRamp": ["#050505", "#141414", "#242424", "#3B3B3A", "#646460", "#979793", "#D8D8D4", "#FAFAF8"]
+      },
+      "black-soft": {
+        "role": "neutral",
+        "displayName": "Soft Black",
+        "canonical": "#090909",
+        "tonalRamp": ["#050505", "#090909", "#0D0D0D", "#1A1A1A", "#2E2E2D", "#646460", "#979793", "#D8D8D4"]
+      },
+      "black-raised": {
+        "role": "neutral",
+        "displayName": "Raised Black",
+        "canonical": "#0D0D0D",
+        "note": "A surface lifted off the ground by tone alone. The system's entire elevation mechanism, and the dark hover state.",
+        "tonalRamp": ["#050505", "#090909", "#0D0D0D", "#1A1A1A", "#2E2E2D", "#646460", "#979793", "#D8D8D4"]
+      },
+      "white-pure": {
+        "role": "neutral",
+        "displayName": "Bone",
+        "canonical": "#FAFAF8",
+        "note": "The page default background. Cool, never cream.",
+        "tonalRamp": ["#1A1A19", "#33332F", "#646460", "#979793", "#D8D8D4", "#EAEAE7", "#F5F5F2", "#FAFAF8"]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "Bone Deep",
+        "canonical": "#F5F5F2",
+        "note": "The slightly darker band, for sections separating from bone without going black.",
+        "tonalRamp": ["#1A1A19", "#33332F", "#646460", "#979793", "#D8D8D4", "#EAEAE7", "#F5F5F2", "#FAFAF8"]
+      },
+      "grey-light": {
+        "role": "neutral",
+        "displayName": "Grey Light",
+        "canonical": "#D8D8D4",
+        "note": "Hairlines and dividers on light grounds.",
+        "tonalRamp": ["#1A1A19", "#33332F", "#4C4C49", "#646460", "#979793", "#B8B8B4", "#D8D8D4", "#EFEFEC"]
+      },
+      "grey-mid": {
+        "role": "neutral",
+        "displayName": "Grey Mid",
+        "canonical": "#979793",
+        "note": "DARK GROUNDS ONLY. 6.95:1 on black, 2.68:1 on white which fails AA.",
+        "tonalRamp": ["#1A1A19", "#33332F", "#4C4C49", "#646460", "#7D7D79", "#979793", "#B8B8B4", "#D8D8D4"]
+      },
+      "grey-dark": {
+        "role": "neutral",
+        "displayName": "Grey Dark",
+        "canonical": "#646460",
+        "note": "LIGHT GROUNDS ONLY. 5.44:1 on white, 3.43:1 on black which is large-text-only.",
+        "tonalRamp": ["#141413", "#26261F", "#3B3B38", "#4C4C49", "#646460", "#7D7D79", "#979793", "#B8B8B4"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The wordmark and the largest editorial statements. Bodoni Moda at weight 400 only; a synthesised bold destroys the thick/thin stress."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings and the manifesto statement."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Category names, card titles, sub-headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running copy in Inter, held inside 65-75ch by narrow measure columns rather than a global container."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Eyebrows, index numbers, metadata and micro-type. Tracked uppercase Inter with tabular numerals."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "bb-ease",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "The only easing curve in the system. Exponential ease-out, no bounce or overshoot."
+      },
+      {
+        "name": "bb-dur-quick",
+        "value": "220ms",
+        "purpose": "Hover, focus and small state changes."
+      },
+      {
+        "name": "bb-dur-normal",
+        "value": "650ms",
+        "purpose": "The default, inside a 550-850ms band."
+      },
+      {
+        "name": "bb-dur-editorial",
+        "value": "1000ms",
+        "purpose": "Large reveals, inside a 900-1200ms band."
+      },
+      {
+        "name": "bb-enter",
+        "value": "15vh",
+        "purpose": "Scroll entrance trigger. Content is 15vh above the fold edge before it moves. Viewport-relative because entry percentages are relative to the element's own height and meant different distances per section."
+      },
+      {
+        "name": "bb-settle",
+        "value": "42vh",
+        "purpose": "Scroll entrance completion, well before the middle of the viewport."
+      },
+      {
+        "name": "bb-step",
+        "value": "3vh",
+        "purpose": "One place in a stagger. A distance, not a delay: with a scroll timeline attached, animation-delay is ignored outright."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Arrow Button (light)",
+      "kind": "button",
+      "refersTo": "button-arrow-light",
+      "description": "The primary control. A pill with a filled circular arrow badge set into its left end; the arrow rotates 45 degrees on hover.",
+      "html": "<a class=\"ds-btn-arrow ds-btn-arrow--light\" href=\"#visit\"><span class=\"ds-btn-arrow__badge\" aria-hidden=\"true\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\"><path d=\"M3 11L11 3M11 3H4.5M11 3v6.5\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></span>Get directions</a>",
+      "css": ".ds-btn-arrow { display: inline-flex; align-items: center; gap: 12px; padding: 8px 24px 8px 8px; border-radius: 9999px; font-family: Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.9375rem; text-decoration: none; transition: background-color 220ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-btn-arrow--light { background: #FAFAF8; color: #050505; } .ds-btn-arrow--light:hover { background: #FFFFFF; } .ds-btn-arrow__badge { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 9999px; background: #050505; color: #FAFAF8; transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-btn-arrow--light .ds-btn-arrow__badge { background: #050505; color: #FAFAF8; } .ds-btn-arrow:hover .ds-btn-arrow__badge { transform: rotate(45deg); } .ds-btn-arrow:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 2px; }"
+    },
+    {
+      "name": "Arrow Button (dark)",
+      "kind": "button",
+      "refersTo": "button-arrow-dark",
+      "description": "The dark-ground variant. The badge inverts against its own pill, because a black badge on a black pill would vanish.",
+      "html": "<a class=\"ds-btn-arrow ds-btn-arrow--dark\" href=\"#visit\"><span class=\"ds-btn-arrow__badge\" aria-hidden=\"true\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\"><path d=\"M3 11L11 3M11 3H4.5M11 3v6.5\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></span>Explore homeware</a>",
+      "css": ".ds-btn-arrow--dark { display: inline-flex; align-items: center; gap: 12px; padding: 8px 24px 8px 8px; border-radius: 9999px; font-family: Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.9375rem; text-decoration: none; background: #050505; color: #FAFAF8; transition: background-color 220ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-btn-arrow--dark:hover { background: #0D0D0D; } .ds-btn-arrow--dark .ds-btn-arrow__badge { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 9999px; background: #FAFAF8; color: #050505; transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-btn-arrow--dark:hover .ds-btn-arrow__badge { transform: rotate(45deg); } .ds-btn-arrow--dark:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 2px; }"
+    },
+    {
+      "name": "Section Eyebrow",
+      "kind": "chip",
+      "refersTo": "label-eyebrow",
+      "description": "The tracked-caps label that tells you which shelf a section sits on. Tabular numerals so index numbers align.",
+      "html": "<span class=\"ds-eyebrow\">03 &mdash; New in</span>",
+      "css": ".ds-eyebrow { font-family: Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.6875rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; font-variant-numeric: tabular-nums; color: #979793; }"
+    },
+    {
+      "name": "Editorial Heading",
+      "kind": "custom",
+      "refersTo": "headline",
+      "description": "The Bodoni display treatment. Weight 400 only, tight tracking and leading, balanced wrapping.",
+      "html": "<h2 class=\"ds-display\">Clothes you won&rsquo;t meet coming the other way</h2>",
+      "css": ".ds-display { font-family: 'Bodoni Moda', 'Libre Bodoni', 'Bodoni 72', Didot, serif; font-optical-sizing: auto; font-weight: 400; letter-spacing: -0.025em; line-height: 1.02; text-wrap: balance; font-size: clamp(44px, 4.8vw, 76px); color: #050505; margin: 0; }"
+    },
+    {
+      "name": "Brand Marquee",
+      "kind": "nav",
+      "refersTo": "brand-rail",
+      "description": "A thin hairline-ruled band under the hero. Seamless -50% loop, masked at both ends so marks arrive and leave rather than being clipped.",
+      "html": "<div class=\"ds-brand-rail\"><div class=\"ds-brand-viewport\"><div class=\"ds-brand-track\"><span class=\"ds-brand-mark\">Label One</span><span class=\"ds-brand-sep\" aria-hidden=\"true\">&mdash;</span><span class=\"ds-brand-mark\">Label Two</span><span class=\"ds-brand-sep\" aria-hidden=\"true\">&mdash;</span><span class=\"ds-brand-mark\">Label Three</span></div></div></div>",
+      "css": ".ds-brand-rail { background: #050505; border-top: 1px solid rgba(255,255,255,0.14); border-bottom: 1px solid rgba(255,255,255,0.14); height: 68px; display: flex; align-items: center; overflow: hidden; } .ds-brand-viewport { width: 100%; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); } .ds-brand-track { display: flex; align-items: center; gap: 32px; width: max-content; } .ds-brand-mark { font-family: Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #F5F5F2; white-space: nowrap; } .ds-brand-sep { color: #646460; }"
+    },
+    {
+      "name": "Snap Rail",
+      "kind": "card",
+      "refersTo": "button-arrow-light",
+      "description": "The horizontal carousel primitive. Native CSS scroll-snap, no slider library, keyboard and screen-reader navigable, works without JavaScript.",
+      "html": "<div class=\"ds-rail\"><figure class=\"ds-rail-card\"><div class=\"ds-rail-shot\"></div><figcaption class=\"ds-rail-cap\">Jackets</figcaption></figure><figure class=\"ds-rail-card\"><div class=\"ds-rail-shot\"></div><figcaption class=\"ds-rail-cap\">Trousers</figcaption></figure><figure class=\"ds-rail-card\"><div class=\"ds-rail-shot\"></div><figcaption class=\"ds-rail-cap\">Knitwear</figcaption></figure></div>",
+      "css": ".ds-rail { display: flex; gap: clamp(26px, 3.4vw, 54px); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 8px; } .ds-rail::-webkit-scrollbar { display: none; } .ds-rail > * { scroll-snap-align: start; } .ds-rail-card { flex: 0 0 clamp(220px, 24vw, 320px); margin: 0; } .ds-rail-shot { aspect-ratio: 3 / 4; background: #D8D8D4; filter: grayscale(1); transition: filter 650ms cubic-bezier(0.22, 1, 0.36, 1); border-radius: 0; } .ds-rail-card:hover .ds-rail-shot { filter: grayscale(0); } .ds-rail-cap { margin-top: 14px; font-family: 'Bodoni Moda', 'Libre Bodoni', Didot, serif; font-weight: 400; font-size: clamp(23px, 1.9vw, 31px); line-height: 1.02; letter-spacing: -0.025em; color: #050505; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Cool Room",
+    "overview": "A fashion gallery, not a jewellery box. The system is built from a true black and a cool bone white, held apart by measured greys, with exactly one warm colour in the entire palette — a deep red sampled from the hero photograph rather than chosen from a swatch. Everything expensive about this design comes from proportion, contrast and space. Nothing comes from ornament.\n\nThe system explicitly rejects the default boutique website: Playfair Display and Montserrat, cream and champagne, a gold-foil monogram, a shop-front photo behind a translucent overlay. It also rejects the warm palette this project originally started from. The shop's own room — black marble, brass rails, a bone floor — produced a palette that read brown wherever two surfaces met, and it was replaced wholesale. There is no brown, tan, beige, cream, champagne or gold anywhere in the UI. Where warmth appears, it is inside a photograph, where it is real.\n\nRestraint here is structural, not decorative. Two typefaces. One easing curve. Three durations. Zero shadows. Two corner radii, one of which is zero. The discipline is what lets the few committed moves — a red hero, a manifesto set in Bodoni caps on black, a wordmark the height of the footer — carry the whole identity without competing with each other.",
+    "keyCharacteristics": [
+      "Cool monochrome ground; a single warm accent that originates in the artwork",
+      "Flat by construction: no shadow vocabulary exists",
+      "Square by default; roundness is reserved for one control",
+      "Editorial type scale with genuine contrast between display and UI",
+      "One motion language, applied site-wide, viewport-relative rather than time-based",
+      "Contrast measured per-ground and documented, never assumed"
+    ],
+    "rules": [
+      {
+        "name": "The One Warm Thing Rule",
+        "body": "Exactly one warm colour exists, and it comes out of a photograph. No brown, tan, beige, cream, champagne or gold may enter the UI. A luxury palette that reaches for gold has stopped trusting its own proportions.",
+        "section": "colors"
+      },
+      {
+        "name": "The Single-Ground Rule",
+        "body": "Each grey is safe on exactly one ground and is documented with its measured ratio. Grey-mid is a dark-section colour, grey-dark a light-section one. They are not interchangeable and must never be swapped.",
+        "section": "colors"
+      },
+      {
+        "name": "The Retired Token Rule",
+        "body": "--gold and --gold-lift survive only because components still call them, and both now resolve to maximum contrast against their intended ground. They are scheduled for deletion, not for reuse.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Faces Rule",
+        "body": "Bodoni and Inter, and nothing else. Three UI faces were collapsed into Inter because three faces was one more idea than the page needed and cost three font downloads to say the same thing.",
+        "section": "typography"
+      },
+      {
+        "name": "The Base Layer Rule",
+        "body": ".display and .label live in @layer base and must stay there. Unlayered CSS beats Tailwind v4 utilities outright, so moving them out silently overrides every per-element leading-* and tracking-* on the site.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Italic Rule",
+        "body": "The Bodoni italic axis is not loaded. It cost 25 KB on the critical path and nothing on the site was set in italic. Add the axis back the day something needs it, not before.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Rule",
+        "body": "No shadows, no glows, no glass. If an element needs to feel lifted, change its tone or give it space. A shadow in this system is a bug.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Hairline Rule",
+        "body": "Rules are 1px and low-contrast. A border heavier than 1px used as a coloured accent stripe is prohibited outright.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep the palette cool. True black #050505 against bone #FAFAF8, with hero red #8A070B as the only warm colour.",
+      "Do check which ground a grey is going on. Grey-mid on dark, grey-dark on light, and never the reverse.",
+      "Do set every editorial moment in Bodoni Moda at weight 400, and every piece of UI in Inter.",
+      "Do convey depth with tone, hairlines and grain.",
+      "Do use currentColor for focus rings.",
+      "Do honour prefers-reduced-motion with gsap.matchMedia() or the global CSS block; never ship a motion path that ignores it.",
+      "Do express scroll choreography as viewport distances (vh), not milliseconds.",
+      "Do derive every address, hour and coordinate from shop.ts.",
+      "Do label placeholder content as placeholder, in source and on screen."
+    ],
+    "donts": [
+      "Don't introduce brown, tan, beige, cream, champagne or gold. The warm palette was removed deliberately and must not return.",
+      "Don't reach for Playfair Display plus Montserrat, a gold-foil monogram, or any other default boutique-website signature. That is the anti-reference.",
+      "Don't add a box-shadow. This system is flat by commitment.",
+      "Don't use border-left or border-right greater than 1px as a coloured accent stripe.",
+      "Don't use background-clip: text for gradient type. The dormant .chrome rule in globals.css is unreferenced dead code and must not be revived.",
+      "Don't synthesise a bold Bodoni, or add the italic axis without a use.",
+      "Don't move .display or .label out of @layer base.",
+      "Don't add a second easing curve or an off-band duration.",
+      "Don't use bounce or elastic easing. --ease-spring is declared, unreferenced, and should be treated as retired.",
+      "Don't animate layout properties. Transform and opacity only.",
+      "Don't fake commerce — no cart state, no checkout, no search backend, no invented prices or stock counts.",
+      "Don't assert an unverified fact about the shop: no parking claims, walking times, delivery terms, returns policy or stockist relationships until the client confirms them.",
+      "Don't reintroduce a giant wordmark to the hero, hero pinning, or hero scaling. All three were removed deliberately."
+    ]
+  }
+}
