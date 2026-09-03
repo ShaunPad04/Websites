@@ -1,0 +1,22 @@
+# Keep generated analysis artifacts out of normal Claude context.
+# These are large, machine-generated, and re-derivable on demand.
+
+# Graphify knowledge graph output — query it via `graphify query/path/explain`,
+# do not let graph.json / graph.html load as ambient context.
+graphify-out/
+.graphify/
+
+# Strix security run output — read a specific report deliberately when triaging
+# findings, never as background context.
+strix_runs/
+
+# Build + QA artifacts
+node_modules/
+.next/
+dist/
+build/
+coverage/
+playwright-report/
+test-results/
+.lighthouse/
+.visual-preview/

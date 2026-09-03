@@ -132,3 +132,22 @@ instead.
 
 Re-clone the upstream repo, diff against the vendored copy, and re-apply the three local
 modifications listed above. The commit SHAs in the table are the current baseline.
+
+---
+
+## Engineering-layer skills (vendored 2026-09-03)
+
+Not design skills. Added to fill genuine gaps, not to duplicate existing design guidance.
+
+| Skills | Upstream | Commit | Licence |
+|---|---|---|---|
+| `gsap-core`, `gsap-timeline`, `gsap-scrolltrigger`, `gsap-plugins`, `gsap-utils`, `gsap-react`, `gsap-performance`, `gsap-frameworks` (8) | [greensock/gsap-skills](https://github.com/greensock/gsap-skills) — official GreenSock | `aed9cfd3277740755f6bfc1155c7aa645403b760` | see upstream |
+| `penetration-testing-with-strix`, `web-app-penetration-testing`, `api-security-testing`, `owasp-top-10-testing`, `find-security-vulnerabilities-in-code`, `fix-security-vulnerabilities-with-strix`, `ci-security-scanning-with-strix`, `application-security-testing`, `managed-pentesting-with-strix` (9) | [usestrix/strix](https://github.com/usestrix/strix) | `5d015df6b1b58934152f897e37d3032f0dc32e0d` | Apache-2.0 |
+
+Vendored verbatim, no local modifications. Upstream global installs are
+`npx skills add https://github.com/greensock/gsap-skills` and `npx skills add usestrix/strix`;
+vendoring here means they load in this repo without a global install.
+
+Two CLI tools install a skill of their own rather than being vendored — see
+`docs/premium-webdev-setup.md`: **Graphify** (`graphify install --platform claude`) and
+**Ponytail** (Claude Code plugin marketplace).

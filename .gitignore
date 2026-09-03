@@ -18,3 +18,12 @@ coverage/
 .lighthouse/
 test-results/
 playwright-report/
+
+# Graphify generated knowledge-graph artifacts
+graphify-out/
+.graphify/
+# Strix security run output (may contain finding details / PoCs)
+strix_runs/
+
+# Local timestamped config backups (git history is the durable backup)
+*.backup-*

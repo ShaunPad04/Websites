@@ -111,3 +111,54 @@ in anything presented as finished. One heroic effect per screen.
   **Never run `playwright install`** in a web session. `playwright.config.ts` already points
   at the system binary via `PLAYWRIGHT_BROWSERS_PATH`.
 - `remotion-motion-graphics` needs `remotion @remotion/cli react react-dom` per project.
+
+---
+
+## Engineering layer — non-design tools
+
+These are **not** design skills and must never drive art direction. Each fills one gap.
+
+| Tool | Job | Invoke |
+|---|---|---|
+| **GSAP AI Skills** (8) | Specialist motion engineering. Correct current GSAP API. | Auto-triggers on motion work: `gsap-core`, `gsap-timeline`, `gsap-scrolltrigger`, `gsap-plugins`, `gsap-react`, `gsap-frameworks`, `gsap-utils`, `gsap-performance` |
+| **Strix skills** (9) | Authorised security testing only. Never automatic. | `penetration-testing-with-strix`, `owasp-top-10-testing`, `api-security-testing`, `fix-security-vulnerabilities-with-strix`, `ci-security-scanning-with-strix`, + 4 more |
+| **Graphify** | Architectural awareness before large changes. | `/graphify .` then `graphify query/path/explain` |
+| **Ponytail** | Implementation discipline. Default **lite**. | `/ponytail lite\|full\|ultra\|off`, `/ponytail-review`, `/ponytail-audit` |
+| **CodeBurn** | Claude-environment diagnostics. | `codeburn optimize` |
+| **OmniRoute** | Optional model routing. Never default. | `omniroute launch` — plain `claude` stays untouched |
+
+### Motion philosophy — GSAP is not a licence to animate everything
+
+Motion serves hierarchy, storytelling and brand. One heroic effect per screen (already a hard
+ban above). Prefer confident entrances, elegant reveals, image transitions, typography
+choreography, subtle parallax, polished nav transitions. Avoid constant movement, animation on
+every heading, scroll hijacking, gratuitous pinning, and anything that delays navigation or
+hurts conversion. Always honour `prefers-reduced-motion` — use `gsap.matchMedia()`.
+
+### Ponytail must not flatten art direction
+
+Ponytail cuts *unnecessary* abstraction — providers for trivial state, wrapper components,
+duplicate helpers, libraries for things CSS already does. It does **not** cut intentional
+craft. GSAP, ScrollTrigger, SplitText, Flip, Three.js, R3F, WebGL, shaders, Lenis, custom
+cursors, page transitions and cinematic interaction are legitimate when the design justifies
+them. Lite is the default for creative and normal work; Full only for deliberate refactors.
+
+### Approved per-project toolbox — never global
+
+Pick the smallest stack the art direction justifies. Motion: `gsap`, `motion`, `lenis`.
+Components: React Bits, Motion Primitives, shadcn/ui. 3D: `three`, `@react-three/fiber`,
+`@react-three/drei`, `r3f-scroll-rig`. Brand motion: Rive.
+Automotive and real-estate can justify 3D/WebGL with performance safeguards; beauty, coffee
+and landscaping usually should not. Never install one because it exists.
+
+### QA baseline for client work
+
+Playwright (widths 375/390/768/1024/1440/1920, baselines for nav, hero, key routes, mobile,
+forms, footers, booking flows), axe-core accessibility, Lighthouse CI, and Strix against an
+**authorised** target only. Install these per project, not globally. Optimise intelligently —
+do not destroy intentional design to chase a synthetic score.
+
+### Security boundaries — Strix
+
+Only your own repos, your own local apps, and explicitly authorised staging. Never third-party
+or client production without written authorisation. Strix never runs automatically.
