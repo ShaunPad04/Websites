@@ -1,16 +1,14 @@
-# Overflow Workflow — £0-first validation
+# Overflow Workflow — validated Codespaces lane
 
-**Status: validation / proof-of-concept.** This document describes an *optional*
-overflow lane for routine implementation. It changes nothing about how premium-webdev
-work is normally done. Opus remains in charge. Read this whole file before using the lane.
+**Status: proof-of-concept validated.** This is an optional overflow lane for routine implementation when hosted Claude is unavailable or capped. It does **not** change the normal premium-webdev workflow. **Opus 5 remains the creative director and final authority.**
 
 ---
 
-## 1. The hierarchy — this is the point of the whole system
+## 1. Hierarchy
 
 ### Opus 5 = Creative Director (exclusive authority)
 
-Opus, and only Opus, owns every decision that affects how the site **looks or feels**:
+Opus, and only Opus, owns decisions that affect how the site **looks or feels**:
 
 - brand direction
 - visual design
@@ -25,11 +23,11 @@ Opus, and only Opus, owns every decision that affects how the site **looks or fe
 - design tokens
 - premium responsive decisions
 - final visual QA
-- **merge approval**
+- merge approval
 
 ### Overflow model = Implementer only
 
-The overflow model may only carry out work Opus has already decided and specified:
+The overflow model may carry out work Opus has already decided and specified:
 
 - approved component implementation
 - TypeScript fixes
@@ -38,219 +36,221 @@ The overflow model may only carry out work Opus has already decided and specifie
 - refactors
 - content / copy swaps
 - repetitive engineering
-- straightforward implementation **explicitly specified by Opus**
+- straightforward implementation explicitly specified by Opus
 
-### THE HARD RULE
+### Hard rule
 
 > **If a decision changes how the website LOOKS or FEELS, the overflow model does NOT decide it.**
 
-The overflow model must **never**:
-
-- redesign anything
-- simplify approved visual work
-- change typography
-- change colours
-- alter spacing / design tokens
-- remove premium interactions
-- change GSAP choreography
-- invent timing / easing
-- alter hero composition
-- reinterpret responsive art direction
-- replace sophisticated approved UI with generic components
+The overflow model must never independently redesign, simplify approved visual work, change typography or colours, alter design tokens, remove premium interactions, change GSAP choreography, invent timing/easing, alter hero composition, reinterpret responsive art direction, or replace sophisticated approved UI with generic components.
 
 > **If an approved specification is ambiguous: STOP AND REPORT. DO NOT IMPROVISE.**
 
-Ambiguity is not permission. A missing value is a question for Opus, never a choice
-for the implementer.
+Ambiguity is not permission. A missing value is a question for Opus, never a choice for the implementer.
 
-### The implementer must read and obey
-
-The overflow model inherits the repository's existing guidance and must follow it:
-
-- `CLAUDE.md` (project rules, hard bans, routing)
-- `premium-motion-direction` skill
-- `frontend-design-skill` guidance where relevant
-- responsive / Tailwind guidance (`tailwind-ui-rules`)
-- the official `gsap-*` skills when touching motion
-- Ponytail implementation policy — **plumbing only, never art-direction reduction**
-
-Ponytail governs *how plainly to build the plumbing*. It never licenses removing or
-simplifying intentional craft. GSAP, ScrollTrigger, SplitText, Lenis, custom cursors,
-page transitions and cinematic interaction stay when the approved design calls for them.
+The implementer must obey the repository guidance, including `CLAUDE.md`, premium motion guidance, responsive/Tailwind rules, GSAP skills where relevant, and the rule that implementation simplification never overrides intentional art direction.
 
 ---
 
 ## 2. Architecture
 
-```
+```text
 NORMAL (Claude available)
-  Opus (creative director)
-    -> writes approved implementation spec
-    -> pushes spec / opens task on GitHub  (client/b-boutique)
-    -> reviews the diff, runs final visual QA, merges
+  Opus 5
+    -> designs / art-directs
+    -> writes an approved implementation spec
+    -> reviews the implementation
+    -> performs final visual QA
+    -> approves merge
 
-OVERFLOW / POST-CAP (browser only, no Anthropic usage)
+OVERFLOW / POST-CAP
   Browser
-    -> GitHub Codespaces (browser VS Code)
-    -> Cline (or Roo Code) extension
-    -> OmniRoute on 127.0.0.1:20128   (never publicly forwarded)
-    -> free coding-model fallback pool
-    -> same premium-webdev repository, same client/b-boutique branch
+    -> GitHub Codespaces
+    -> Cline
+    -> OmniRoute on 127.0.0.1:20128
+    -> Gemini 3.7 Flash (validation worker)
+    -> same premium-webdev repository
 ```
 
-Opus and the overflow lane **coordinate through the GitHub repository**, not a live
-network socket. Opus pushes specs and reviews PRs; the implementer works on the branch.
-This is deliberate: it needs no direct connection from a hosted Claude session to the
-Codespace, and it keeps working after the Anthropic cap because the implementer lane
-does not depend on Claude at all.
+Opus and the overflow lane coordinate through GitHub/repository state, not through a live socket between hosted Claude and the Codespace.
 
 ---
 
-## 3. Free provider pool (validation only)
+## 3. Current validated model
 
-OmniRoute auto-fallback rolls to the next provider when one hits its rate limit:
+The working validation route is:
 
+```text
+Cline -> OmniRoute -> gemini/gemini-3.7-flash
 ```
-Gemini Flash  ->  Cerebras GLM-4.7  ->  Mistral Codestral  ->  OpenRouter (free)
+
+`gemini-2.5-pro` was tested and rejected by the upstream API as unavailable for this account. The working model is therefore pinned in the overflow helper to:
+
+```text
+gemini-3.7-flash
 ```
 
-- **Primary — Gemini 2.x Flash** (Google AI Studio free): large context, drives Cline
-  agentically over the repo.
-- **Secondary — Cerebras GLM-4.7 free**: strong model, small (~8K) free context — use
-  for single-file / short tasks, not whole-repo runs.
-- **Fallback — Mistral Codestral free**, then **OpenRouter free** as the last hop.
-
-Model IDs and limits drift. Confirm the live catalogue before relying on any single one:
+Model catalogues change. Check the current connected catalogue with:
 
 ```bash
-omniroute models          # list what your connected providers expose
-omniroute simulate "..."  # dry-run which provider would be picked
+omniroute models
 ```
 
-Turn OmniRoute token compression **off** for this use — it can corrupt design specs.
+This free Gemini route is **validation / non-sensitive work only unless current Google API terms for the exact account and client use case have been reviewed and approved**. Do not route real confidential client code through an unverified free provider.
 
-### FREE PROVIDER WARNING
-
-> **FREE PROVIDERS ARE FOR WORKFLOW VALIDATION / NON-SENSITIVE TEST CODE UNLESS THEIR
-> CURRENT TERMS HAVE BEEN VERIFIED FOR CLIENT USE.**
-
-Most free tiers may train on, log, or retain your inputs, and some forbid commercial
-use. **Do not route real B Boutique client code through a provider classified as unsafe
-or unclear for commercial / client privacy.** During validation, use throwaway /
-non-sensitive test code only.
-
-Current classification (verify before trusting — terms change):
-
-| Provider (free tier) | Trains on input | Client-code verdict |
-|---|---|---|
-| Gemini Flash (AI Studio free) | Yes | DO NOT USE for client code |
-| Cerebras GLM-4.7 free | Unclear | CAUTION |
-| Mistral Codestral free | Yes (unless opted out) | DO NOT USE for client code |
-| OpenRouter free variants | Often | CAUTION -> DO NOT USE |
-
-**Paid GLM-5.2 (z.ai — no training on inputs) remains the intended later client-safe
-overflow upgrade** unless a better verified option exists. Switching to it is a single
-provider/key swap in OmniRoute — the Codespace, Cline, and repo are unchanged.
+The later client-safe worker can be swapped behind OmniRoute without changing Cline, Codespaces, or the repository workflow.
 
 ---
 
 ## 4. Secrets
 
-Provider credentials live **only** in **GitHub Codespaces Secrets**, injected as
-environment variables at Codespace start. They must never appear in `devcontainer.json`,
-git, `CLAUDE.md`, committed `.env` files, documentation, logs, or shell history.
+Provider credentials live only in **GitHub Codespaces Secrets** and are injected as environment variables. They must never appear in git, `CLAUDE.md`, committed `.env` files, documentation, screenshots, logs, or shell history.
 
-Placeholder variable names only (you set the real values in Codespaces Secrets, never here):
+Current required secret:
 
-- `OMNIROUTE_API_KEY` — OmniRoute's own access token
-- `GEMINI_API_KEY` — primary free provider (validation)
-- `CEREBRAS_API_KEY` — secondary free provider (validation)
-- `MISTRAL_API_KEY` — fallback free provider (validation)
-- `OPENROUTER_API_KEY` — last-hop free provider (validation)
-
-To add one: GitHub → Settings → Codespaces → Secrets → New secret, scoped to this repo.
-To rotate/remove: change or delete it there and restart the Codespace. Nothing in the
-repo changes.
-
----
-
-## 5. Starting OmniRoute inside a Codespace
-
-The devcontainer does **not** auto-start OmniRoute (auto-start on every create is fragile
-and can hang Codespace startup). Start it by hand when you want the lane, in a terminal:
-
-```bash
-omniroute serve --port 20128    # binds loopback via OMNIROUTE_SERVER_HOST
+```text
+GEMINI_API_KEY
 ```
 
-**Loopback binding is required.** OmniRoute is a Next standalone server that listens on
-`0.0.0.0` by default. The devcontainer sets `OMNIROUTE_SERVER_HOST=127.0.0.1`
-(`containerEnv`), which makes `omniroute serve` bind `127.0.0.1` only — verified: with it
-set, the listen address is `127.0.0.1` and OmniRoute's own `SECURITY: listening on 0.0.0.0`
-warning does not fire. If you ever run OmniRoute outside this devcontainer, set that
-variable yourself first:
+It is scoped to the `ShaunPad04/premium-webdev` repository.
+
+To rotate it: GitHub -> Settings -> Codespaces -> Secrets, update the secret, then stop and restart the Codespace so the new value is injected.
+
+Never paste the provider key into Cline. Cline talks only to OmniRoute.
+
+---
+
+## 5. Starting the overflow lane
+
+The devcontainer installs OmniRoute but deliberately does not auto-start it.
+
+After opening or rebuilding the Codespace, run:
 
 ```bash
-OMNIROUTE_SERVER_HOST=127.0.0.1 omniroute serve --port 20128
+bash scripts/start-overflow.sh
 ```
 
-Then point Cline at `http://127.0.0.1:20128/v1`, model `auto` (or a specific free ID).
-The port is **not forwarded at all** — Cline and OmniRoute share the Codespace, so nothing
-needs to leave it. **Never add a public port forward for 20128.**
+The helper:
+
+1. requires `GEMINI_API_KEY` to exist;
+2. keeps `OMNIROUTE_SERVER_HOST=127.0.0.1`;
+3. configures/updates the native `gemini` provider from the environment without putting the secret in argv or shell history;
+4. sets the default worker model to `gemini-3.7-flash`;
+5. starts OmniRoute on port `20128` if needed;
+6. verifies that a loopback listener exists before reporting success;
+7. prints the exact Cline values to use.
+
+Port `20128` must remain private and must never be publicly forwarded.
 
 ---
 
-## 6. Post-cap test — proving Claude is not needed
+## 6. Cline configuration
 
-Run this with **no active hosted Claude session**. That independence is the entire point.
+Use **OpenAI Compatible** in Cline with exactly:
 
-1. Open GitHub Codespaces from the browser.
-2. Set a Codespaces **spending limit of $0** first (see §7).
-3. Open Cline / Roo in browser VS Code.
-4. `omniroute serve --port 20128` in a terminal; point Cline at it.
-5. Give the model a small **implementation-only** task on **test code** (e.g. "add a unit
-   test for this pure helper", "fix this TypeScript error").
-6. Model edits code.
-7. Run `pnpm build` / `pnpm test`.
-8. Review the diff in the VS Code Source Control panel.
-9. Commit and push to `client/b-boutique` from the Source Control panel.
+```text
+API Provider: OpenAI Compatible
+Base URL:     http://127.0.0.1:20128
+API Key:      sk_omniroute
+Model ID:     gemini/gemini-3.7-flash
+```
 
-If all nine steps complete without Claude, the fallback is proven.
+### Important: no `/v1` in the Base URL
+
+Do **not** enter:
+
+```text
+http://127.0.0.1:20128/v1
+```
+
+Cline appends the OpenAI-compatible path itself. The validated working Base URL is:
+
+```text
+http://127.0.0.1:20128
+```
+
+`sk_omniroute` is the local Cline-to-OmniRoute value used by this setup. It is **not** the Google provider key.
 
 ---
 
-## 7. £0 guardrails
+## 7. Validation completed
 
-- **Codespaces spending limit must be $0** — GitHub then hard-stops instead of charging.
-- Use the **2-core** machine.
-- **Stop the Codespace when finished** (or rely on the 30-min idle auto-stop).
-- Keep storage within the included 15 GB (keep one Codespace; delete when done).
-- **No paid provider** during validation.
-- **Never publicly forward port 20128.**
+The end-to-end proof completed successfully:
+
+1. Cline reached OmniRoute locally.
+2. OmniRoute authenticated to the Gemini provider.
+3. `gemini/gemini-3.7-flash` returned a successful response.
+4. Cline proposed a controlled repository edit.
+5. The model was corrected when it substituted a Unicode arrow for the exact ASCII spec.
+6. It then created exactly one test file with the requested content.
+7. `git status --short` showed only that one untracked test file.
+8. The test file was deleted.
+9. `git status --short` returned clean.
+
+This proves the overflow lane can perform controlled implementation work without hosted Claude.
 
 ---
 
-## 8. Scope — what the lane may and may not touch
+## 8. Safe task contract
 
-Two different activities, two different rules. Do not conflate them.
+For any real overflow task, provide an **Opus-approved implementation spec** and include these constraints:
 
-### Setup / infrastructure creation (standing up the overflow lane itself)
+- implement only the approved specification;
+- do not make independent visual/design decisions;
+- do not alter typography, colours, spacing, motion direction, choreography, responsive art direction, or design tokens unless the spec explicitly says to;
+- do not simplify intentional premium interactions;
+- if any visual requirement is missing or ambiguous, stop and report instead of guessing;
+- inspect only files required for the task;
+- do not commit or push unless explicitly instructed;
+- report every file changed and every command run.
 
-Must **not** alter B Boutique **application source**, and must never touch the existing
-skills (`premium-motion-direction`, `gsap-*`, Ponytail, Graphify, Strix), the design
-system, or `CLAUDE.md`. Setting up the lane only adds/edits its own infrastructure
-(`docs/overflow-workflow.md`, `.devcontainer/`).
+A useful implementation handoff format is:
 
-### Actual approved overflow tasks (running the lane)
+```text
+ROLE: implementation worker only. Opus 5 owns design decisions.
 
-The overflow implementer **may edit B Boutique source** — that is the entire purpose —
-but only under strict limits:
+APPROVED SPEC:
+<exact Opus-approved implementation instructions>
 
-- **only** where required by an **explicit, Opus-approved implementation spec**;
-- **may not** make independent visual or design decisions (see the hard rule in §1);
-- **may not** touch the existing skills, the design system, or `CLAUDE.md`;
-- **ambiguity = STOP AND REPORT.** A missing or unclear value is a question for Opus,
-  never a choice for the implementer.
+BOUNDARIES:
+- No redesigning or visual improvisation.
+- No changes outside the named files unless required and reported first.
+- Ambiguity = STOP AND REPORT.
+- Run the requested verification commands.
+- Do not commit or push unless explicitly instructed.
 
-In short: the implementer changes application code to realise an approved spec; it never
-reshapes the project, the design language, or the tooling on its own initiative.
+DELIVERABLE:
+- implementation
+- verification results
+- exact changed-file list
+- any unresolved ambiguity
+```
+
+---
+
+## 9. £0 guardrails
+
+- Keep the GitHub Codespaces spending budget at **$0**.
+- Use the 2-core Codespace where practical.
+- Stop the Codespace when finished.
+- Keep port `20128` private.
+- Do not attach a paid provider during the £0 validation phase unless intentionally upgrading the worker.
+- Free-provider availability and rate limits can change; temporary `503 high demand` responses are possible.
+
+---
+
+## 10. Scope
+
+### Infrastructure/setup work
+
+May edit only overflow infrastructure such as:
+
+- `.devcontainer/devcontainer.json`
+- `docs/overflow-workflow.md`
+- `scripts/start-overflow.sh`
+
+It must not alter B Boutique application source, the design system, existing skills, or `CLAUDE.md` merely to set up the lane.
+
+### Approved overflow implementation work
+
+The worker may edit B Boutique application code **only under an explicit Opus-approved implementation spec**. It remains an implementer, not an art director.
