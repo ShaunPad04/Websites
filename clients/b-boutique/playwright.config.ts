@@ -25,10 +25,19 @@ export default defineConfig({
     { name: 'tablet',  use: { ...devices['Desktop Chrome'], viewport: { width: 834, height: 1112 }, isMobile: false, hasTouch: true, ...(systemChromium ? { launchOptions: { executablePath: systemChromium } } : {}) } },
     { name: 'desktop', use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 }, ...(systemChromium ? { launchOptions: { executablePath: systemChromium } } : {}) } },
   ],
+  // Playwright starts this server AND kills it when the run ends. That is
+  // correct for a standalone `pnpm test:a11y`, and wrong when a parent process
+  // (`pnpm verify`) already owns a server that Lighthouse still needs
+  // afterwards — killing it there is what produced 0/0/0/0 null-metric
+  // Lighthouse runs.
+  //
+  // BB_SERVER_OWNED=1 means "a parent owns port 3000": reuse it, never start
+  // or stop one. It overrides the CI branch deliberately, because the parent
+  // has already guaranteed the server is up and serving a fresh build.
   webServer: {
     command: 'pnpm build && pnpm start',
     url: 'http://127.0.0.1:3000',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: process.env.BB_SERVER_OWNED === '1' || !process.env.CI,
     timeout: 180_000,
   },
 });
