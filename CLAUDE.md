@@ -122,10 +122,10 @@ These are **not** design skills and must never drive art direction. Each fills o
 |---|---|---|
 | **GSAP AI Skills** (8) | Specialist motion engineering. Correct current GSAP API. | Auto-triggers on motion work: `gsap-core`, `gsap-timeline`, `gsap-scrolltrigger`, `gsap-plugins`, `gsap-react`, `gsap-frameworks`, `gsap-utils`, `gsap-performance` |
 | **Strix skills** (9) | Authorised security testing only. Never automatic. | `penetration-testing-with-strix`, `owasp-top-10-testing`, `api-security-testing`, `fix-security-vulnerabilities-with-strix`, `ci-security-scanning-with-strix`, + 4 more |
-| **Graphify** | Architectural awareness before large changes. | `/graphify .` then `graphify query/path/explain` |
-| **Ponytail** | Implementation discipline. Default **lite**. | `/ponytail lite\|full\|ultra\|off`, `/ponytail-review`, `/ponytail-audit` |
-| **CodeBurn** | Claude-environment diagnostics. | `codeburn optimize` |
-| **OmniRoute** | Optional model routing. Never default. | `omniroute launch` — plain `claude` stays untouched |
+| **Graphify** | Architectural awareness before large changes. | `/graphify` skill is vendored. Building a graph needs the CLI on demand: `uv tool install graphifyy`, then `graphify query/path/explain` |
+| **Ponytail** | Implementation discipline. | `/ponytail-review`, `/ponytail-audit`, `/ponytail-debt`, `/ponytail-gain`, `/ponytail-help` — vendored skills, no runtime modes (see below) |
+| **CodeBurn** | Claude-environment diagnostics. | On demand only: `npx --yes codeburn@latest optimize`. Never `--apply` |
+| **OmniRoute** | Not used in this environment. | Dropped from the daily workflow — see `docs/premium-webdev-setup.md` if a local machine ever needs it |
 
 ### Motion philosophy — GSAP is not a licence to animate everything
 
@@ -134,6 +134,20 @@ ban above). Prefer confident entrances, elegant reveals, image transitions, typo
 choreography, subtle parallax, polished nav transitions. Avoid constant movement, animation on
 every heading, scroll hijacking, gratuitous pinning, and anything that delays navigation or
 hurts conversion. Always honour `prefers-reduced-motion` — use `gsap.matchMedia()`.
+
+### Implementation discipline — the Lite-equivalent rule
+
+Ponytail's plugin runtime (lifecycle hooks, `/ponytail lite|full|ultra`, `PONYTAIL_DEFAULT_MODE`)
+**does not exist in this hosted environment** — only the vendored skills do. There is therefore no
+mode to "set". **Lite is not technically active; this rule is the durable equivalent**, and it is
+the one that governs:
+
+- Prefer the smallest robust implementation that fully does the job.
+- Avoid unnecessary abstractions, providers for trivial state, wrapper components, duplicate
+  helpers, file proliferation, and dependencies for things the platform already does well.
+- When a genuinely simpler or lazier alternative exists, say so — once, then build what was asked.
+- **This is not a minimalism mandate and must never make a site look basic.** It governs
+  *implementation plumbing*, never art direction, visual ambition, or craft.
 
 ### Ponytail must not flatten art direction
 
