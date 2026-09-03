@@ -164,13 +164,16 @@ export function Testimonials() {
           ) : null}
 
           <div className="tm-controls">
-            <button type="button" className="tm-arrow" onClick={() => step(-1)} aria-label="Previous testimonial">
+            {/* data-dir, not :first-of-type — the CSS leans each arrow the way
+                it travels, and a selector that infers direction from document
+                order silently reverses the day someone adds a third control. */}
+            <button type="button" className="tm-arrow" data-dir="prev" onClick={() => step(-1)} aria-label="Previous testimonial">
               <span aria-hidden="true">&larr;</span>
             </button>
             <p className="tm-count" aria-live="off">
               {String(index + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
             </p>
-            <button type="button" className="tm-arrow" onClick={() => step(1)} aria-label="Next testimonial">
+            <button type="button" className="tm-arrow" data-dir="next" onClick={() => step(1)} aria-label="Next testimonial">
               <span aria-hidden="true">&rarr;</span>
             </button>
             <span className="tm-track" aria-hidden="true">
