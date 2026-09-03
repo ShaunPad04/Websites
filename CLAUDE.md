@@ -26,6 +26,7 @@ explicitly invoked.
 | Rebuild an existing site from a URL | `website-rebuild` | 14-phase pipeline. Owns the whole job end to end. |
 | Change existing UI | `impeccable <verb>` | See below. |
 | Motion graphics / video | `remotion-motion-graphics` | Unrelated to the web skills. No conflict. |
+| Substantial website motion / interaction | `premium-motion-direction` | Art direction and choreography — *what* moves and *why*. Then the official `gsap-*` skills for implementation. |
 
 ### `impeccable` owns all refinement verbs
 
