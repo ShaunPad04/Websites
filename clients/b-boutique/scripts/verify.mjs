@@ -19,7 +19,7 @@
 // one of its own.
 
 import { spawn } from 'node:child_process';
-import { startServer, isServerUp } from './lib/server.mjs';
+import { startServer, isServerUp, waitForQuiet } from './lib/server.mjs';
 
 const URL = process.env.BB_VERIFY_URL ?? 'http://127.0.0.1:3000';
 
@@ -61,6 +61,14 @@ try {
   //    BB_SERVER_OWNED stops Playwright taking ownership and killing it.
   results.push(await run('accessibility', 'pnpm', ['test:a11y'], { BB_SERVER_OWNED: '1' }));
   results.push(await run('lint', 'pnpm', ['lint']));
+
+  // Lighthouse last, and only once the machine is quiet. Its simulated
+  // throttling is calibrated against observed CPU, so auditing while
+  // Playwright's browsers are still winding down reports timings that are
+  // about the load on this box rather than about the site.
+  process.stdout.write('\n  waiting for the machine to settle before the audit … ');
+  const q = await waitForQuiet();
+  console.log(q.quiet ? `load ${q.load.toFixed(2)}, go` : `still ${q.load.toFixed(2)} after timeout, auditing anyway`);
   results.push(await run('performance', 'pnpm', ['audit:perf', URL]));
 } finally {
   // 4. Release port 3000 whatever happened above.

@@ -57,7 +57,7 @@ export function Homeware() {
                 seed={21}
                 slot="panel-homeware"
                 alt="Stoneware vases, a lit candle and folded linen on a black marble shelf"
-                sizes="(min-width: 1024px) 36vw, 92vw"
+                sizes="(min-width: 1024px) 30vw, 92vw"
                 className="absolute inset-0 h-full w-full"
               />
             </span>
@@ -71,7 +71,7 @@ export function Homeware() {
                   seed={22}
                   slot="homeware-linen"
                   alt="Folded linen napkins and a ribbed glass tumbler on black marble"
-                  sizes="(min-width: 1024px) 24vw, 68vw"
+                  sizes="(min-width: 1024px) 20vw, 68vw"
                   className="absolute inset-0 h-full w-full"
                 />
               </span>

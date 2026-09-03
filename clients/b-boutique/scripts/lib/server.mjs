@@ -35,6 +35,34 @@ export async function waitForServer(url, { timeoutMs = 120_000, intervalMs = 250
   return false;
 }
 
+/**
+ * Wait for the machine to go quiet before a benchmark runs.
+ *
+ * Lighthouse calibrates its simulated throttling against observed CPU, so a
+ * loaded machine inflates every timing it reports. Running the audit straight
+ * after Playwright's three browser projects measured 6 points lower than the
+ * same build audited on an idle machine (88 vs 94, LCP 4.0s vs 3.0s) — a
+ * measurement artefact, not a regression, and one that made the gate unable to
+ * detect a real change.
+ *
+ * This is a readiness condition rather than a fixed pause: it polls the load
+ * average and returns as soon as it drops under `target`, so a fast machine
+ * waits almost no time. It gives up after `timeoutMs` and audits anyway rather
+ * than blocking a run forever. os.loadavg() reports [0,0,0] on Windows, which
+ * reads as already-quiet — correct, since there is nothing to wait for.
+ */
+export async function waitForQuiet({ target = 0.7, timeoutMs = 90_000, intervalMs = 1_000 } = {}) {
+  const os = await import('node:os');
+  const deadline = Date.now() + timeoutMs;
+  let last = os.loadavg()[0];
+  while (Date.now() < deadline) {
+    last = os.loadavg()[0];
+    if (last <= target) return { quiet: true, load: last };
+    await new Promise((r) => setTimeout(r, intervalMs));
+  }
+  return { quiet: false, load: last };
+}
+
 /** True if something is already answering on `url`. One shot, no polling. */
 export async function isServerUp(url) {
   try {

@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  /* Not inlining CSS. experimental.inlineCss was tried against this exact page
+     and measured worse: performance 94 -> 89 and LCP 3.0s -> 3.7s. The
+     stylesheet is render-blocking but it is also cached and parallel-fetched,
+     and folding 13.7 KB into the document delays the document itself, which is
+     strictly upstream of the LCP text. Do not re-enable without re-measuring. */
   images: {
     // AVIF first: the hero is a 2.8 MB PNG and it is the LCP element, so the
     // encoding choice is the single biggest lever on that metric.
