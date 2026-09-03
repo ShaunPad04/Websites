@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 
 import { testimonials, testimonialsPending } from "@/lib/testimonials";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
@@ -174,7 +174,12 @@ export function Testimonials() {
               <span aria-hidden="true">&rarr;</span>
             </button>
             <span className="tm-track" aria-hidden="true">
-              <span className="tm-track-fill" style={{ width: `${((index + 1) / count) * 100}%` }} />
+              {/* Progress as a 0-1 scale factor, not a width percentage: the
+                  fill is scaled on the compositor rather than relaid out. */}
+              <span
+                className="tm-track-fill"
+                style={{ "--tm-fill": (index + 1) / count } as CSSProperties}
+              />
             </span>
           </div>
         </div>

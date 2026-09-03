@@ -75,9 +75,15 @@
   --bb-dur-normal:    650ms;   /* the default: 550-850ms band        */
   --bb-dur-editorial: 1000ms;  /* large reveals: 900-1200ms band     */
 
-  /* Kept: .reveal and the hero timelines already reference these. */
+  /* Kept: .reveal and the hero timelines already reference --ease-out. */
   --ease-out: var(--bb-ease);
-  --ease-spring: cubic-bezier(0.34, 1.4, 0.44, 1);
+  /* Was cubic-bezier(0.34, 1.4, 0.44, 1) — a 1.4 control point overshoots and
+     settles back, which reads as bounce. On a boutique of this register that
+     is the one motion cliche to avoid: real objects decelerate, they do not
+     spring. This is ease-out-expo — a faster attack than --bb-ease and a
+     longer tail, so it still feels more energetic than the base curve without
+     ever passing its destination. */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* ── Entrance trigger grammar ─────────────────────────────────────────
      Every section entrance on this page is a scroll-driven animation, and a
@@ -533,12 +539,22 @@ body {
   margin-left: 14px;
   background: rgba(255, 255, 255, 0.2);
 }
+/* The fill spans the whole track and is scaled down, rather than being sized
+   by width. Animating width relayouts the track on every frame of a 600ms
+   transition; scaleX runs on the compositor and touches neither layout nor
+   paint. The rendered result is identical because the fill is a flat 1px
+   block of colour — no text, border or radius to distort under scale.
+   --tm-fill is a 0-1 progress value set by Testimonials.tsx. */
 .tm-track-fill {
   position: absolute;
   inset: 0 auto 0 0;
   display: block;
+  width: 100%;
+  transform-origin: left center;
+  transform: scaleX(var(--tm-fill, 0));
   background: rgba(255, 255, 255, 0.72);
-  transition: width 600ms var(--bb-ease);
+  transition: transform 600ms var(--bb-ease);
+  will-change: transform;
 }
 
 /* Entrance, once. The slide transitions above are separate and unaffected. */
