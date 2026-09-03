@@ -9,9 +9,8 @@
   "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
 
   // Force OmniRoute to bind loopback whenever it is started. Verified control:
-  // OmniRoute (a Next standalone server) otherwise listens on 0.0.0.0. Setting
-  // OMNIROUTE_SERVER_HOST=127.0.0.1 makes `omniroute serve` bind 127.0.0.1 only.
-  // This is a bind address, NOT a secret.
+  // OmniRoute otherwise listens on 0.0.0.0. This explicit env setting keeps it
+  // reachable only from tools inside the same Codespace.
   "containerEnv": {
     "OMNIROUTE_SERVER_HOST": "127.0.0.1"
   },
@@ -20,9 +19,10 @@
   //  - activate the pinned pnpm
   //  - install the B Boutique project deps from the EXISTING lockfile
   //    (--frozen-lockfile: never changes versions; no-op if already installed)
-  //  - install OmniRoute pinned to the current npm 'latest' (3.8.50)
-  // It does NOT start OmniRoute — auto-starting a long-running server on every
-  // create is fragile and can hang startup. Start it by hand when needed (docs section 5).
+  //  - install OmniRoute pinned to 3.8.50
+  // It deliberately does NOT start OmniRoute. Run `bash scripts/start-overflow.sh`
+  // when you want the lane; that helper reads the Codespaces secret, configures
+  // Gemini without printing it, starts OmniRoute, and verifies loopback binding.
   "postCreateCommand": "corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm --dir clients/b-boutique install --frozen-lockfile && npm install -g omniroute@3.8.50",
 
   // OmniRoute and Cline run in the SAME Codespace; Cline reaches OmniRoute over
