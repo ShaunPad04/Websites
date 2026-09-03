@@ -1,0 +1,40 @@
+{
+  // Overflow validation environment (see docs/overflow-workflow.md).
+  // Minimal by design. No secrets, no API keys, no paid providers here.
+  // Provider credentials come ONLY from GitHub Codespaces Secrets (env vars).
+  "name": "premium-webdev-overflow",
+
+  // Node 22 image ships git + corepack (pnpm). Matches the toolchain
+  // (Next 16 / React 19 / pnpm 10.33). Nothing extra is installed.
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
+
+  // Force OmniRoute to bind loopback whenever it is started. Verified control:
+  // OmniRoute (a Next standalone server) otherwise listens on 0.0.0.0. Setting
+  // OMNIROUTE_SERVER_HOST=127.0.0.1 makes `omniroute serve` bind 127.0.0.1 only.
+  // This is a bind address, NOT a secret.
+  "containerEnv": {
+    "OMNIROUTE_SERVER_HOST": "127.0.0.1"
+  },
+
+  // One idempotent setup step:
+  //  - activate the pinned pnpm
+  //  - install the B Boutique project deps from the EXISTING lockfile
+  //    (--frozen-lockfile: never changes versions; no-op if already installed)
+  //  - install OmniRoute pinned to the current npm 'latest' (3.8.50)
+  // It does NOT start OmniRoute — auto-starting a long-running server on every
+  // create is fragile and can hang startup. Start it by hand when needed (docs section 5).
+  "postCreateCommand": "corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm --dir clients/b-boutique install --frozen-lockfile && npm install -g omniroute@3.8.50",
+
+  // OmniRoute and Cline run in the SAME Codespace; Cline reaches OmniRoute over
+  // 127.0.0.1 internally. Port 20128 is therefore NOT forwarded at all — no
+  // forwardPorts, no portsAttributes — so it can never be exposed publicly.
+
+  // Cline (Open VSX) as the browser coding agent. Free, no paid provider wired.
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "saoudrizwan.claude-dev"
+      ]
+    }
+  }
+}
