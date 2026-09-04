@@ -4,14 +4,24 @@ Premium client website work. Skills in `.claude/skills/` load automatically.
 
 ## Layout
 
-- `starters/premium-site/` — Next.js 16 + React 19 + TypeScript + Tailwind v4 starter.
-  Copy to `clients/<name>/` to begin a project. Do not build directly in the starter.
-- `.claude/skills/` — 16 skills, one job each. Provenance in `CREDITS.md` there.
-- `.claude/skills/00-design-references/` — shared data, not a skill. Read by `website-rebuild`.
+- `account-sync-skills/` — **the 33 canonical global skills.** Source of truth for the
+  claude.ai account-sync upload. Provenance in `CREDITS.md` there, hashes in
+  `CHECKSUMS.txt`. See `docs/ACCOUNT-SYNC-UPLOAD.md`.
+- `starters/premium-site/` — Next.js + React + TypeScript + Tailwind starter with the
+  full QA gate. Copy to `clients/<name>/` to begin a project. Never build in the starter.
+- `scripts/bootstrap-claude-plugins.sh` — restores the 5 plugins in a fresh cloud container.
+- `scripts/package-account-sync-skills.sh` — builds the reproducible upload package.
+- `docs/` — `ROUTING.md`, `PLUGINS.md`, `ACCOUNT-SYNC-UPLOAD.md`, `OMNIROUTE.md`.
+- `.claude/skills/` — only what is NOT account-synced: the Strix security set, Ponytail,
+  and `00-design-references/` (shared data, embedded into its consumers for sync).
+
+**The design skills are no longer duplicated here.** They live in `account-sync-skills/`
+and reach every project through the account. Project skills override account-synced ones of
+the same name, so keeping stale copies here would silently shadow the canonical versions.
 
 ---
 
-## Skill routing — read this before invoking any design skill
+## Skill routing — canonical copy in `docs/ROUTING.md`
 
 These skills have overlapping descriptions and will all try to claim a design request.
 **They are not peers.** Use this precedence. One skill drives; the rest are reference or
@@ -24,13 +34,16 @@ explicitly invoked.
 | Build any new UI | `frontend-design-skill` | It is a *conductor* — it calls the others and holds an 8-item evidence gate. Let it orchestrate. |
 | Build a landing / marketing page | `website` | Narrative structure, hero thesis, conversion arc. Still satisfy the gate. |
 | Rebuild an existing site from a URL | `website-rebuild` | 14-phase pipeline. Owns the whole job end to end. |
-| Change existing UI | `impeccable <verb>` | See below. |
+| Change existing UI | `/impeccable <verb>` | **Plugin v4.1.3**, not a vendored skill. See below. |
 | Motion graphics / video | `remotion-motion-graphics` | Unrelated to the web skills. No conflict. |
 | Substantial website motion / interaction | `premium-motion-direction` | Art direction and choreography — *what* moves and *why*. Then the official `gsap-*` skills for implementation. |
 
 ### `impeccable` owns all refinement verbs
 
-`impeccable` is the umbrella for 17 refinement modes, each in `impeccable/reference/`:
+`impeccable` is the umbrella for 17 refinement modes. It is installed as the upstream
+**plugin v4.1.3** (`impeccable@impeccable`), never vendored — the old 58-file copy here was
+proven byte-identical to the taste-derived version and was removed. Modes live in the
+plugin's `reference/`:
 
 `adapt` `animate` `audit` `bolder` `clarify` `colorize` `critique` `delight` `distill`
 `harden` `layout` `optimize` `overdrive` `polish` `quieter` `shape` `typeset`
@@ -62,28 +75,31 @@ Read these for knowledge. They must not take over a request:
 | `brandkit` | Generating brand-guideline boards and identity imagery. |
 | `imagegen-frontend-web` | Generating per-section reference imagery before building. |
 
-### Account-synced skills also load
+### Account-synced skills
 
-`frontend-design`, `design-lead`, `apple-design`, `figma-implement-design` and
-`motion-design` sync from the claude.ai account and are not in this repo. `design-lead` and
-`frontend-design` overlap `frontend-design-skill` directly. **In this repo,
-`frontend-design-skill` wins** — it has the evidence gate. Disable the synced ones in
-claude.ai settings if the overlap becomes noisy.
+The 33 skills in `account-sync-skills/` are uploaded to claude.ai and enabled for the
+account, so they load in **every** Claude Code cloud session automatically. That is the
+only distribution channel that survives a container recycle.
+
+Anthropic's own `frontend-design` is installed as a **plugin but disabled by default** —
+enabling it puts a second automatic conductor alongside `frontend-design-skill`.
+`frontend-design-skill` wins here: it has the evidence gate. Enable the Anthropic one
+deliberately for a second opinion, then disable it again (`docs/PLUGINS.md`).
 
 ---
 
 ## Project flow
 
-1. `impeccable shape` — structured discovery. Never skip this on client work.
+1. `/impeccable shape` — structured discovery. Never skip this on client work.
 2. `ui-ux-pro-max` scripts — palette, type pairing, style direction:
    ```bash
-   python3 .claude/skills/ui-ux-pro-max/scripts/search.py "luxury architecture studio" --domain style
-   python3 .claude/skills/ui-ux-pro-max/scripts/search.py "wellness spa" --design-system --project-name "Serenity"
-   python3 .claude/skills/ui-ux-pro-max/scripts/search.py "scroll reveal" --domain gsap
+   python3 "${CLAUDE_SKILL_DIR}/scripts/search.py" "luxury architecture studio" --domain style
+   python3 "${CLAUDE_SKILL_DIR}/scripts/search.py" "wellness spa" --design-system --project-name "Serenity"
+   python3 "${CLAUDE_SKILL_DIR}/scripts/search.py" "scroll reveal" --domain gsap
    ```
 3. `frontend-design-skill` or `website` — the build.
 4. `impeccable critique` / `impeccable audit` / `web-design-guidelines` — review.
-5. `pnpm test:a11y && pnpm audit:perf` — the objective numbers.
+5. `pnpm verify` — the full gate. Or `pnpm test:a11y`, `pnpm test:visual`, `pnpm lighthouse`.
 6. `visual-preview` — the client review artefact.
 
 ## Conventions
@@ -106,8 +122,12 @@ in anything presented as finished. One heroic effect per screen.
 
 ## Environment
 
-- Claude Code web sessions are ephemeral: only committed work survives. Never install skills
-  to `~/.claude/skills/` here — vendor into `.claude/skills/` and commit.
+- Claude Code cloud sessions are ephemeral: `~/.claude` is wiped when a container is
+  recycled, so only committed work and account-synced skills survive. Never hand-install
+  skills into `~/.claude/skills/` — put reusable ones in `account-sync-skills/` and upload
+  them to the account; keep project-only ones in the project's `.claude/skills/`.
+- Plugins do not sync. Run `bash scripts/bootstrap-claude-plugins.sh` once per fresh
+  container; it is idempotent and no-ops when everything is present.
 - Playwright and Chromium are preinstalled system-wide (`/opt/pw-browsers`).
   **Never run `playwright install`** in a web session. `playwright.config.ts` already points
   at the system binary via `PLAYWRIGHT_BROWSERS_PATH`.
@@ -126,7 +146,7 @@ These are **not** design skills and must never drive art direction. Each fills o
 | **Graphify** | Architectural awareness before large changes. | `/graphify` skill is vendored. Building a graph needs the CLI on demand: `uv tool install graphifyy`, then `graphify query/path/explain` |
 | **Ponytail** | Implementation discipline. | `/ponytail-review`, `/ponytail-audit`, `/ponytail-debt`, `/ponytail-gain`, `/ponytail-help` — vendored skills, no runtime modes (see below) |
 | **CodeBurn** | Claude-environment diagnostics. | On demand only: `npx --yes codeburn@latest optimize`. Never `--apply` |
-| **OmniRoute** | Not used in this environment. | Dropped from the daily workflow — see `docs/premium-webdev-setup.md` if a local machine ever needs it |
+| **OmniRoute** | Model/token routing. **Not installed, not bootstrapped.** | Audited: needs a local gateway on port 20128, cannot persist in a managed container, and routing client briefs to third-party providers carries confidentiality and compression risk. Use native `/model` selection instead — see `docs/OMNIROUTE.md` |
 
 ### Motion philosophy — GSAP is not a licence to animate everything
 
