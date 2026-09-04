@@ -7,10 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:a11y": "playwright test",
-    "test:a11y:desktop": "playwright test --project=desktop",
-    "audit:perf": "node scripts/audit.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:a11y": "playwright test a11y.spec.ts",
+    "test:visual": "playwright test visual.spec.ts",
+    "test:visual:update": "playwright test visual.spec.ts --update-snapshots",
+    "test": "playwright test",
+    "lighthouse": "node scripts/lighthouse.mjs",
+    "verify": "node scripts/verify.mjs"
   },
   "dependencies": {
     "gsap": "^3.15.0",
