@@ -27,3 +27,6 @@ strix_runs/
 
 # Local timestamped config backups (git history is the durable backup)
 *.backup-*
+
+# derived account-sync upload archives (regenerate with scripts/package-account-sync-skills.sh)
+/dist/

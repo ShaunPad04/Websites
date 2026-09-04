@@ -1,0 +1,34 @@
+skill,files,bytes,source_repo,sha,derivation,role
+apple-design-hig,57,495150,dickwu/apple-design-skill,d0bac1e765,direct upstream (folder renamed to avoid collision),reference-only
+brand,17,86922,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+brandkit,1,15992,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+design-libera,35,261724,liberastudio-mx/skill-web-design,b5531d3c4f,direct upstream,reference-only — never driver
+design-system,26,180153,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+design-system-generator,14,226005,lotfb86/web-design-skills,81644c1073,direct upstream (08-) + embedded design-references,driver
+emil-design-eng,1,27335,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+frontend-design-skill,3,27664,Zealotic-spec/frontend-design-skill,71d1985d20,local superset (+CATALOG.md),PRIMARY DRIVER — new frontend
+full-output-enforcement,1,2623,tyfarrago-hub/taste,acbb3e9c90,direct upstream,explicit-only
+graphify,12,97281,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+gsap-core,1,14792,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+gsap-frameworks,1,10621,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+gsap-performance,1,4139,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+gsap-plugins,1,21579,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+gsap-react,1,6565,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+gsap-scrolltrigger,1,18390,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+gsap-timeline,1,4394,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+gsap-utils,1,12093,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+high-end-visual-design,1,10561,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+image-to-code,1,36473,tyfarrago-hub/taste,acbb3e9c90,direct upstream,explicit-only
+imagegen-frontend-web,1,36885,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+local-business-rebuild,16,243550,lotfb86/web-design-skills,81644c1073,direct upstream (06-) + embedded design-references,driver
+premium-motion-direction,1,13152,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+redesign-existing-projects,1,15091,tyfarrago-hub/taste,acbb3e9c90,direct upstream,explicit-only
+remotion-motion-graphics,5,24220,haidrrrry/claude-remotion-skill,1dcbe5e3fc,local superset (+LICENSE),driver (video)
+responsive-design,1,9393,lotfb86/web-design-skills,81644c1073,direct upstream (02-),driver
+tailwind-ui-rules,7,89074,MarkBenz/claude-code-skills,2075b6d4df,verified byte-identical to upstream,reference-only
+theme-factory,21,73851,lotfb86/web-design-skills,81644c1073,direct upstream (04-),driver
+ui-ux-pro-max,47,3316340,nextlevelbuilder/ui-ux-pro-max-skill,f3ac195224,direct upstream,reference/data — never driver
+visual-preview,4,117352,wenkang-deepblue/frontend-design,17bb94344a,functional core only (README assets excluded),explicit-only
+web-design-guidelines,1,1231,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+website,1,43810,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev,see routing
+website-rebuild,19,257716,ShaunPad04/premium-webdev,93c10e1471,via premium-webdev + embedded design-references,driver — rebuild from URL
