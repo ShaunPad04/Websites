@@ -30,6 +30,21 @@ const bodoni = Bodoni_Moda({
      and nothing on the site uses it: every italic face reported `unloaded`
      and a sweep of the rendered page found zero elements computing
      font-style: italic. Add it back the day something is set in italic. */
+
+  /* `preload: false` was tried here and rejected on measurement.
+   *
+   * The reasoning was sound on paper: the LCP element is the hero philosophy
+   * line, which is Inter, and Bodoni's latin subset is 25.8 KB of competing
+   * high-priority bytes on the same throttled connection. Taking it off the
+   * preload should hand that bandwidth to Inter and the hero photograph.
+   *
+   * Five Lighthouse runs each way, same build, same quiet machine:
+   * preloaded  median 88 (87-92), unpreloaded median 89 (87-90). The spread
+   * swallows the difference — there is no gain here, only a different set of
+   * dice. And it is not free: Bodoni sets the wordmark in the header, which
+   * is above the fold, so dropping the preload puts a fallback-serif flash on
+   * the brand mark on every cold load. Paying for that with nothing is a bad
+   * trade twice over. Do not re-run this one. */
   display: "swap",
 });
 

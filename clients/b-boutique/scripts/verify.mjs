@@ -69,7 +69,7 @@ try {
   process.stdout.write('\n  waiting for the machine to settle before the audit … ');
   const q = await waitForQuiet();
   console.log(q.quiet ? `load ${q.load.toFixed(2)}, go` : `still ${q.load.toFixed(2)} after timeout, auditing anyway`);
-  results.push(await run('performance', 'pnpm', ['audit:perf', URL]));
+  results.push(await run('lighthouse', 'pnpm', ['audit:perf', URL]));
 } finally {
   // 4. Release port 3000 whatever happened above.
   if (server) {
@@ -86,10 +86,31 @@ for (const { label, code } of results) {
 }
 
 const failed = results.filter((r) => r.code !== 0);
-if (failed.some((r) => r.label === 'performance')) {
-  console.log('\n  Note: SEO scores 63 on preview builds because indexing is');
-  console.log('  deliberately off (ALLOW_INDEXING). That is the expected result');
-  console.log('  here, and it is why `performance` fails its threshold gate.');
+
+// The lighthouse step gates on four categories at once, so a bare ✗ does not
+// say which one gave way. One of them fails by design: with indexing off the
+// page is noindex, SEO scores 63 against a threshold of 100, and the step can
+// never pass. Say so — but only when it is actually true.
+//
+// This note used to print on any lighthouse failure and assert SEO was the
+// cause. Run the gate with ALLOW_INDEXING=true and that becomes a lie: SEO
+// scores 100 and it is performance that fails, and the note tells you to
+// ignore it. A real regression could sit behind that sentence indefinitely.
+// Now the reassurance is tied to the condition that earns it, and when
+// indexing is on the summary points at the per-category lines instead.
+if (failed.some((r) => r.label === 'lighthouse')) {
+  if (process.env.ALLOW_INDEXING !== 'true') {
+    console.log('\n  Note: SEO scores 63 here because indexing is deliberately off');
+    console.log('  (ALLOW_INDEXING). That is expected, and on its own it is enough');
+    console.log('  to fail the `lighthouse` step. To see the other three judged on');
+    console.log('  their own merits, run: ALLOW_INDEXING=true pnpm verify');
+  } else {
+    console.log('\n  Note: indexing is on, so SEO is not the excuse. Read the four');
+    console.log('  per-category lines above — whichever is marked ✗ is the real');
+    console.log('  failure. Performance in particular is noisy: it has measured');
+    console.log('  87-92 across runs on an unchanged build, so judge it on a median');
+    console.log('  of several runs rather than on one.');
+  }
 }
 console.log('');
 process.exit(failed.length ? 1 : 0);
