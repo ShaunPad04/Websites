@@ -1402,7 +1402,6 @@ body {
 
     .hero-media    { animation-name: hero-media; }
     .hero-fx-left  { animation-name: hero-left; }
-    .hero-fx-right { animation-name: hero-right; }
     .hero-fx-scroll { animation-name: hero-scroll; }
 
     /* A phone shows a taller crop through a shorter window, so the same
@@ -1411,19 +1410,16 @@ body {
     @media (max-width: 1023px) {
       .hero-media    { animation-name: hero-media-sm; }
       .hero-fx-left  { animation-name: hero-left-sm; }
-      .hero-fx-right { animation-name: hero-right-sm; }
     }
   }
 }
 
 @keyframes hero-media  { from { transform: translateY(0); }  to { transform: translateY(32px); } }
 @keyframes hero-left   { from { transform: translateY(-50%); } to { transform: translateY(calc(-50% - 10px)); } }
-@keyframes hero-right  { from { transform: translateY(0); }  to { transform: translateY(-14px); } }
 @keyframes hero-scroll { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-5px); } }
 
 @keyframes hero-media-sm { from { transform: translateY(0); }  to { transform: translateY(11px); } }
 @keyframes hero-left-sm  { from { transform: translateY(0); } to { transform: translateY(-5px); } }
-@keyframes hero-right-sm { from { transform: translateY(0); }  to { transform: translateY(-6px); } }
 
 /* Header and hero links: no underline, no colour change, just a small drop in
    opacity. Anything louder competes with the photograph. */
