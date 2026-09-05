@@ -31,12 +31,20 @@ const bodoni = Bodoni_Moda({
      and a sweep of the rendered page found zero elements computing
      font-style: italic. Add it back the day something is set in italic. */
 
-  /* `preload: false` was tried here and rejected on measurement.
+  /* `preload: false` was tried here and rejected on measurement, and the case
+   * against it got stronger on 2026-09-05.
    *
-   * The reasoning was sound on paper: the LCP element is the hero philosophy
-   * line, which is Inter, and Bodoni's latin subset is 25.8 KB of competing
-   * high-priority bytes on the same throttled connection. Taking it off the
-   * preload should hand that bandwidth to Inter and the hero photograph.
+   * The reasoning was sound on paper at the time: the LCP element was then the
+   * hero philosophy line, which is Inter, and Bodoni's latin subset is 25.8 KB
+   * of competing high-priority bytes on the same throttled connection. Taking
+   * it off the preload should hand that bandwidth to Inter and the hero
+   * photograph.
+   *
+   * That premise is now gone. The hero philosophy line was removed at the
+   * client's request, and LCP moved to the header wordmark — read from the
+   * trace, `header.fixed > div.relative > a.display`, which is Bodoni. The
+   * font this preload fetches is now the font the largest paint waits on, so
+   * dropping it would delay LCP directly rather than merely risk a flash.
    *
    * Five Lighthouse runs each way, same build, same quiet machine:
    * preloaded  median 88 (87-92), unpreloaded median 89 (87-90). The spread

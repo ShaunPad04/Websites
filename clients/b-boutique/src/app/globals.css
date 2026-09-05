@@ -1576,7 +1576,27 @@ body {
 }
 @media (min-width: 1024px) { .vm-panel { height: clamp(500px, 38vw, 570px); } }
 
-.vm-panel-inner { text-align: center; padding-inline: 24px; }
+/* Above the map, not under it.
+ *
+ * This block is the address fallback, and until now it could never be seen —
+ * in either state. It is static content, so the absolutely-positioned iframe
+ * painted over it whatever the DOM order said; and .vm-preview carries an
+ * opaque white background on purpose, so a blocked embed covers this just as
+ * completely as a working map does. The panel rendered as a black rectangle
+ * with a floating "Expand map" button and the address present in the DOM,
+ * invisible. The one section whose entire job is getting someone to the door.
+ *
+ * Raising it puts the address over the scrim, which is already there to keep
+ * type legible against whatever the map is doing underneath. It now reads in
+ * both states rather than neither. z-index 1 clears the frame and the scrim,
+ * both of which are positioned at auto; .vm-expand takes 2 so the control
+ * stays on top if a long street name ever reaches it. */
+.vm-panel-inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding-inline: 24px;
+}
 
 .vm-panel-street {
   font-family: var(--font-bodoni), "Libre Bodoni", "Bodoni 72", Didot, serif;
@@ -1632,6 +1652,7 @@ body {
 
 .vm-expand {
   position: absolute;
+  z-index: 2;
   right: 16px;
   bottom: 16px;
   display: inline-flex;

@@ -34,6 +34,23 @@ export function Hero() {
       id="top"
       className="hero relative isolate w-full overflow-hidden bg-bb-black"
     >
+      {/* The page's only h1, and deliberately not visible.
+       *
+       * The approved hero is the photograph with small type on it and nothing
+       * else, so this cannot be shown without breaking that. But the page had
+       * no h1 at all: eleven h2s and no top-level landmark, which leaves a
+       * screen-reader user navigating by heading with nothing to land on, and
+       * throws away the strongest on-page signal the day indexing is switched
+       * on. axe does not flag it — page-has-heading-one is a best-practice
+       * rule, not WCAG A/AA — so the suite stayed green while it was missing.
+       *
+       * Every word here is a confirmed fact, and it says what the shop is and
+       * where it is. No claim that is not already true elsewhere on the page. */}
+      <h1 className="sr-only">
+        B Boutique — independent womenswear, accessories and homeware on Sea
+        View Street, Cleethorpes
+      </h1>
+
       <div className="hero-media absolute inset-0 -z-10">
         <HeroPicture />
       </div>
@@ -100,18 +117,13 @@ export function Hero() {
         </div>
       </nav>
 
-      {/* RIGHT — the philosophy line. On desktop it sits below the vertical
-          middle at the right edge, clear of the face. On a phone there is no
-          right half to sit in, so it drops to the lower left instead, under
-          the hand and above SCROLL: same words, no overlap with the portrait
-          either way. */}
-      <p
-        className="hero-fx hero-fx-right absolute bottom-[112px] left-[18px] w-[min(76%,320px)] text-[12px] font-normal sm:left-8 lg:bottom-auto lg:left-auto lg:right-9 lg:top-[58%] lg:w-[264px]"
-        style={{ lineHeight: 1.7, color: "rgba(255,255,255,.94)" }}
-      >
-        Clothes you won&rsquo;t meet coming the other way down the high street.
-        One shop, on one street, every piece chosen by hand.
-      </p>
+      {/* The philosophy line that used to sit at the right edge is gone, on the
+          client's instruction. It is not lost: the same words are the manifesto
+          in PointOfView, set large on black as section 01, which is where they
+          carry weight. Saying them twice made the hero argue with the section
+          that exists to make the argument.
+
+          Only the hero copy was removed. PointOfView keeps it verbatim. */}
 
       {/* BOTTOM — SCROLL, and a hairline that runs to the edge of the frame. */}
       <div className="hero-fx hero-fx-scroll absolute inset-x-0 bottom-0 flex flex-col items-center">
