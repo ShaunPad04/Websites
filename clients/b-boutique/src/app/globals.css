@@ -889,6 +889,18 @@ body {
   list-style: none;
 }
 .newin-rail::-webkit-scrollbar { display: none; }
+
+/* While the rail is drifting under its own power, snap and smooth both have to
+   be off. A mandatory snap fights a scrollLeft written every frame — the
+   browser keeps trying to settle on a card while the script keeps moving it,
+   and the result is a visible stutter rather than a glide. `scroll-behavior`
+   goes with it because the arrows' smooth scroll and a per-frame write are two
+   animations arguing over the same value. Both come back the instant a person
+   touches the rail, so a flick still lands a card flush against the gutter. */
+.newin-rail.is-drifting {
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+}
 @media (min-width: 768px) { .newin-rail { scroll-padding-left: var(--bb-gutter-editorial); } }
 
 /* 1.28 pieces on a phone, 3 on a tablet, 5 across a wide desktop — the widths
@@ -1850,11 +1862,53 @@ body {
    — the one thing you are pointing at — along with its furniture, and dims a
    row to announce that it is live. Backwards. The question holds at full
    black; the number and the plus, which rest quieter than it, come up to meet
-   it. Colour only, so nothing moves and nothing fades. */
+   it.
+
+   That colour shift used to be the whole hover, deliberately. The client asked
+   for movement, so there is now one gesture on top of it, and only one: a
+   hairline draws itself along the foot of the row, left to right, and the
+   question steps a few pixels toward the space it opens. It is the section's
+   own vocabulary — this page is built out of hairlines — rather than a new
+   idea imported for the occasion, and it is transform-only, so it costs no
+   layout and cannot shift the eight rows below it. */
 .faq-summary:hover .faq-n,
 .faq-summary:focus-visible .faq-n,
 .faq-summary:hover .faq-icon,
 .faq-summary:focus-visible .faq-icon { color: var(--bb-black-soft); }
+
+.faq-summary { position: relative; }
+
+/* The drawing rule. Sits on the row's own bottom edge and scales out from the
+   left, so it reads as the row underlining itself rather than a box appearing.
+   transform-origin flips on the way out, which means it retracts back the way
+   it came instead of collapsing to its middle. */
+.faq-summary::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--bb-black-soft);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 520ms var(--bb-ease);
+}
+.faq-summary:hover::after,
+.faq-summary:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* The question steps toward the rule as it draws. 5px — enough to feel
+   answered, small enough that a two-line question does not appear to wander. */
+.faq-q { transition: transform 520ms var(--bb-ease); }
+.faq-summary:hover .faq-q,
+.faq-summary:focus-visible .faq-q { transform: translateX(5px); }
+
+/* An open row keeps the rule, at rest rather than on hover: the row you are
+   reading stays underlined while you read it. */
+.faq-row[open] .faq-summary::after { transform: scaleX(1); transform-origin: left center; }
 /* The ring is drawn just inside the row, so it is not clipped by the rules. */
 .faq-summary:focus-visible { outline: 2px solid currentColor; outline-offset: -4px; }
 
@@ -1933,11 +1987,55 @@ body {
     opacity: 0;
     overflow: hidden;
     transition:
-      height 400ms var(--bb-ease),
-      content-visibility 400ms allowed-discrete,
-      opacity 400ms var(--bb-ease);
+      height 480ms var(--bb-ease),
+      content-visibility 480ms allowed-discrete,
+      opacity 300ms var(--bb-ease);
   }
   .faq-row[open]::details-content { height: auto; opacity: 1; }
+}
+
+/* The answer arrives, rather than simply being uncovered.
+ *
+ * The height transition above opens the box; on its own that is a shutter
+ * going up, and the text inside is just suddenly there — correct, and
+ * characterless, which is what the client was reacting to. This gives the copy
+ * its own short move: it rises the last few pixels and settles slightly after
+ * the box has begun opening, so the row reads as one gesture with a follow
+ * rather than two things happening at once.
+ *
+ * Asymmetric on purpose. Opening is unhurried and delayed behind the box —
+ * you have decided to read it, so it can take its time. Closing is quick and
+ * undelayed, because a dismissal that lingers feels like lag. Transform and
+ * opacity only; the height above is the one layout property in play and it is
+ * the browser's own mechanism, not a max-height guess. */
+.faq-answer {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    opacity 180ms var(--bb-ease),
+    transform 180ms var(--bb-ease);
+}
+.faq-row[open] .faq-answer {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 420ms var(--bb-ease) 120ms,
+    transform 520ms var(--bb-ease) 120ms;
+}
+
+/* Without this the rise never runs, which is measured rather than assumed: at
+   120ms into an open the answer already read opacity 1 and transform none.
+   ::details-content is `content-visibility: hidden` while closed, so on the
+   first frame of an open the element has only just started being rendered at
+   all — and a transition cannot interpolate from a state the box was never in.
+   @starting-style supplies that first frame explicitly. Browsers without it
+   land on the end state immediately, which is the same honest degradation the
+   height animation already makes. */
+@starting-style {
+  .faq-row[open] .faq-answer {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
 }
 
 /* Entrance — the quietest on the page. No SplitText: the philosophy section

@@ -23,6 +23,7 @@ export function ImageSlot({
   tone = "bone",
   label,
   seed = 0,
+  uid,
   className = "",
   slot,
   alt,
@@ -32,6 +33,13 @@ export function ImageSlot({
   tone?: Tone;
   label?: string;
   seed?: number;
+  /** Disambiguates the SVG filter id when the same slot is rendered more than
+   *  once on a page — a looping rail renders its set twice, and two elements
+   *  sharing an id is invalid, with the second silently referencing the
+   *  first's filter. Defaults to `seed`, so single-use slots are unchanged.
+   *  It never touches `seed`, so the artwork itself stays identical between
+   *  copies, which is what makes a duplicated rail seamless. */
+  uid?: string | number;
   className?: string;
   /** Key into src/lib/images.ts. When a photograph exists for this slot it
    *  is layered over the designed fallback below. */
@@ -43,6 +51,7 @@ export function ImageSlot({
 }) {
   const [from, to] = RAMP[tone];
   const angle = 120 + ((seed * 37) % 90);
+  const veinId = `vein-${uid ?? seed}`;
   const dark = tone === "onyx" || tone === "marble";
   const src = imageFor(slot);
 
@@ -60,7 +69,7 @@ export function ImageSlot({
           viewBox="0 0 400 500"
         >
           <defs>
-            <filter id={`vein-${seed}`}>
+            <filter id={veinId}>
               <feTurbulence
                 type="fractalNoise"
                 baseFrequency="0.012 0.05"
@@ -70,7 +79,7 @@ export function ImageSlot({
               <feDisplacementMap in="SourceGraphic" scale="58" />
             </filter>
           </defs>
-          <g filter={`url(#vein-${seed})`} opacity="0.5">
+          <g filter={`url(#${veinId})`} opacity="0.5">
             <path d="M-40 130 C 90 96, 190 190, 440 118" stroke="#EFE7DA" strokeWidth="2.2" fill="none" />
             <path d="M-40 260 C 120 300, 220 200, 440 280" stroke="#D8CDBB" strokeWidth="1.4" fill="none" opacity="0.75" />
             <path d="M-40 390 C 110 350, 250 430, 440 372" stroke="#EFE7DA" strokeWidth="1.7" fill="none" opacity="0.6" />
